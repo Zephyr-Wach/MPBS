@@ -1,3 +1,3 @@
-rootProject.name = 'MPBS'
+rootProject.name = 'mbps'
 
 include 'mpbs-common', 'mpbs-user', 'mpbs-blog', 'mpbs-files', 'mpbs-auth', 'mpbs-security', 'mpbs-app'

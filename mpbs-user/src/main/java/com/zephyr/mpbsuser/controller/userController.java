@@ -1,19 +1,27 @@
 package com.zephyr.mpbsuser.controller;
 
+import com.zephyr.mpbsuser.service.userService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import com.zephyr.mpbscommon.utils.Result;
+
+
+
 
 @Controller
 @RequestMapping("/usr")
 public class userController {
+
+    private userService UserService;
 
     /**
      * login
      * @return
      */
     @RequestMapping("/login")
-    public String login(){
-        return "login";
+    public Result login(){
+
+        return UserService.login();
     }
 
     /**
