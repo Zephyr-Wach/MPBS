@@ -4,19 +4,12 @@ plugins {
     id 'java'
 }
 
-group = 'com.zephyr'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-web'       // Web相关
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'   // JPA，如果用MyBatis可以改成MyBatis依赖
+    implementation 'mysql:mysql-connector-java'                              // MySQL驱动
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2' // MyBatis Starter
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'

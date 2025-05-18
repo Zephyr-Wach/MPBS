@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '2.6.13'
-    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'org.springframework.boot' version '2.6.13' apply false
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE' apply false
     id 'java'
 }
 
@@ -8,15 +8,28 @@ group = 'com.zephyr'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        mavenCentral()
+    }
 }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+ext {
+    springBootVersion = '2.6.13'
+    mybatisVersion = '2.2.2'
+    mysqlVersion = '8.0.33'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
 }
