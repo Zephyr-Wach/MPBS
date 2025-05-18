@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="#JAVA_HOME" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/mpbs-app" />
+            <option value="$PROJECT_DIR$/mpbs-auth" />
+            <option value="$PROJECT_DIR$/mpbs-blog" />
+            <option value="$PROJECT_DIR$/mpbs-common" />
+            <option value="$PROJECT_DIR$/mpbs-files" />
+            <option value="$PROJECT_DIR$/mpbs-security" />
+            <option value="$PROJECT_DIR$/mpbs-user" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
