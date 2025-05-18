@@ -1,0 +1,32 @@
+# Gradle 缓存和构建文件夹
+.gradle/
+build/
+
+# IDEA 配置文件夹，用户本地配置不提交
+.idea/
+*.iml
+
+# 操作系统相关（Windows）
+Thumbs.db
+.DS_Store
+
+# 日志文件
+*.log
+
+# 临时文件
+*.tmp
+*.temp
+
+# 编译生成的类文件和其他
+out/
+bin/
+
+# gradle wrapper缓存
+.gradle/
+
+# 忽略 gradle 生成的项目文件
+.gradle/
+build/
+
+# 忽略本地运行时生成的文件
+local.properties
