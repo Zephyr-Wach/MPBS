@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(scanBasePackages = {
         "com.zephyr.mpbsapp",
         "com.zephyr.mpbsauth",
-        "com.zephyr.mbpsblog",
+        "com.zephyr.mpbsblog",
         "com.zephyr.mpbscommon",
         "com.zephyr.mpbsfiles",
         "com.zephyr.mpbssecurity",

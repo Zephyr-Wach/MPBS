@@ -30,3 +30,13 @@ build/
 
 # 忽略本地运行时生成的文件
 local.properties
+/mpbs-app/build/
+/mpbs-auth/build/
+/mpbs-blog/build/
+/mpbs-common/build/
+/mpbs-files/build/
+/mpbs-security/build/
+/mpbs-user/build/
+
+/web/package-lock.json
+/web/node_modules/
