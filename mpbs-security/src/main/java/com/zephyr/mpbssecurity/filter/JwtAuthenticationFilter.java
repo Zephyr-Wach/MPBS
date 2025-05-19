@@ -2,6 +2,7 @@ package com.zephyr.mpbssecurity.filter;
 
 import com.zephyr.mpbscommon.utils.JwtUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,17 +22,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        String token = request.getHeader("Authorization"); // 或者你自己约定的header
+        String token = request.getHeader("Authorization");
 
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
 
-            // 这里写你token解析和校验逻辑，比如根据token拿到userId等
             String userId = JwtUtil.getUserIdFromToken(token);
-            if (userId != null) {
-                // 验证通过，构造Authentication对象放入SecurityContext
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
+            String role = JwtUtil.getRoleFromToken(token);
+            if (userId != null && role != null) {
+                SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, null, Collections.singletonList(authority));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }

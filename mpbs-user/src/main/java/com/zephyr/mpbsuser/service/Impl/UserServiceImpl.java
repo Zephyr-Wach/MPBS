@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userMapper.findByUserNameAndUserPwd(loginDTO.getUserName(), loginDTO.getUserPwd());
         return user != null ?
                 Result.success(new HashMap<String, Object>() {{
-                    put("token", JwtUtil.generateToken(user.getUserId()));
+                    put("token", JwtUtil.generateToken(user.getUserId(),user.getUserPermission()));
                     put("username", user.getUserName());
                     put("userId", user.getUserId());
                 }}) :
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userMapper.findByUserName(registerDTO.getUserName());
         return user != null ?
                 Result.success(new HashMap<String, Object>() {{
-                    put("token", JwtUtil.generateToken(user.getUserId()));
+                    put("token", JwtUtil.generateToken(user.getUserId(),user.getUserPermission()));
                     put("username", user.getUserName());
                     put("userId", user.getUserId());
                 }}) :
@@ -59,15 +59,29 @@ public class UserServiceImpl implements UserService {
     public Result updatePassword(UpdatePasswordDTO updatePassword) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            return Result.failure(401,"未认证或身份信息缺失");
+            return Result.failure(401, "未认证或身份信息缺失");
         }
 
         String userId = (String) authentication.getPrincipal();
 
-        return Objects.equals(userId, updatePassword.getUserId()) &&
-                userMapper.findByUserNameAndUserPwd(updatePassword.getUserId(), updatePassword.getOldPassword()) != null &&
-                userMapper.updatePassword(updatePassword)?
-                Result.success() :
-                Result.failure(400, "修改失败");
+        // 1. 校验传来的userId和token中的userId是否一致
+        if (!Objects.equals(userId, updatePassword.getUserId())) {
+            return Result.failure(403, "无权限修改其他用户密码");
+        }
+
+        // 2. 校验旧密码是否正确（建议用userId查询用户，再比对密码）
+        UserEntity user = userMapper.findByUserIdAndUserPwd(updatePassword.getUserId(), updatePassword.getOldPassword());
+        if (user == null) {
+            return Result.failure(400, "旧密码错误");
+        }
+
+        // 3. 执行密码更新
+        boolean success = userMapper.updatePassword(updatePassword);
+        if (success) {
+            return Result.success();
+        } else {
+            return Result.failure(500, "密码修改失败，请稍后重试");
+        }
     }
+
 }

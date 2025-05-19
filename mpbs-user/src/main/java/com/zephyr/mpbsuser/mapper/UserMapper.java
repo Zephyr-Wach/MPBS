@@ -15,6 +15,9 @@ public interface UserMapper {
     @Select("SELECT * FROM user_info WHERE user_name = #{userName} AND user_pwd = #{userPwd}")
     UserEntity findByUserNameAndUserPwd(@Param("userName") String userName, @Param("userPwd") String userPwd);
 
+    @Select("SELECT * FROM user_info WHERE user_id = #{userId} AND user_pwd =#{userPwd}")
+    UserEntity findByUserIdAndUserPwd(@Param("userId") String userId, @Param("userPwd") String userPwd);
+
     @Insert("INSERT INTO user_info (user_name, user_pwd, email) VALUES (#{userName}, #{userPwd}, #{email})")
     @Options(useGeneratedKeys = true, keyProperty = "userId", keyColumn = "user_id")
     void insert(RegisterDTO registerDTO);
@@ -22,6 +25,6 @@ public interface UserMapper {
     @Select("SELECT COUNT(1) FROM user_info WHERE user_name = #{userName}")
     int countByUserName(String userName);
 
-    @Update("UPDATE user SET password = #{newPassword} WHERE id = #{userId}")
+    @Update("UPDATE user_info SET user_pwd = #{newPassword} WHERE user_id = #{userId}")
     boolean updatePassword(UpdatePasswordDTO updatePassword);
 }
