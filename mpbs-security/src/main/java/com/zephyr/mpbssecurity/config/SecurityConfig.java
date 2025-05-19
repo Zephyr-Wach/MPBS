@@ -22,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/public/**").permitAll()   // 公开接口，无需token
                 .antMatchers("/usr/**").permitAll()     // 登录注册接口无需token
-                .antMatchers("/admin/**").hasRole("ULTIMATE")
+                .antMatchers("/admin/**").hasRole("ULTIMATE") //hasAnyRole("ADMIN", "ULTIMATE") // 支持多个角色
                 .anyRequest().authenticated();               // 其他接口都需要认证
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
