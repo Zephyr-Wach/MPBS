@@ -19,10 +19,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    public Result login(@RequestBody LoginDTO loginDTO) {
-        return userService.login(loginDTO);
-    }
-
+    public Result login(@RequestBody LoginDTO loginDTO) {return userService.login(loginDTO);}
 
     /**
      * register
@@ -38,7 +35,5 @@ public class UserController {
      * @return
      */
     @GetMapping("/checkUserName")
-    public Result getUserInfo(@RequestParam String userName){
-        return userService.checkByUserName(userName);
-    }
+    public Result getUserInfo(@RequestParam String userName){return userService.checkByUserName(userName);}
 }

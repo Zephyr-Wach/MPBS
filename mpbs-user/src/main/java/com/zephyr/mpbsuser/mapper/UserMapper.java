@@ -1,11 +1,9 @@
 package com.zephyr.mpbsuser.mapper;
 
 import com.zephyr.mpbsuser.dto.RegisterDTO;
+import com.zephyr.mpbsuser.dto.UpdatePasswordDTO;
 import com.zephyr.mpbsuser.entity.UserEntity;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.data.repository.query.Param;
 
 @Mapper
@@ -23,4 +21,7 @@ public interface UserMapper {
 
     @Select("SELECT COUNT(1) FROM user_info WHERE user_name = #{userName}")
     int countByUserName(String userName);
+
+    @Update("UPDATE user SET password = #{newPassword} WHERE id = #{userId}")
+    boolean updatePassword(UpdatePasswordDTO updatePassword);
 }

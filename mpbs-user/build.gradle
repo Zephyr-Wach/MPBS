@@ -6,7 +6,9 @@ plugins {
 
 dependencies {
     implementation project(':mpbs-common')
+    implementation project(':mpbs-security')
 
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'       // Web相关
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'   // JPA，如果用MyBatis可以改成MyBatis依赖
     implementation 'mysql:mysql-connector-java'                              // MySQL驱动

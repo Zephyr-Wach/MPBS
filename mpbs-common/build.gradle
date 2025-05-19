@@ -6,11 +6,8 @@ plugins {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'       // Web相关
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'   // JPA，如果用MyBatis可以改成MyBatis依赖
-    implementation 'mysql:mysql-connector-java'                              // MySQL驱动
-    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2' // MyBatis Starter
     dependencies {implementation 'io.jsonwebtoken:jjwt:0.9.1'}                // JWT
-
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 sourceCompatibility = '1.8'
