@@ -11,6 +11,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'   // JPA，如果用MyBatis可以改成MyBatis依赖
     implementation 'mysql:mysql-connector-java'                              // MySQL驱动
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2' // MyBatis Starter
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+    }
 }
 
 sourceCompatibility = '1.8'
