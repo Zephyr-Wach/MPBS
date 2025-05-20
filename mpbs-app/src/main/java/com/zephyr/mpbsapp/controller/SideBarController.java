@@ -19,7 +19,8 @@ public class SideBarController {
 
     @GetMapping("/getSideBarList")
     public List<SidebarMenuDto> getSideBarList(Authentication authentication) {
-        String role = authentication.getAuthorities().iterator().next().getAuthority();
-        return sideBarMenuService.getMenuByRole(role);
+        return authentication == null || authentication.getAuthorities() == null || authentication.getAuthorities().isEmpty() ?
+                sideBarMenuService.getMenuByRole(null) :
+                sideBarMenuService.getMenuByRole(authentication.getAuthorities().iterator().next().getAuthority());
     }
 }
