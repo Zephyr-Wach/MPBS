@@ -27,7 +27,7 @@ export async function loginAndSaveToken(userName: string, userPwd: string) {
         if (res.code === 0 && res.data.token) {
             // 保存 token 到 localStorage
             localStorage.setItem('token', res.data.token);
-            console.log('登录成功，token已保存');
+            console.log('登录成功，token已保存'+res.data.token);
             // 可以返回用户信息等
             return res.data;
         } else {
@@ -93,5 +93,12 @@ export const checkUserName = (userName: object) => {
         url: '/usr/login',
         method: 'get',
         params: userName,
+    });
+};
+//getUserInfo
+export const getUserInfo = () => {
+    return request({
+        url: '/user/getUserInfo',
+        method: 'get',
     });
 };

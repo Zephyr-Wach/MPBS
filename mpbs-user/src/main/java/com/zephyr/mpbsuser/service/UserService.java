@@ -10,4 +10,5 @@ public interface UserService {
     Result register(RegisterDTO registerDTO);
     Result checkByUserName(String userName) ;
     Result updatePassword(UpdatePasswordDTO updatePassword);
+    Result getUserInfo();
 }

@@ -7,12 +7,29 @@
         <router-view />
       </div>
     </div>
+
+    <!-- 登录弹窗 -->
+    <Login
+        v-if="showLoginModal"
+        @close="showLoginModal = false"
+        @loginSuccess="onLoginSuccess"
+    />
   </div>
 </template>
 
 <script setup>
 import Sidebar from '@/components/SideBar.vue';
 import Navbar from '@/components/Navbar.vue';
+import Login from '@/components/Login.vue';
+import { showLoginModal } from '@/router';
+
+function onLoginSuccess(userData) {
+  showLoginModal.value = false;
+  // 登录成功后逻辑，比如刷新页面、跳转到profile等
+  // 这里举例跳转：
+  // import router from '@/router';
+  // router.push('/profile');
+}
 </script>
 
 <style scoped>
@@ -31,9 +48,11 @@ import Navbar from '@/components/Navbar.vue';
 }
 
 .content-area {
+  position: fixed;
+  height: calc(100vh - 30px);
   margin-top: 30px;
   flex: 1;
-  display: flex; /* 横向排列 */
+  display: flex;
   width: 100%;
 }
 
@@ -43,9 +62,8 @@ import Navbar from '@/components/Navbar.vue';
 }
 
 .main-content {
-  flex: 1; /* 自适应剩余宽度 */
+  flex: 1;
   padding: 16px;
   overflow-y: auto;
 }
-
 </style>

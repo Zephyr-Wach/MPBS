@@ -20,14 +20,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-
-        // 排除 /public/** 路径，不做 token 验证
-//        String path = request.getRequestURI();
-//        if (path.startsWith("/public/")) {
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
-
         String token = request.getHeader("Authorization");
 
         try {

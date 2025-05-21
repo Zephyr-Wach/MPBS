@@ -46,7 +46,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import { getSideBarList } from '@/api/public/index.ts';
+import { getSideBarList } from '@/api/public';
 
 interface MenuItem {
   id: number;

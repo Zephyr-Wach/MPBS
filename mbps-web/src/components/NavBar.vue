@@ -5,9 +5,10 @@
     </h1>
     <nav>
       <ul class="nav-links">
-        <li><a href="#about">关于</a></li>
-        <li><a href="#contact">联系</a></li>
-        <li><a href="#profile">个人中心</a></li>
+        <router-link to="/about">关于</router-link>
+<!--        <li><a href="#contact">联系</a></li>-->
+
+        <router-link to="/profile">个人中心</router-link>
       </ul>
     </nav>
   </header>
@@ -23,7 +24,7 @@
   left: 0;
   width: 100vw;
   height: 60px;
-  /* 从左到右，白色到紫红色渐变 */
+  /* 从左到右，渐变 */
   background: linear-gradient(to right, #ffffff, #2de2be);
   color: #2c3e50; /* 文字深色，和背景对比 */
   padding: 0 1rem 0 1px; /* 上右下左 */

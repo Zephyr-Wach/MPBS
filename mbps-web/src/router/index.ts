@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import Layout from '@/layout/Layout.vue';
+import { ref } from 'vue';
+
+export const showLoginModal = ref(false);
 
 const routes: RouteRecordRaw[] = [
     {
@@ -41,18 +44,54 @@ const routes: RouteRecordRaw[] = [
                 name: 'DeliverBlog',
                 component: () => import('@/views/admin/DeliverBlog.vue'),
             },
+            {
+                path: 'about',
+                name: 'about',
+                component: () => import('@/views/About.vue'),
+            },
+            {
+                path: 'contact',
+                name: 'contact',
+                component: () => import('@/views/Contact.vue'),
+            },
+            {
+                path: 'profile',
+                name: 'Profile',
+                component: () => import('@/views/Profile.vue'),
+                meta: { requiresAuth: true }, // 需要登录
+            },
         ],
     },
     {
         path: '/login',
         name: 'Login',
-        component: () => import('@/views/Login.vue'),
+        component: () => import('@/components/Login.vue'),
     },
 ];
 
 const router = createRouter({
     history: createWebHistory(),
     routes,
+});
+
+function isTokenExpired(token: string): boolean {
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const now = Math.floor(Date.now() / 1000);
+        return payload.exp && payload.exp < now;
+    } catch {
+        return true;
+    }
+}
+
+router.beforeEach((to, from, next) => {
+    const token = localStorage.getItem('token');
+    if (to.meta.requiresAuth && (!token || isTokenExpired(token))) {
+        showLoginModal.value = true; // 弹窗登录
+        next(false); // 阻止跳转
+    } else {
+        next();
+    }
 });
 
 export default router;
