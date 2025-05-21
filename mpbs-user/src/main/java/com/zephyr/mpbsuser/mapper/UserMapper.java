@@ -27,4 +27,7 @@ public interface UserMapper {
 
     @Update("UPDATE user_info SET user_pwd = #{newPassword} WHERE user_id = #{userId}")
     boolean updatePassword(UpdatePasswordDTO updatePassword);
+
+    @Select("SELECT * FROM user_info WHERE user_id = #{userId}")
+    UserEntity findByUserId(String userId);
 }

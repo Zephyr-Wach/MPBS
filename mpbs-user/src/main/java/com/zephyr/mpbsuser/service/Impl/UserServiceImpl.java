@@ -87,12 +87,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return Result.failure(401, "未认证或身份信息缺失");
-        }
-
-
-
+        return authentication == null || !authentication.isAuthenticated()?
+                Result.failure(401, "未认证或身份信息缺失"):
+                Result.success(userMapper.findByUserId((String) authentication.getPrincipal()));
     }
 
 }

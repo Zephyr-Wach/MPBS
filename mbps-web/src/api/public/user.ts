@@ -78,27 +78,11 @@ export async function registerAndSaveToken(userName: string, userPwd: string) {
     }
 }
 
-// updatePassword
-export const updatePassword = (obj: Object) => {
-    return request({
-        url: '/user/updatePassword',
-        method: 'post',
-        data: obj,
-    });
-};
-
 // checkUserName
 export const checkUserName = (userName: object) => {
     return request({
         url: '/usr/login',
         method: 'get',
         params: userName,
-    });
-};
-//getUserInfo
-export const getUserInfo = () => {
-    return request({
-        url: '/user/getUserInfo',
-        method: 'get',
     });
 };
