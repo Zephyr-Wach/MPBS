@@ -1,6 +1,8 @@
 <template>
   <header class="navbar">
-    <h1 class="logo">我的博客</h1>
+    <h1 class="logo">
+      <img src="@/assets/logo.ico" alt="logo" class="logo-img" />
+    </h1>
     <nav>
       <ul class="nav-links">
         <li><a href="#about">关于</a></li>
@@ -11,40 +13,42 @@
   </header>
 </template>
 
-
 <script setup>
-// 这里可以添加逻辑，比如响应式菜单、点击事件等
 </script>
 
 <style scoped>
-
 .navbar {
-  position: fixed;      /* 固定在视口顶部 */
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;         /* 100视口宽度，确保铺满 */
-  height: 60px;         /* 给一个固定高度 */
-  background-color: #2c3e50;
-  color: #fff;
-  padding: 0 2rem;
+  width: 100vw;
+  height: 60px;
+  /* 从左到右，白色到紫红色渐变 */
+  background: linear-gradient(to right, #ffffff, #2de2be);
+  color: #2c3e50; /* 文字深色，和背景对比 */
+  padding: 0 1rem 0 1px; /* 上右下左 */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 1000;        /* z-index高于sidebar，确保覆盖 */
+  z-index: 1000;
   box-sizing: border-box;
 }
-.content-area {
-  margin-top: 60px; /* navbar高度 */
-  display: flex;
-  height: calc(100vh - 60px);
-}
 
-
-
-
+/* logo区域背景白色，和渐变区区分 */
 .logo {
+  height: 30px;
   font-size: 1.5rem;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.logo-img {
+  height: 40px;
+  width: auto;
 }
 
 .nav-links {
@@ -54,7 +58,7 @@
 }
 
 .nav-links a {
-  color: #fff;
+  color: #2c3e50; /* 深色文字 */
   text-decoration: none;
   font-weight: 500;
 }
