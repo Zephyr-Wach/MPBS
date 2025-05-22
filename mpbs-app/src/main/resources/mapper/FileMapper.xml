@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zephyr.mpbsfiles.mapper.FileMapper">
+
+    <select id="getAccessibleFilesByRole" resultType="com.zephyr.mpbsfiles.dto.FilesProcessDTO">
+        SELECT DISTINCT
+            CAST(f.id AS CHAR) AS id,
+            f.filename,
+            f.storage_path AS storagePath,
+            CAST(f.uploader_id AS CHAR) AS uploaderId,
+            DATE_FORMAT(f.created_at, '%Y-%m-%d %H:%i:%s') AS createdAt,
+            CAST(f.size AS CHAR) AS size,
+            f.mime_type AS mimeType
+        FROM files f
+            LEFT JOIN file_permissions fp ON f.id = fp.file_id
+        WHERE f.is_public = 1
+           OR (fp.role_id = #{roleId} AND fp.can_read = 1)
+    </select>
+
+    <insert id="insertFile" parameterType="com.zephyr.mpbsfiles.dto.FilesProcessDTO" useGeneratedKeys="false">
+        INSERT INTO files (id, filename, storage_path, uploader_id, created_at, size, mime_type)
+        VALUES (#{id}, #{filename}, #{storagePath}, #{uploaderId}, NOW(), #{size}, #{mimeType})
+    </insert>
+
+    <select id="selectFileById" parameterType="String" resultType="com.zephyr.mpbsfiles.dto.FilesProcessDTO">
+        SELECT
+            CAST(id AS CHAR) AS id,
+            filename,
+            storage_path AS storagePath,
+            CAST(uploader_id AS CHAR) AS uploaderId,
+            DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') AS createdAt,
+            CAST(size AS CHAR) AS size,
+            mime_type AS mimeType
+        FROM files
+        WHERE id = #{id}
+    </select>
+
+</mapper>
+

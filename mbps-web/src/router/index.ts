@@ -23,6 +23,7 @@ const routes: RouteRecordRaw[] = [
                 path: 'cloud',
                 name: 'Cloud',
                 component: () => import('@/views/Cloud.vue'),
+                meta: { requiresAuth: true }
             },
             {
                 path: 'admin/users',

@@ -2,6 +2,11 @@ server:
   port: 6688
 
 spring:
+  servlet:
+    multipart:
+      enabled: true           # 开启文件上传支持
+      max-file-size: 50MB     # 单个文件最大大小，可以改成你想要的，比如50MB、200MB等
+      max-request-size: 200MB # 一次请求能上传的所有文件总大小，可以单独设置，比max-file-size大
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/mbps?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
@@ -22,3 +27,6 @@ logging:
 jwt:
   secret: mbpsSecretKeyHere
   expiration: 3600000
+
+file:
+  upload-path: "D:/Users/wangc/Downloads/mpbs"
