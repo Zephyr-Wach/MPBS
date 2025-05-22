@@ -33,11 +33,12 @@ export const uploadFile = (file: File) => {
     });
 };
 
-// 下载文件，返回后端的文件流，前端用浏览器打开或手动处理下载
+// 下载文件
 export const downloadFile = (id: string) => {
     return request({
         url: `/files/download/${id}`,
         method: 'get',
-        responseType: 'blob', // 二进制流
-    });
+        responseType: 'blob',
+    }).then(res => res);
 };
+

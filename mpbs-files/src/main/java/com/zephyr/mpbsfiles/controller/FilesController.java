@@ -4,6 +4,8 @@ import com.zephyr.mpbscommon.utils.Result;
 import com.zephyr.mpbsfiles.dto.FilesProcessDTO;
 import com.zephyr.mpbsfiles.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 @RestController
@@ -54,28 +57,44 @@ public class FilesController {
      * download file
      */
     @GetMapping("/download/{id}")
-    public ResponseEntity<?> downloadFile(Authentication authentication, @PathVariable String id) {
+    public ResponseEntity<Resource> downloadFile(Authentication authentication, @PathVariable String id) {
+        // 鉴权校验
         if (authentication == null || authentication.getPrincipal() == null) {
-            return ResponseEntity.status(401).body("token is invalid");
+            return ResponseEntity.status(401).build();
         }
+
+        // 根据id获取文件信息
         FilesProcessDTO dto = fileService.getFileById(id);
         if (dto == null) {
             return ResponseEntity.notFound().build();
         }
+
         File file = new File(dto.getStoragePath());
         if (!file.exists()) {
             return ResponseEntity.notFound().build();
         }
+
         try {
-            byte[] data = Files.readAllBytes(file.toPath());
+            // 文件流资源
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+
+            // 解决文件名中文乱码，URL编码后替换空格
+            String encodedFilename = URLEncoder.encode(dto.getFilename(), StandardCharsets.UTF_8.toString())
+                    .replaceAll("\\+", "%20");
+
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + dto.getFilename() + "\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFilename + "\"")
+                    .contentLength(file.length())
                     .contentType(MediaType.parseMediaType(dto.getMimeType()))
-                    .body(data);
+                    .body(resource);
+
         } catch (IOException e) {
-            return ResponseEntity.status(500).body("读取文件失败");
+            // 读取文件异常
+            return ResponseEntity.status(500).build();
         }
     }
+
+
 //    /**
 //     * delete file
 //     */
