@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { getUserInfo } from '@/api/user/user';
+import { uploadFile, generateUrl } from '@/api/public/media';
 
 interface UserInfo {
   userId: string;
@@ -13,6 +14,7 @@ interface UserInfo {
 
 const userInfo = ref<UserInfo | null>(null);
 const error = ref<string | null>(null);
+const uploading = ref(false);  // 上传状态提示
 
 async function fetchUserInfo() {
   try {
@@ -30,6 +32,42 @@ async function fetchUserInfo() {
 onMounted(() => {
   fetchUserInfo();
 });
+
+// 新增：文件上传处理
+const fileInput = ref<HTMLInputElement | null>(null);
+
+function onAvatarClick() {
+  if (fileInput.value) {
+    fileInput.value.value = '';  // 清空上次选择
+    fileInput.value.click();
+  }
+}
+
+async function onFileChange(event: Event) {
+  const files = (event.target as HTMLInputElement).files;
+  if (!files || files.length === 0) return;
+
+  const file = files[0];
+  uploading.value = true;
+  error.value = null;
+
+  try {
+    const uploadRes = await uploadFile(file);
+    const urlRes = await generateUrl(uploadRes.data.id);
+
+    const baseURL = import.meta.env.VITE_API_BASE_URL;
+
+    if (userInfo.value) {
+      userInfo.value.avatarUrl = baseURL + urlRes.data;
+      console.info(userInfo.value.avatarUrl);
+    }
+  } catch (e) {
+    error.value = '头像上传失败，请重试';
+  } finally {
+    uploading.value = false;
+  }
+}
+
 </script>
 
 <template>
@@ -38,8 +76,26 @@ onMounted(() => {
     <div v-if="error" class="error-msg">{{ error }}</div>
 
     <div v-else-if="userInfo" class="profile-info">
-      <div class="avatar-box">
-        <p class="avatar-text">{{ userInfo.avatarUrl ?? '暂无头像路径' }}</p>
+      <div class="avatar-box" @click="onAvatarClick" style="cursor:pointer;position:relative;">
+        <template v-if="uploading">
+          <span>上传中...</span>
+        </template>
+        <template v-else>
+          <img
+              v-if="userInfo.avatarUrl"
+              :src="userInfo.avatarUrl"
+              alt="头像"
+              style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"
+          />
+          <p v-else class="avatar-text">点击上传头像</p>
+        </template>
+        <input
+            ref="fileInput"
+            type="file"
+            accept="image/*"
+            @change="onFileChange"
+            style="display:none"
+        />
       </div>
       <div class="info-row"><span>用户ID:</span> {{ userInfo.userId }}</div>
       <div class="info-row"><span>用户名:</span> {{ userInfo.userName }}</div>
@@ -96,6 +152,8 @@ h2 {
   text-align: center;
   padding: 8px;
   word-break: break-word;
+  position: relative;
+  overflow: hidden;
 }
 
 .avatar-text {

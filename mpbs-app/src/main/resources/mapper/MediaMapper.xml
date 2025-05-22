@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zephyr.mpbsfiles.mapper.MediaMapper">
+    <insert id="insertMedia" parameterType="com.zephyr.mpbsfiles.dto.MediaProcessDTO" useGeneratedKeys="false">
+        INSERT INTO medias (id, filename, storage_path, uploader_id, created_at, size, mime_type)
+        VALUES (#{id}, #{filename}, #{storagePath}, #{uploaderId}, NOW(), #{size}, #{mimeType})
+    </insert>
+
+    <select id="getMediaById" parameterType="string" resultType="com.zephyr.mpbsfiles.dto.MediaProcessDTO">
+        SELECT * FROM medias WHERE id = #{id}
+    </select>
+
+</mapper>
+

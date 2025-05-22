@@ -1,8 +1,8 @@
 package com.zephyr.mpbsfiles.service.Impl;
 
-import com.zephyr.mpbsfiles.dto.FilesProcessDTO;
-import com.zephyr.mpbsfiles.mapper.FileMapper;
-import com.zephyr.mpbsfiles.service.FileService;
+import com.zephyr.mpbsfiles.dto.MediaProcessDTO;
+import com.zephyr.mpbsfiles.mapper.MediaMapper;
+import com.zephyr.mpbsfiles.service.MediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -10,26 +10,19 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 @Service
-public class FileServiceImpl implements FileService {
+public class MediaServiceImpl implements MediaService {
     @Autowired
-    private FileMapper fileMapper;
+    private MediaMapper mediaMapper;
 
     @Value("${file.upload-path}")
-    private String uploadPath;
-
-//    private String uploadPath = systemUploadPath + "/Files";
-
-    @Override
-    public List<FilesProcessDTO> getFilesListByRole(String userId) {
-        return fileMapper.getAccessibleFilesByRole(Integer.parseInt(userId));
-    }
+    private String mediaPath;
+//    private String mediaPath = systemUploadPath + "/Media";
 
     @Override
-    public FilesProcessDTO uploadFile(MultipartFile file, String uploaderId) throws IOException {
+    public MediaProcessDTO uploadMedia(MultipartFile file, String uploaderId) throws IOException {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("上传文件为空");
         }
@@ -43,14 +36,14 @@ public class FileServiceImpl implements FileService {
         }
 
         String storageFileName = id + suffix;
-        File dest = new File(uploadPath, storageFileName);
+        File dest = new File(mediaPath, storageFileName);
         if (!dest.getParentFile().exists()) {
             dest.getParentFile().mkdirs();
         }
         file.transferTo(dest);
 
         // 构建 DTO
-        FilesProcessDTO dto = new FilesProcessDTO();
+        MediaProcessDTO dto = new MediaProcessDTO();
         dto.setId(id);
         dto.setFilename(originalFilename);
         dto.setStoragePath(dest.getAbsolutePath());
@@ -59,13 +52,14 @@ public class FileServiceImpl implements FileService {
         dto.setMimeType(file.getContentType());
 
         // 存数据库
-        fileMapper.insertFile(dto);
+        mediaMapper.insertMedia(dto);
 
         return dto;
     }
 
     @Override
-    public FilesProcessDTO getFileById(String id) {
-        return fileMapper.selectFileById(id);
+    public MediaProcessDTO getMediaById(String mediaId) {
+        return mediaMapper.getMediaById(mediaId);
     }
+
 }
