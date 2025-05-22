@@ -1,4 +1,4 @@
-package entity;
+package com.zephyr.mpbsblog.entity;
 
 import lombok.Data;
 
