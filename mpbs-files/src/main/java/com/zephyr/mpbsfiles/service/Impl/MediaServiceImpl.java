@@ -1,16 +1,19 @@
 package com.zephyr.mpbsfiles.service.Impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zephyr.mpbsfiles.dto.MediaProcessDTO;
+import com.zephyr.mpbsfiles.entity.MediaEntity;
 import com.zephyr.mpbsfiles.mapper.MediaMapper;
 import com.zephyr.mpbsfiles.service.MediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class MediaServiceImpl implements MediaService {
@@ -60,6 +63,32 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public MediaProcessDTO getMediaById(String mediaId) {
         return mediaMapper.getMediaById(mediaId);
+    }
+
+    @Override
+    public Map<String, Object> listMediaByUser(String userId, int page, int size) {
+        Page<MediaEntity> mediaPage = new Page<>(page, size);
+        QueryWrapper<MediaEntity> wrapper = new QueryWrapper<>();
+        wrapper.eq("uploader_id", userId).orderByDesc("created_at");
+
+        mediaMapper.selectPage(mediaPage, wrapper);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("total", mediaPage.getTotal());
+        result.put("pages", mediaPage.getPages());
+        result.put("current", mediaPage.getCurrent());
+        result.put("size", mediaPage.getSize());
+        result.put("records", mediaPage.getRecords());
+        return result;
+    }
+
+    @Override
+    public boolean deleteMedia(String mediaId, String userId) {
+        MediaEntity entity = mediaMapper.selectById(mediaId);
+        if (entity == null || !userId.equals(entity.getUploaderId())) {
+            return false;
+        }
+        return mediaMapper.deleteById(mediaId) > 0;
     }
 
 }

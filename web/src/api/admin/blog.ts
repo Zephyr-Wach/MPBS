@@ -72,3 +72,53 @@ export function getBlogDetail(id: string): Promise<BlogDetailResponse> {
         method: 'get',
     });
 }
+
+// 删除媒体文件
+interface MediaDeleteResponse {
+    code: number;
+    message: string;
+    data?: any;
+}
+export function deleteMedia(mediaId: string): Promise<MediaDeleteResponse> {
+    return request({
+        url: '/media/delete',
+        method: 'delete',
+        params: { mediaId },  // delete接口用params传mediaId
+    });
+}
+
+// 媒体分页列表返回的单条数据结构
+interface MediaItem {
+    id: string;
+    filename: string;
+    storagePath: string;
+    uploaderId: string;
+    createdAt: string;
+    size: string;
+    mimeType: string;
+    isPublic?: string;
+}
+
+// 分页返回数据结构
+interface MediaListData {
+    total: number;
+    pages: number;
+    current: number;
+    size: number;
+    records: MediaItem[];
+}
+
+interface MediaListResponse {
+    code: number;
+    message: string;
+    data: MediaListData;
+}
+
+// 获取媒体文件列表（分页）
+export function getMediaList(page = 1, size = 10): Promise<MediaListResponse> {
+    return request({
+        url: '/media/list',
+        method: 'get',
+        params: { page, size },
+    });
+}

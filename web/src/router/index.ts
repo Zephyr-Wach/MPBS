@@ -44,22 +44,17 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'admin/clouds',
                 name: 'CloudManage',
-                component: () => import('@/views/admin/CloudManage.vue'),
+                component: () => import('@/views/admin/MediaManage.vue'),
             },
             {
                 path: 'admin/deliver',
                 name: 'DeliverBlog',
-                component: () => import('@/views/admin/DeliverBlog.vue'),
+                component: () => import('@/views/admin/PostBlog.vue'),
             },
             {
                 path: 'about',
                 name: 'about',
                 component: () => import('@/views/About.vue'),
-            },
-            {
-                path: 'contact',
-                name: 'contact',
-                component: () => import('@/views/Contact.vue'),
             },
             {
                 path: 'profile',

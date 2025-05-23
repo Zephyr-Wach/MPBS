@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.List;
 
 @RestController
 @RequestMapping("/media")
@@ -36,14 +37,6 @@ public class MediaController {
         }
     }
 
-//    /**
-//     * delete picture/video
-//     */
-//    @RequestMapping("/delete")
-//    public String delete() {
-//
-//    }
-
     @GetMapping("/generateUrl/{mediaId}")
     public Result generateMediaUrl(@PathVariable("mediaId") String mediaId) {
         MediaProcessDTO dto = mediaService.getMediaById(mediaId);
@@ -58,4 +51,33 @@ public class MediaController {
         return Result.success(url);
     }
 
+    /**
+     * delete picture/video
+     */
+    @DeleteMapping("/delete")
+    public Result deleteMedia(Authentication authentication, @RequestParam("mediaId") String mediaId) {
+        if (authentication == null || authentication.getPrincipal() == null) {
+            return Result.failure(401, "token is invalid");
+        }
+        String userId = authentication.getPrincipal().toString();
+        boolean success = mediaService.deleteMedia(mediaId, userId);
+        return success ? Result.success("Delete successful") : Result.failure(403, "No permission or media not found");
+    }
+
+    /**
+     * get picture/video List
+     */
+    @RequestMapping("/list")
+    public Result listMedia(
+            Authentication authentication,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        if (authentication == null || authentication.getPrincipal() == null) {
+            return Result.failure(401, "token is invalid");
+        }
+
+        String userId = authentication.getPrincipal().toString();
+        return Result.success(mediaService.listMediaByUser(userId, page, size));
+    }
 }
