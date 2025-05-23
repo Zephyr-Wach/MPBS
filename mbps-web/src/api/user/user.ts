@@ -16,3 +16,16 @@ export const updatePassword = (obj: Object) => {
         data: obj,
     });
 };
+
+//updateUserInfo
+export const updateUserInfo = (userName: string, avatarUrl: string, email: string) => {
+    return request({
+        url: '/user/updateInfo',
+        method: 'post',
+        data: {
+            userName,
+            avatarUrl,
+            email
+        }
+    });
+}

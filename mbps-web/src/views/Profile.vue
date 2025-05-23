@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { getUserInfo } from '@/api/user/user';
+import { getUserInfo, updateUserInfo } from '@/api/user/user';
 import { uploadFile, generateUrl } from '@/api/public/media';
 
 interface UserInfo {
@@ -68,6 +68,26 @@ async function onFileChange(event: Event) {
   }
 }
 
+async function updateInfo() {
+  if (!userInfo.value) return;
+
+  try {
+    const res = await updateUserInfo(
+        userInfo.value.userName,
+        userInfo.value.avatarUrl ?? '',
+        userInfo.value.email ?? ''
+    );
+    if (res.code === 0 && res.data) {
+      userInfo.value = res.data;
+    } else {
+      error.value = res.message || '更新失败';
+    }
+  } catch (e) {
+    error.value = '接口请求异常';
+  }
+}
+
+
 </script>
 
 <template>
@@ -101,6 +121,7 @@ async function onFileChange(event: Event) {
       <div class="info-row"><span>用户名:</span> {{ userInfo.userName }}</div>
       <div class="info-row"><span>邮箱:</span> {{ userInfo.email ?? '未设置' }}</div>
       <div class="info-row"><span>权限:</span> {{ userInfo.userPermission }}</div>
+      <button class="update-button" @click="updateInfo">修改</button>
     </div>
 
     <div v-else class="loading">加载中...</div>

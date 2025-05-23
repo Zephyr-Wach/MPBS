@@ -1,6 +1,7 @@
 package com.zephyr.mpbsuser.mapper;
 
 import com.zephyr.mpbsuser.dto.RegisterDTO;
+import com.zephyr.mpbsuser.dto.UpdateInfoDTO;
 import com.zephyr.mpbsuser.dto.UpdatePasswordDTO;
 import com.zephyr.mpbsuser.entity.UserEntity;
 import org.apache.ibatis.annotations.*;
@@ -30,4 +31,8 @@ public interface UserMapper {
 
     @Select("SELECT * FROM user_info WHERE user_id = #{userId}")
     UserEntity findByUserId(String userId);
+
+    @Update("UPDATE user_info SET user_name = #{info.userName}, avatar_url = #{info.avatarUrl}, email = #{info.email} WHERE user_id = #{userId}")
+    boolean updateInfo(@Param("userId") String userId, @Param("info") UpdateInfoDTO info);
+
 }

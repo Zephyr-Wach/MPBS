@@ -62,8 +62,6 @@ const handleFileChange = async (event: Event) => {
 const download = async (id: string) => {
   try {
     const blob = await downloadFile(id);
-    console.log(blob);
-    console.log(blob instanceof Blob);
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     const fileInfo = files.value.find(f => f.id === id);

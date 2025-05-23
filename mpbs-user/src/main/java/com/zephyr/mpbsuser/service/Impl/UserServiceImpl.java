@@ -4,6 +4,7 @@ import com.zephyr.mpbscommon.utils.JwtUtil;
 import com.zephyr.mpbscommon.utils.Result;
 import com.zephyr.mpbsuser.dto.LoginDTO;
 import com.zephyr.mpbsuser.dto.RegisterDTO;
+import com.zephyr.mpbsuser.dto.UpdateInfoDTO;
 import com.zephyr.mpbsuser.dto.UpdatePasswordDTO;
 import com.zephyr.mpbsuser.entity.UserEntity;
 import com.zephyr.mpbsuser.mapper.UserMapper;
@@ -90,6 +91,11 @@ public class UserServiceImpl implements UserService {
         return authentication == null || !authentication.isAuthenticated()?
                 Result.failure(401, "未认证或身份信息缺失"):
                 Result.success(userMapper.findByUserId((String) authentication.getPrincipal()));
+    }
+
+    @Override
+    public boolean updateInfo(String userId, UpdateInfoDTO info) {
+        return userMapper.updateInfo(userId, info);
     }
 
 }
