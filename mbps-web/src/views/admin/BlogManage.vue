@@ -3,7 +3,7 @@
 </script>
 
 <template>
-
+<p>blog manage</p>
 </template>
 
 <style scoped>
