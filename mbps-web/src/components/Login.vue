@@ -9,6 +9,11 @@
           <button type="submit" :disabled="loading">{{ loading ? '登录中...' : '登录' }}</button>
           <button type="button" class="close-btn" @click="close">关闭</button>
         </div>
+        <p class="register-tip">
+          还没有账号，
+          <a href="#" @click.prevent="$emit('showRegister')">点击注册</a>
+        </p>
+
       </form>
       <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
     </div>

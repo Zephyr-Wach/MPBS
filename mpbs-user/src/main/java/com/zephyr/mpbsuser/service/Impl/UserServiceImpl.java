@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userMapper.findByUserName(registerDTO.getUserName());
         return user != null ?
                 Result.success(new HashMap<String, Object>() {{
-                    put("token", JwtUtil.generateToken(user.getUserId(),user.getUserPermission()));
+//                    put("token", JwtUtil.generateToken(user.getUserId(),user.getUserPermission()));
                     put("username", user.getUserName());
                     put("userId", user.getUserId());
                 }}) :

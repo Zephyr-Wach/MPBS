@@ -81,7 +81,7 @@ export async function registerAndSaveToken(userName: string, userPwd: string) {
 // checkUserName
 export const checkUserName = (userName: object) => {
     return request({
-        url: '/usr/login',
+        url: '/usr/checkUserName',
         method: 'get',
         params: userName,
     });
