@@ -1,7 +1,12 @@
 <template>
   <div>
     <div v-for="blog in blogList" :key="blog.id" class="blog-item" style="margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 1rem;">
-      <img v-if="blog.coverUrl" :src="blog.coverUrl" alt="封面" style="width: 150px; height: 100px; object-fit: cover; float: right; margin-left: 1rem;" />
+      <img
+          v-if="blog.coverUrl"
+          :src="getFullCoverUrl(blog.coverUrl)"
+          alt="封面"
+          style="width: 150px; height: 100px; object-fit: cover; float: right; margin-left: 1rem;"
+      />
       <h3>{{ blog.title }}</h3>
       <small>{{ formatDate(blog.createdAt) }}</small>
       <p>{{ blog.contentMd.slice(0, 100) + (blog.contentMd.length > 100 ? '...' : '') }}</p>
@@ -27,6 +32,16 @@ const blogList = ref<Array<{
   createdAt: string;
   contentMd: string;
 }>>([]);
+
+const baseUrl = 'http://localhost:6688'; // 你服务器地址，注意端口
+
+function getFullCoverUrl(url: string) {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  return baseUrl + url;
+}
 
 const loadBlogs = async () => {
   const res = await getBlogList(page.value, 10);
