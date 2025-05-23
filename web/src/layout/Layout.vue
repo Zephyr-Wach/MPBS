@@ -25,10 +25,7 @@ import { showLoginModal } from '@/router';
 
 function onLoginSuccess(userData) {
   showLoginModal.value = false;
-  // 登录成功后逻辑，比如刷新页面、跳转到profile等
-  // 这里举例跳转：
-  // import router from '@/router';
-  // router.push('/profile');
+
 }
 </script>
 

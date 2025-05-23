@@ -102,6 +102,7 @@ onMounted(loadDetail);
 }
 
 .content {
+  text-align: left;
   line-height: 1.75;
   font-size: 1.1rem;
   color: #444;
