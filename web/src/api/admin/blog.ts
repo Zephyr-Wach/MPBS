@@ -122,3 +122,36 @@ export function getMediaList(page = 1, size = 10): Promise<MediaListResponse> {
         params: { page, size },
     });
 }
+
+export interface BlogPost {
+    id: string;
+    title: string;
+    contentMd: string;
+    contentHtml?: string;
+    coverUrl?: string;
+    authorId?: string;
+    status: string;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+interface ApiResponse<T> {
+    code: number;
+    message: string;
+    data: T;
+}
+
+export function updateBlog(id: string, blog: Partial<BlogPost>): Promise<ApiResponse<null>> {
+    return request({
+        url: `/blog/update/${id}`,
+        method: 'put',
+        data: blog,
+    });
+}
+
+export function deleteBlog(id: string): Promise<ApiResponse<null>> {
+    return request({
+        url: `/blog/delete/${id}`,
+        method: 'delete',
+    });
+}

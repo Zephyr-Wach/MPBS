@@ -42,6 +42,13 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/views/admin/BlogManage.vue'),
             },
             {
+                path: 'admin/blogs/edit/:id',
+                name: 'BlogEdit',
+                component: () => import('@/views/admin/BlogEdit.vue'),
+                props: true,
+                meta: { requiresAuth: true },
+            },
+            {
                 path: 'admin/clouds',
                 name: 'CloudManage',
                 component: () => import('@/views/admin/MediaManage.vue'),

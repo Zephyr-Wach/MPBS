@@ -2,6 +2,7 @@ package com.zephyr.mpbsblog.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zephyr.mpbsblog.entity.BlogPostEntity;
 import com.zephyr.mpbsblog.mapper.BlogPostMapper;
 import com.zephyr.mpbsblog.service.BlogPostService;
@@ -16,7 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class BlogPostServiceImpl implements BlogPostService {
+public class BlogPostServiceImpl extends ServiceImpl<BlogPostMapper, BlogPostEntity> implements BlogPostService {
 
     @Autowired
     private BlogPostMapper blogPostMapper;
