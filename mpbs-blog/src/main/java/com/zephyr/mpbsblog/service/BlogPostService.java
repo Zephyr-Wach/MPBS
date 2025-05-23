@@ -1,5 +1,8 @@
 package com.zephyr.mpbsblog.service;
 
-public interface BlogPostService {
+import com.zephyr.mpbsblog.entity.BlogPostEntity;
+import com.zephyr.mpbscommon.utils.Result;
 
+public interface BlogPostService {
+    Result postBlog(BlogPostEntity BlogPostEntity);
 }
