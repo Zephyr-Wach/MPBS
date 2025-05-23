@@ -139,10 +139,11 @@ onMounted(() => {
   margin-top: 0.5rem;
   color: #444;
   font-size: 0.9rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;  /* 自动换行，强力断词 */
+  word-break: break-word;
+  white-space: normal;      /* 允许换行 */
 }
+
 .actions button {
   margin-left: 0.5rem;
   padding: 0.4rem 0.8rem;
