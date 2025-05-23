@@ -8,7 +8,7 @@ const error = ref<string | null>(null);
 const uploadedUrl = ref<string>('');
 const uploadedUrlShower = ref<string>('');
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:6688'; // 服务器基础URL，建议用环境变量
+const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:6688';
 
 function onSelectFile() {
   if (fileInput.value) {

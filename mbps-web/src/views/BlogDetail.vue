@@ -30,7 +30,7 @@ const blog = ref<null | {
 }>(null);
 
 const route = useRoute();
-const baseUrl = 'http://localhost:6688';
+const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:6688';
 
 function getFullCoverUrl(url: string) {
   if (!url) return '';
