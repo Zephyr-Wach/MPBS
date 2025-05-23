@@ -7,5 +7,4 @@
         INSERT INTO blog_post(title, content_md, content_html, cover_url, author_id, status, created_at, updated_at)
         VALUES(#{title}, #{contentMd}, #{contentHtml}, #{coverUrl}, #{authorId}, #{status}, #{createdAt}, #{updatedAt})
     </insert>
-
 </mapper>

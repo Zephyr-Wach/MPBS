@@ -1,5 +1,6 @@
 package com.zephyr.mpbsblog.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zephyr.mpbsblog.entity.BlogPostEntity;
 import com.zephyr.mpbsblog.service.BlogPostService;
 import com.zephyr.mpbscommon.utils.Result;
@@ -19,5 +20,16 @@ public class BlogPostController {
         blogPost.setAuthorId(authentication.getPrincipal().toString());
         return blogPostService.postBlog(blogPost);
     }
+
+
+    @GetMapping("/getBlogList")
+    public Result getBlogList(
+            @RequestParam(defaultValue = "1") int pageNum,
+            @RequestParam(defaultValue = "10") int pageSize) {
+
+        IPage<BlogPostEntity> pageResult = blogPostService.getBlogList(pageNum, pageSize);
+        return Result.success(pageResult);
+    }
+
 
 }

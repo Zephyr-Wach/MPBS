@@ -1,9 +1,11 @@
 package com.zephyr.mpbsblog.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.util.Date;
 
+@TableName("blog_post")
 @Data
 public class BlogPostEntity {
     private String id;
