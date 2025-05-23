@@ -33,5 +33,6 @@ jwt:
   expiration: 3600000
 
 file:
-  upload-path: "/home/MPBS"
-#  D:/Users/wangc/Downloads/mpbs
+  upload-path: /home/MPBS
+#  "D:/Users/wangc/Downloads/mpbs"
+#  /home/MPBS
