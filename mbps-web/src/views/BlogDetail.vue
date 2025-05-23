@@ -1,15 +1,14 @@
 <template>
   <div v-if="blog" class="blog-detail-container">
-    <h1>{{ blog.title }}</h1>
-    <small>{{ formatDate(blog.createdAt) }}</small>
+    <h1 class="title">{{ blog.title }}</h1>
+    <small class="date">{{ formatDate(blog.createdAt) }}</small>
     <img
         v-if="blog.coverUrl"
         :src="getFullCoverUrl(blog.coverUrl)"
         alt="封面"
-        style="max-width: 100%; margin: 1rem 0;"
+        class="cover-image"
     />
-    <!-- contentHtml 优先显示，如果没有则显示 contentMd -->
-    <div v-html="blog.contentHtml || markdownToHtml(blog.contentMd)"></div>
+    <div class="content" v-html="blog.contentHtml || markdownToHtml(blog.contentMd)"></div>
   </div>
   <div v-else class="loading">加载中...</div>
 </template>
@@ -65,14 +64,68 @@ onMounted(loadDetail);
 <style scoped>
 .blog-detail-container {
   max-width: 800px;
-  margin: 2rem auto;
-  padding: 1rem;
+  margin: 2.5rem auto;
+  padding: 1.5rem 2rem;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: #f9fafa;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  color: #333;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2de2be;
+  margin-bottom: 0.3rem;
+  user-select: text;
+}
+
+.date {
+  display: block;
+  color: #409eff;
+  font-size: 0.9rem;
+  margin-bottom: 1.2rem;
+  user-select: none;
+}
+
+.cover-image {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 1.8rem;
+  box-shadow: 0 2px 8px rgba(45, 226, 190, 0.3);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+.cover-image:hover {
+  transform: scale(1.03);
+}
+
+.content {
+  line-height: 1.75;
+  font-size: 1.1rem;
+  color: #444;
+  border-top: 1px solid #ddd;
+  padding-top: 1.5rem;
+  user-select: text;
+}
+
+.content p {
+  margin-bottom: 1rem;
+}
+
+.content img {
+  max-width: 100%;
+  border-radius: 6px;
+  margin: 1rem 0;
+  box-shadow: 0 1px 5px rgba(64, 158, 255, 0.2);
 }
 
 .loading {
   text-align: center;
-  color: #888;
+  color: #bbb;
   font-style: italic;
+  padding: 3rem 0;
+  user-select: none;
 }
 </style>
