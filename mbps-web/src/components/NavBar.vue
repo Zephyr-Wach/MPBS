@@ -5,9 +5,6 @@
     </h1>
     <nav>
       <ul class="nav-links">
-        <router-link to="/about">关于</router-link>
-<!--        <li><a href="#contact">联系</a></li>-->
-
         <router-link to="/profile">个人中心</router-link>
       </ul>
     </nav>
