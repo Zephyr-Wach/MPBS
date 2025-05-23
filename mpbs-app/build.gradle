@@ -12,6 +12,11 @@ repositories {
     mavenCentral()
 }
 
+// Gradle 7+ 推荐写法
+bootJar {
+    mainClass.set('com.zephyr.mpbsapp.MpbsAppApplication')
+}
+
 dependencies {
     implementation project(':mpbs-auth')
     implementation project(':mpbs-blog')
@@ -27,15 +32,12 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
     runtimeOnly 'mysql:mysql-connector-java:8.0.33'
-    dependencies {
-        compileOnly 'org.projectlombok:lombok'
-        annotationProcessor 'org.projectlombok:lombok'
-    }
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 }
 
-springBoot {
-    mainClass = 'com.zephyr.mpbsapp.MpbsAppApplication'
-}
+// 不需要重复写 springBoot.mainClass，bootJar中指定即可
 
 tasks.named('test') {
     useJUnitPlatform()

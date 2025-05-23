@@ -9,9 +9,13 @@ spring:
       max-request-size: 200MB # 一次请求能上传的所有文件总大小，可以单独设置，比max-file-size大
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mbps?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
-    username: mbps
-    password: mbps@Z112801
+    url: jdbc:mysql://127.0.0.1:3306/mpbs?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+    username: MPBS
+    password: "Hd.!.FW#R4-rjX*@YcdD"
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -29,4 +33,5 @@ jwt:
   expiration: 3600000
 
 file:
-  upload-path: "D:/Users/wangc/Downloads/mpbs"
+  upload-path: "/home/MPBS"
+#  D:/Users/wangc/Downloads/mpbs
