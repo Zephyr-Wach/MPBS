@@ -8,4 +8,6 @@ public interface BlogPostService {
     Result postBlog(BlogPostEntity BlogPostEntity);
 
     IPage<BlogPostEntity> getBlogList(int pageNum, int pageSize) ;
+
+    BlogPostEntity getBlogDetail(String id);
 }

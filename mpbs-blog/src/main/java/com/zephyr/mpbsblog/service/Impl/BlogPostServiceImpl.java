@@ -37,4 +37,9 @@ public class BlogPostServiceImpl implements BlogPostService {
         return blogPostMapper.selectPage(page, query);
     }
 
+    @Override
+    public BlogPostEntity getBlogDetail(String id) {
+        return blogPostMapper.selectByIdPublished(id);
+    }
+
 }

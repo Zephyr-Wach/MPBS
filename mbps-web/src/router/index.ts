@@ -20,6 +20,12 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/views/Blog.vue'),
             },
             {
+                path: 'blog/detail/:id',
+                name: 'BlogDetail',
+                component: () => import('@/views/BlogDetail.vue'),  // 博客详情页
+                props: true, // 这样组件可以直接通过 props 接收 id
+            },
+            {
                 path: 'cloud',
                 name: 'Cloud',
                 component: () => import('@/views/Cloud.vue'),

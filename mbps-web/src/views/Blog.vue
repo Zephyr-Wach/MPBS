@@ -1,6 +1,12 @@
 <template>
   <div>
-    <div v-for="blog in blogList" :key="blog.id" class="blog-item" style="margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 1rem;">
+    <div
+        v-for="blog in blogList"
+        :key="blog.id"
+        class="blog-item"
+        style="margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 1rem; cursor: pointer;"
+        @click="goDetail(blog.id)"
+    >
       <img
           v-if="blog.coverUrl"
           :src="getFullCoverUrl(blog.coverUrl)"
@@ -21,19 +27,22 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { getBlogList } from '@/api/admin/blog';
 
 const page = ref(1);
 const pages = ref(1);
-const blogList = ref<Array<{
-  id: string;
-  title: string;
-  coverUrl?: string;
-  createdAt: string;
-  contentMd: string;
-}>>([]);
+const blogList = ref<
+    Array<{
+      id: string;
+      title: string;
+      coverUrl?: string;
+      createdAt: string;
+      contentMd: string;
+    }>
+>([]);
 
-const baseUrl = 'http://localhost:6688'; // 你服务器地址，注意端口
+const baseUrl = 'http://localhost:6688'; // 服务器地址
 
 function getFullCoverUrl(url: string) {
   if (!url) return '';
@@ -41,6 +50,12 @@ function getFullCoverUrl(url: string) {
     return url;
   }
   return baseUrl + url;
+}
+
+const router = useRouter();
+
+function goDetail(id: string) {
+  router.push({ path: `/blog/detail/${id}` });
 }
 
 const loadBlogs = async () => {

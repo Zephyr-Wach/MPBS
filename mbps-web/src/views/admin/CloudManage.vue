@@ -5,7 +5,8 @@ import { uploadFile, generateUrl } from '@/api/public/media';
 const fileInput = ref<HTMLInputElement | null>(null);
 const uploading = ref(false);
 const error = ref<string | null>(null);
-const uploadedUrl = ref<string>('');  // 最终访问的完整URL
+const uploadedUrl = ref<string>('');
+const uploadedUrlShower = ref<string>('');
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:6688'; // 服务器基础URL，建议用环境变量
 
@@ -24,6 +25,7 @@ async function onFileChange(event: Event) {
   uploading.value = true;
   error.value = null;
   uploadedUrl.value = '';
+  uploadedUrlShower.value = '';
 
   try {
     // 1. 上传文件
@@ -41,7 +43,8 @@ async function onFileChange(event: Event) {
     }
 
     // 3. 拼接完整URL
-    uploadedUrl.value = baseUrl + urlRes.data;
+    uploadedUrl.value =urlRes.data;
+    uploadedUrlShower.value = baseUrl + urlRes.data;
   } catch (e) {
     error.value = '上传过程中出现错误，请稍后重试';
   } finally {
@@ -68,10 +71,13 @@ async function onFileChange(event: Event) {
 
     <div v-if="uploadedUrl" class="preview">
       <p>文件访问链接：</p>
+      <a :href="uploadedUrlShower" target="_blank">{{ uploadedUrlShower }}</a>
+
+      <p>封面访问链接：</p>
       <a :href="uploadedUrl" target="_blank">{{ uploadedUrl }}</a>
 
       <!-- 简单图片预览，若不是图片不会显示 -->
-      <img v-if="uploadedUrl.match(/\.(jpeg|jpg|gif|png|svg)$/i)" :src="uploadedUrl" alt="文件预览" />
+      <img v-if="uploadedUrl.match(/\.(jpeg|jpg|gif|png|svg)$/i)" :src="uploadedUrlShower" alt="文件预览" />
     </div>
   </div>
 </template>

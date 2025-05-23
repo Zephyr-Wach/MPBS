@@ -22,6 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/static/**").permitAll()
+                .antMatchers("/blog/**").permitAll()
                 .antMatchers("/public/**").permitAll()   // 公开接口，token 可选
                 .antMatchers("/usr/**").permitAll()      // 登录注册接口，token 可选
                 .antMatchers("/admin/**").hasRole("ULTIMATE") // 需要 ULTIMATE 角色

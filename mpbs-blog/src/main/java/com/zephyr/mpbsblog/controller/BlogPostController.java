@@ -31,5 +31,13 @@ public class BlogPostController {
         return Result.success(pageResult);
     }
 
+    @GetMapping("/detail/{id}")
+    public Result getBlogDetail(@PathVariable String id) {
+        BlogPostEntity blog = blogPostService.getBlogDetail(id);
+        if (blog == null) {
+            return Result.failure(404,"文章不存在或未发布");
+        }
+        return Result.success(blog);
+    }
 
 }

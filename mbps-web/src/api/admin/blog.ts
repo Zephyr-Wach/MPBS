@@ -50,3 +50,25 @@ export function getBlogList(page = 1, size = 10): Promise<BlogListResponse> {
         params: { page, size },
     });
 }
+
+interface BlogDetail {
+    id: string;
+    title: string;
+    contentHtml: string;
+    contentMd: string;
+    coverUrl?: string;
+    createdAt: string;
+}
+
+interface BlogDetailResponse {
+    code: number;
+    message: string;
+    data: BlogDetail;
+}
+
+export function getBlogDetail(id: string): Promise<BlogDetailResponse> {
+    return request({
+        url: `/blog/detail/${id}`,
+        method: 'get',
+    });
+}
