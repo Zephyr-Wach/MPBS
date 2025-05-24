@@ -11,7 +11,7 @@
  Target Server Version : 80039 (8.0.39)
  File Encoding         : 65001
 
- Date: 23/05/2025 16:47:43
+ Date: 24/05/2025 13:40:56
 */
 
 SET NAMES utf8mb4;
@@ -34,7 +34,7 @@ CREATE TABLE `blog_post`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `author_id`(`author_id` ASC) USING BTREE,
   CONSTRAINT `blog_post_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `user_info` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of blog_post
@@ -55,7 +55,7 @@ CREATE TABLE `file_permissions`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `id`(`id` ASC) USING BTREE,
   UNIQUE INDEX `file_id`(`file_id` ASC, `role_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 100000010 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 100000012 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of file_permissions
@@ -139,6 +139,7 @@ CREATE TABLE `temporary_links`  (
   `file_id` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `expires_at` datetime NOT NULL,
   `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `temporary_links_ibfk_1`(`file_id` ASC) USING BTREE,
   CONSTRAINT `temporary_links_ibfk_1` FOREIGN KEY (`file_id`) REFERENCES `files` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
@@ -165,8 +166,32 @@ CREATE TABLE `user_info`  (
 -- ----------------------------
 -- Records of user_info
 -- ----------------------------
-INSERT INTO `user_info` VALUES (1000000010, 'admin', 'admin', '', 'http://localhost:6688/static/2e3148a20aeb48b6a7b30acad9edda1a.png', 'ULTIMATE');
-INSERT INTO `user_info` VALUES (1000000011, 'tester', 'tester', '', 'http://localhost:6688/static/33e1fdc1cb99445e8d76921bb73bd936.png', 'NORMAl');
+INSERT INTO `user_info` VALUES (1000000010, 'admin', 'admin', '', '', 'ULTIMATE');
+
+-- ----------------------------
+-- Triggers structure for table blog_post
+-- ----------------------------
+DROP TRIGGER IF EXISTS `trg_blog_post_before_insert`;
+delimiter ;;
+CREATE TRIGGER `trg_blog_post_before_insert` BEFORE INSERT ON `blog_post` FOR EACH ROW BEGIN
+  IF NEW.created_at IS NULL THEN
+    SET NEW.created_at = NOW();
+  END IF;
+  SET NEW.updated_at = NOW();
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table blog_post
+-- ----------------------------
+DROP TRIGGER IF EXISTS `trg_blog_post_before_update`;
+delimiter ;;
+CREATE TRIGGER `trg_blog_post_before_update` BEFORE UPDATE ON `blog_post` FOR EACH ROW BEGIN
+  SET NEW.updated_at = NOW();
+END
+;;
+delimiter ;
 
 -- ----------------------------
 -- Triggers structure for table files
