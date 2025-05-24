@@ -10,7 +10,7 @@ interface UserInfoDTO {
   avatarUrl?: string;
   userPermission?: string;
 }
-
+const permissionOptions = ['NORMAL', 'JUNIOR', 'INTERMEDIATE', 'SENIOR', 'ULTIMATE'];
 const users = ref<UserInfoDTO[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
@@ -121,8 +121,13 @@ onMounted(() => {
         </div>
         <div class="form-row">
           <label>权限:</label>
-          <input v-model="form.userPermission" />
+          <select v-model="form.userPermission" required>
+            <option v-for="perm in permissionOptions" :key="perm" :value="perm">
+              {{ perm }}
+            </option>
+          </select>
         </div>
+
 
         <div class="form-actions">
           <button type="submit" class="btn save-btn">保存</button>
