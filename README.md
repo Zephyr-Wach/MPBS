@@ -3,6 +3,7 @@
 
 #### 介绍
 my personal blog site
+可以看看我运行的的博客 [MPBS](http://1.94.120.221/)
 
 # MPBS - 多模块博客系统
 
