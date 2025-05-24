@@ -202,7 +202,15 @@ async function submitChangePassword() {
       </div>
       <div class="info-row"><span>用户ID:</span> {{ userInfo.userId }}</div>
       <div class="info-row"><span>用户名:</span> {{ userInfo.userName }}</div>
-      <div class="info-row"><span>邮箱:</span> {{ userInfo.email ?? '未设置' }}</div>
+      <div class="info-row">
+        <span>邮箱:</span>
+        <input
+            type="email"
+            v-model="userInfo.email"
+            placeholder="请输入邮箱"
+            class="input-email"
+        />
+      </div>
       <div class="info-row"><span>权限:</span> {{ userInfo.userPermission }}</div>
       <button class="update-button" @click="updateInfo">修改</button>
 
@@ -384,4 +392,26 @@ h2 {
   opacity: 0.6;
   cursor: not-allowed;
 }
+.input-email {
+  width: 220px;         /* 限制宽度 */
+  padding: 6px 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  color: #333;
+  text-align: right;    /* 文本靠右 */
+}
+
+.input-email::placeholder {
+  color: #aaa;
+  text-align: right;    /* placeholder 也靠右 */
+}
+
+.input-email:focus {
+  border-color: #409eff;
+  box-shadow: 0 0 5px rgba(64,158,255,0.5);
+}
+
 </style>
