@@ -33,10 +33,10 @@ jwt:
   expiration: 3600000
 
 public:
-  base-url: http://localhost:8080
+  base-url: http://1.94.120.221:80
 #  https://files.example.com
-
+#  http://localhost:80
 file:
-  upload-path: "D:/Users/wangc/Downloads/mpbs"
+  upload-path: /home/MPBS
 #  "D:/Users/wangc/Downloads/mpbs"
 #  /home/MPBS

@@ -82,12 +82,55 @@ function extractFilename(path: string) {
 }
 
 // 复制文本到剪贴板
+// function copyToClipboard(text: string) {
+//   navigator.clipboard.writeText(text).then(() => {
+//     alert('复制成功');
+//   }).catch(() => {
+//     alert('复制失败，请手动复制');
+//   });
+// }
 function copyToClipboard(text: string) {
-  navigator.clipboard.writeText(text).then(() => {
-    alert('复制成功');
-  }).catch(() => {
+  if (navigator.clipboard && window.isSecureContext) {
+    // HTTPS 或 localhost
+    navigator.clipboard.writeText(text).then(() => {
+      alert('复制成功');
+    }).catch(() => {
+      // 失败则使用回退方法
+      fallbackCopy(text);
+    });
+  } else {
+    // HTTP或不支持Clipboard API环境，使用回退方法
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text: string) {
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+
+  // 避免页面滚动
+  textArea.style.position = 'fixed';
+  textArea.style.top = '0';
+  textArea.style.left = '0';
+  textArea.style.width = '2em';
+  textArea.style.height = '2em';
+  textArea.style.padding = '0';
+  textArea.style.border = 'none';
+  textArea.style.outline = 'none';
+  textArea.style.boxShadow = 'none';
+  textArea.style.background = 'transparent';
+
+  document.body.appendChild(textArea);
+  textArea.select();
+
+  try {
+    const successful = document.execCommand('copy');
+    alert(successful ? '复制成功' : '复制失败，请手动复制');
+  } catch (err) {
     alert('复制失败，请手动复制');
-  });
+  }
+
+  document.body.removeChild(textArea);
 }
 
 // 获取媒体列表

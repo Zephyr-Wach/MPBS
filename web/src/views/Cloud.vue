@@ -78,13 +78,26 @@ const download = async (id: string) => {
   }
 };
 
+// const generateShareLink = async (fileId: string) => {
+//   try {
+//     const res = await getFileShareLink(fileId);
+//     if (res.code === 0) {
+//       const shareUrl = res.data;
+//       await navigator.clipboard.writeText(shareUrl);
+//       alert('分享链接已复制到剪贴板:\n' + shareUrl);
+//     } else {
+//       alert('生成分享链接失败: ' + res.msg);
+//     }
+//   } catch (err) {
+//     alert('生成分享链接失败: ' + err);
+//   }
+// };
 const generateShareLink = async (fileId: string) => {
   try {
     const res = await getFileShareLink(fileId);
     if (res.code === 0) {
       const shareUrl = res.data;
-      await navigator.clipboard.writeText(shareUrl);
-      alert('分享链接已复制到剪贴板:\n' + shareUrl);
+      await copyTextToClipboard(shareUrl);  // 调用新复制函数
     } else {
       alert('生成分享链接失败: ' + res.msg);
     }
@@ -92,6 +105,49 @@ const generateShareLink = async (fileId: string) => {
     alert('生成分享链接失败: ' + err);
   }
 };
+
+async function copyTextToClipboard(text: string) {
+  if (navigator.clipboard && window.isSecureContext) {
+    // HTTPS 或 localhost，优先使用现代API
+    try {
+      await navigator.clipboard.writeText(text);
+      alert('分享链接已复制到剪贴板:\n' + text);
+    } catch {
+      fallbackCopy(text);
+    }
+  } else {
+    // HTTP等不安全上下文，使用传统方法
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text: string) {
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+  textArea.style.position = 'fixed';  // 避免页面滚动
+  textArea.style.top = '0';
+  textArea.style.left = '0';
+  textArea.style.width = '2em';
+  textArea.style.height = '2em';
+  textArea.style.padding = '0';
+  textArea.style.border = 'none';
+  textArea.style.outline = 'none';
+  textArea.style.boxShadow = 'none';
+  textArea.style.background = 'transparent';
+
+  document.body.appendChild(textArea);
+  textArea.select();
+
+  try {
+    const successful = document.execCommand('copy');
+    alert(successful ? '分享链接已复制到剪贴板:\n' + text : '复制失败，请手动复制链接');
+  } catch {
+    alert('复制失败，请手动复制链接');
+  }
+
+  document.body.removeChild(textArea);
+}
+
 
 loadFiles();
 </script>
