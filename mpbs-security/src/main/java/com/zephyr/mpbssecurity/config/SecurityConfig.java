@@ -21,6 +21,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers("/files/share/download/**").permitAll()
                 .antMatchers("/static/**").permitAll()
                 .antMatchers("/blog/**").permitAll()
                 .antMatchers("/public/**").permitAll()   // 公开接口，token 可选

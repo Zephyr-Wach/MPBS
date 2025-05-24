@@ -1,5 +1,6 @@
 package com.zephyr.mpbsfiles.service;
 
+import com.zephyr.mpbscommon.utils.Result;
 import com.zephyr.mpbsfiles.dto.FilesProcessDTO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,4 +14,8 @@ public interface FileService {
 
     // 根据id查询文件信息
     FilesProcessDTO getFileById(String id);
+
+    Result shareFile(String fileId);
+
+    Result deleteFile(String fileId);
 }

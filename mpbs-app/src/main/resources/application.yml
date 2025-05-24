@@ -32,7 +32,11 @@ jwt:
   secret: mbpsSecretKeyHere
   expiration: 3600000
 
+public:
+  base-url: http://localhost:8080
+#  https://files.example.com
+
 file:
-  upload-path: /home/MPBS
+  upload-path: "D:/Users/wangc/Downloads/mpbs"
 #  "D:/Users/wangc/Downloads/mpbs"
 #  /home/MPBS

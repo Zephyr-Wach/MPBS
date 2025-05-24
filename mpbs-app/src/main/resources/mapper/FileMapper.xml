@@ -37,5 +37,9 @@
         WHERE id = #{id}
     </select>
 
+    <delete id="deleteById" parameterType="String" >
+            DELETE FROM files WHERE id = #{id}
+    </delete>
+
 </mapper>
 
