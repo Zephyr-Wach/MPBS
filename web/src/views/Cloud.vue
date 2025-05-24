@@ -11,12 +11,13 @@
     <ul class="file-list">
       <li v-for="file in files" :key="file.id" class="file-item">
         <div class="file-info">
-          <span class="filename">{{ file.filename }}</span>
+          <span class="filename" :title="file.filename">{{ file.filename }}</span>
           <span class="filesize">{{ file.size }} bytes</span>
         </div>
         <div class="btn-group">
           <button class="btn download-btn" @click="download(file.id)">下载</button>
           <button class="btn share-btn" @click="generateShareLink(file.id)">生成分享链接</button>
+          <button class="btn del-btn" @click="delfile(file.id)">删除</button>
         </div>
       </li>
     </ul>
@@ -26,7 +27,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { getFilesList, uploadFile, downloadFile, FilesProcessDTO } from '@/api/user/cloud';
-import { getFileShareLink } from '@/api/admin/file';
+import { getFileShareLink, delFile } from '@/api/admin/file';
 
 const files = ref<FilesProcessDTO[]>([]);
 
@@ -78,26 +79,12 @@ const download = async (id: string) => {
   }
 };
 
-// const generateShareLink = async (fileId: string) => {
-//   try {
-//     const res = await getFileShareLink(fileId);
-//     if (res.code === 0) {
-//       const shareUrl = res.data;
-//       await navigator.clipboard.writeText(shareUrl);
-//       alert('分享链接已复制到剪贴板:\n' + shareUrl);
-//     } else {
-//       alert('生成分享链接失败: ' + res.msg);
-//     }
-//   } catch (err) {
-//     alert('生成分享链接失败: ' + err);
-//   }
-// };
 const generateShareLink = async (fileId: string) => {
   try {
     const res = await getFileShareLink(fileId);
     if (res.code === 0) {
       const shareUrl = res.data;
-      await copyTextToClipboard(shareUrl);  // 调用新复制函数
+      await copyTextToClipboard(shareUrl);
     } else {
       alert('生成分享链接失败: ' + res.msg);
     }
@@ -106,9 +93,22 @@ const generateShareLink = async (fileId: string) => {
   }
 };
 
+const delfile = async (fileId: string) => {
+  try {
+    const res = await delFile(fileId);
+    if (res.code === 0) {
+      alert('删除成功');
+      loadFiles();
+    } else {
+      alert('删除失败: ' + res.msg);
+    }
+  } catch (err) {
+    alert('删除失败: ' + err);
+  }
+};
+
 async function copyTextToClipboard(text: string) {
   if (navigator.clipboard && window.isSecureContext) {
-    // HTTPS 或 localhost，优先使用现代API
     try {
       await navigator.clipboard.writeText(text);
       alert('分享链接已复制到剪贴板:\n' + text);
@@ -116,7 +116,6 @@ async function copyTextToClipboard(text: string) {
       fallbackCopy(text);
     }
   } else {
-    // HTTP等不安全上下文，使用传统方法
     fallbackCopy(text);
   }
 }
@@ -124,7 +123,7 @@ async function copyTextToClipboard(text: string) {
 function fallbackCopy(text: string) {
   const textArea = document.createElement('textarea');
   textArea.value = text;
-  textArea.style.position = 'fixed';  // 避免页面滚动
+  textArea.style.position = 'fixed';
   textArea.style.top = '0';
   textArea.style.left = '0';
   textArea.style.width = '2em';
@@ -148,54 +147,53 @@ function fallbackCopy(text: string) {
   document.body.removeChild(textArea);
 }
 
-
 loadFiles();
 </script>
 
 <style scoped>
 .cloud {
-  max-width: 600px;
+  max-width: 640px;
   margin: 40px auto;
   background-color: #fff;
-  padding: 32px 40px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(45, 226, 190, 0.15);
+  padding: 36px 48px;
+  border-radius: 18px;
+  box-shadow: 0 12px 36px rgba(45, 226, 190, 0.18);
   font-family: "Helvetica Neue", Arial, sans-serif;
-  color: #333;
+  color: #2b2b2b;
   user-select: none;
 }
 
 h2 {
   color: #409eff;
   text-align: center;
-  margin-bottom: 28px;
-  font-size: 26px;
+  margin-bottom: 32px;
+  font-size: 28px;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
 }
 
 .upload-area {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 36px;
 }
 
 .upload-label {
-  background-color: #2de2be;
+  background: linear-gradient(135deg, #2de2be 0%, #25c9a0 100%);
   color: #fff;
-  padding: 12px 28px;
-  border-radius: 12px;
+  padding: 14px 32px;
+  border-radius: 14px;
   cursor: pointer;
   font-weight: 700;
-  font-size: 16px;
-  box-shadow: 0 4px 12px rgba(45, 226, 190, 0.5);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  font-size: 17px;
+  box-shadow: 0 6px 14px rgba(45, 226, 190, 0.7);
   user-select: none;
   display: inline-block;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .upload-label:hover {
-  background-color: #24c9a7;
-  box-shadow: 0 6px 16px rgba(36, 201, 167, 0.6);
+  background: linear-gradient(135deg, #24c9a7 0%, #1ea58a 100%);
+  box-shadow: 0 8px 20px rgba(36, 201, 167, 0.8);
 }
 
 .file-list {
@@ -208,18 +206,18 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f5f7fa;
+  background: #f0f2f5;
   border-left: 6px solid #409eff;
-  margin-bottom: 16px;
-  padding: 16px 20px;
-  border-radius: 12px;
-  box-shadow: 0 3px 12px rgba(64, 158, 255, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  margin-bottom: 18px;
+  padding: 18px 24px;
+  border-radius: 14px;
+  box-shadow: 0 5px 16px rgba(64, 158, 255, 0.12);
+  transition: transform 0.25s ease, box-shadow 0.35s ease;
 }
 
 .file-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(64, 158, 255, 0.2);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(64, 158, 255, 0.22);
 }
 
 .file-info {
@@ -231,7 +229,7 @@ h2 {
 
 .filename {
   font-weight: 700;
-  font-size: 16px;
+  font-size: 17px;
   color: #2b2b2b;
   white-space: nowrap;
   overflow: hidden;
@@ -239,46 +237,63 @@ h2 {
 }
 
 .filesize {
-  font-size: 13px;
+  font-size: 14px;
   color: #888;
-  margin-top: 4px;
+  margin-top: 6px;
   user-select: text;
 }
 
 .btn-group {
   display: flex;
-  gap: 12px;
+  gap: 14px;
 }
 
 .btn {
-  padding: 8px 18px;
-  border-radius: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
   cursor: pointer;
   border: none;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   user-select: none;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  min-width: 100px;
+  text-align: center;
 }
 
 .download-btn {
   background-color: #409eff;
   color: #fff;
+  box-shadow: 0 6px 18px rgba(64, 158, 255, 0.6);
 }
 
 .download-btn:hover {
   background-color: #307fe8;
-  box-shadow: 0 5px 15px rgba(48, 127, 232, 0.6);
+  box-shadow: 0 8px 24px rgba(48, 127, 232, 0.85);
 }
 
 .share-btn {
   background-color: #2de2be;
   color: #fff;
+  box-shadow: 0 6px 18px rgba(45, 226, 190, 0.6);
 }
 
 .share-btn:hover {
   background-color: #24c9a7;
-  box-shadow: 0 5px 15px rgba(36, 201, 167, 0.6);
+  box-shadow: 0 8px 24px rgba(36, 201, 167, 0.85);
+}
+
+.del-btn {
+  background-color: #ddd;
+  color: #555;
+  box-shadow: 0 4px 12px rgba(153, 153, 153, 0.4);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+}
+
+.del-btn:hover {
+  background-color: #bbb;
+  color: #222;
+  box-shadow: 0 6px 20px rgba(136, 136, 136, 0.7);
 }
 </style>

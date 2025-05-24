@@ -164,7 +164,7 @@ public class FilesController {
     /**
      * delete file
      */
-    @PostMapping("/{fileId}")
+    @PostMapping("/{fileId}/del")
     public Result deleteFile(@PathVariable String fileId) {
         return fileService.deleteFile(fileId);
     }

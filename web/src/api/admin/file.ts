@@ -6,3 +6,10 @@ export function getFileShareLink(fileId: string) {
         method: 'post',
     });
 }
+
+export function delFile(fileId: string) {
+    return request({
+        url: `/files/${fileId}/del`,
+        method: 'post',
+    });
+}
