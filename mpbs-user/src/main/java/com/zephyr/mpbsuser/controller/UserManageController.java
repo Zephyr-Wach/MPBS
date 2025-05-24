@@ -1,7 +1,7 @@
 package com.zephyr.mpbsuser.controller;
 
 import com.zephyr.mpbscommon.utils.Result;
-import com.zephyr.mpbsuser.dto.UpdateInfoDTO;
+import com.zephyr.mpbssecurity.utils.PasswordUtils;
 import com.zephyr.mpbsuser.dto.UserInfoDTO;
 import com.zephyr.mpbsuser.entity.UserEntity;
 import com.zephyr.mpbsuser.service.UserService;

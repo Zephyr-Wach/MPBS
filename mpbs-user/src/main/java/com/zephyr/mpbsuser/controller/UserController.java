@@ -6,6 +6,7 @@ import com.zephyr.mpbsuser.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.zephyr.mpbscommon.utils.Result;
+import com.zephyr.mpbssecurity.utils.PasswordUtils;
 
 @RestController
 @RequestMapping("/usr")
@@ -19,7 +20,9 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    public Result login(@RequestBody LoginDTO loginDTO) {return userService.login(loginDTO);}
+    public Result login(@RequestBody LoginDTO loginDTO) {
+        return userService.login(loginDTO);
+    }
 
     /**
      * register
