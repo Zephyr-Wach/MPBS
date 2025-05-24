@@ -42,11 +42,11 @@ my personal blog site
 2. 配置
    修改 application.yml，填写你的相关信息。
 
-3.启动服务
+3. 启动服务
 ```
 ./gradlew :mpbs-app:bootRun
 ```
-4.前端启动
+4. 前端启动
 ```
 cd web
 npm install
