@@ -8,6 +8,11 @@
       </div>
     </div>
 
+    <!-- 页脚备案信息 -->
+    <footer class="footer">
+      © 2025 MPBS 版权所有 | <span style="color: gray;">备案信息待补充</span>
+    </footer>
+
     <!-- 登录弹窗 -->
     <Login
         v-if="showLoginModal"
@@ -16,6 +21,7 @@
     />
   </div>
 </template>
+
 
 <script setup>
 import Sidebar from '@/components/SideBar.vue';
@@ -63,4 +69,17 @@ function onLoginSuccess(userData) {
   padding: 16px;
   overflow-y: auto;
 }
+.footer {
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 13px;
+  color: #999;
+  background-color: #f1f1f1;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+}
+
 </style>
