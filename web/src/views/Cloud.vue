@@ -15,6 +15,7 @@
           <span class="filesize">{{ file.size }} bytes</span>
         </div>
         <button class="download-btn" @click="download(file.id)">下载</button>
+        <button class="share-btn" @click="generateShareLink(file.id)">生成分享链接</button>
       </li>
     </ul>
   </div>
@@ -23,6 +24,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { getFilesList, uploadFile, downloadFile, FilesProcessDTO } from '@/api/user/cloud';
+import {getFileShareLink } from '@/api/admin/file';
 
 const files = ref<FilesProcessDTO[]>([]);
 
@@ -75,7 +77,21 @@ const download = async (id: string) => {
     alert('下载失败: ' + err);
   }
 };
-
+// 生成分享链接并复制到剪贴板
+const generateShareLink = async (fileId: string) => {
+  try {
+    const res = await getFileShareLink(fileId);
+    if (res.code === 0) {
+      const shareUrl = res.data; // 后端返回的分享链接
+      await navigator.clipboard.writeText(shareUrl);
+      alert('分享链接已复制到剪贴板:\n' + shareUrl);
+    } else {
+      alert('生成分享链接失败: ' + res.msg);
+    }
+  } catch (err) {
+    alert('生成分享链接失败: ' + err);
+  }
+};
 loadFiles();
 </script>
 
