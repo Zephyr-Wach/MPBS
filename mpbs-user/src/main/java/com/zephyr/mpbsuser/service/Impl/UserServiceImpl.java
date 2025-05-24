@@ -2,10 +2,7 @@ package com.zephyr.mpbsuser.service.Impl;
 
 import com.zephyr.mpbscommon.utils.JwtUtil;
 import com.zephyr.mpbscommon.utils.Result;
-import com.zephyr.mpbsuser.dto.LoginDTO;
-import com.zephyr.mpbsuser.dto.RegisterDTO;
-import com.zephyr.mpbsuser.dto.UpdateInfoDTO;
-import com.zephyr.mpbsuser.dto.UpdatePasswordDTO;
+import com.zephyr.mpbsuser.dto.*;
 import com.zephyr.mpbsuser.entity.UserEntity;
 import com.zephyr.mpbsuser.mapper.UserMapper;
 import com.zephyr.mpbsuser.service.UserService;
@@ -16,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -98,4 +96,14 @@ public class UserServiceImpl implements UserService {
         return userMapper.updateInfo(userId, info);
     }
 
+    @Override
+    public List<UserEntity> getAllUsers() {
+        // 查询所有用户，注意你原有Mapper没有此方法，需要补充
+        return userMapper.findAllUsers();
+    }
+
+    @Override
+    public boolean updateUserInfo(String userId, UserInfoDTO info) {
+        return userMapper.updateUserInfo(userId, info);
+    }
 }
