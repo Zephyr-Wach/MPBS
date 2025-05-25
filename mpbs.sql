@@ -39,7 +39,26 @@ CREATE TABLE `blog_post`  (
 -- ----------------------------
 -- Records of blog_post
 -- ----------------------------
-
+-- ----------------------------
+-- Table structure for blog_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_comment`;
+CREATE TABLE `blog_comment`  (
+                                 `id` bigint NOT NULL AUTO_INCREMENT,
+                                 `post_id` bigint NOT NULL,
+                                 `user_id` bigint NOT NULL,
+                                 `parent_id` bigint NULL DEFAULT NULL,
+                                 `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+                                 `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+                                 `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                 PRIMARY KEY (`id`) USING BTREE,
+                                 INDEX `idx_post_id`(`post_id` ASC) USING BTREE,
+                                 INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
+                                 INDEX `idx_parent_id`(`parent_id` ASC) USING BTREE,
+                                 CONSTRAINT `fk_comment_parent` FOREIGN KEY (`parent_id`) REFERENCES `blog_comment` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+                                 CONSTRAINT `fk_comment_post` FOREIGN KEY (`post_id`) REFERENCES `blog_post` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+                                 CONSTRAINT `fk_comment_user` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 -- ----------------------------
 -- Table structure for file_permissions
 -- ----------------------------
