@@ -1,8 +1,10 @@
 package com.zephyr.mpbsfiles.controller;
 
+import com.zephyr.mpbscommon.utils.BeanConvertUtil;
 import com.zephyr.mpbscommon.utils.Result;
 import com.zephyr.mpbsfiles.dto.MediaProcessDTO;
 import com.zephyr.mpbsfiles.service.MediaService;
+import com.zephyr.mpbsfiles.vo.MediaProcessVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.core.Authentication;
@@ -21,7 +23,10 @@ public class MediaController {
     private MediaService mediaService;
 
     /**
-     * upload picture/video
+     * 上传图片或视频
+     * @param authentication 认证信息
+     * @param file 上传的文件
+     * @return 操作结果，包含上传后的媒体信息或错误信息
      */
     @PostMapping("/upload")
     public Result uploadFile(Authentication authentication, @RequestParam("file") MultipartFile file) {
@@ -31,12 +36,17 @@ public class MediaController {
         String uploaderId = authentication.getPrincipal().toString();
         try {
             MediaProcessDTO dto = mediaService.uploadMedia(file, uploaderId);
-            return Result.success(dto);
+            return Result.success(BeanConvertUtil.convert(dto, MediaProcessVO.class));
         } catch (IOException | IllegalArgumentException e) {
             return Result.failure(500, e.getMessage());
         }
     }
 
+    /**
+     * 生成媒体文件访问URL
+     * @param mediaId 媒体文件ID
+     * @return 操作结果，包含媒体访问URL或错误信息
+     */
     @GetMapping("/generateUrl/{mediaId}")
     public Result generateMediaUrl(@PathVariable("mediaId") String mediaId) {
         MediaProcessDTO dto = mediaService.getMediaById(mediaId);
@@ -44,7 +54,6 @@ public class MediaController {
             return Result.failure(404, "Media not found");
         }
 
-        // 从完整路径中提取文件名
         String fileName = Paths.get(dto.getStoragePath()).getFileName().toString();
         String url = "/static/" + fileName;
 
@@ -52,7 +61,10 @@ public class MediaController {
     }
 
     /**
-     * delete picture/video
+     * 删除图片或视频
+     * @param authentication 认证信息
+     * @param mediaId 媒体文件ID
+     * @return 操作结果，成功或失败信息（无权限或文件不存在）
      */
     @DeleteMapping("/delete")
     public Result deleteMedia(Authentication authentication, @RequestParam("mediaId") String mediaId) {
@@ -65,7 +77,11 @@ public class MediaController {
     }
 
     /**
-     * get picture/video List
+     * 获取当前用户的图片/视频列表，支持分页
+     * @param authentication 认证信息
+     * @param page 当前页码，默认1
+     * @param size 每页数量，默认10
+     * @return 操作结果，包含分页后的媒体列表
      */
     @RequestMapping("/list")
     public Result listMedia(
@@ -80,4 +96,5 @@ public class MediaController {
         String userId = authentication.getPrincipal().toString();
         return Result.success(mediaService.listMediaByUser(userId, page, size));
     }
+
 }

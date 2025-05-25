@@ -37,8 +37,6 @@ public class FileServiceImpl implements FileService {
     @Value("${public.base-url}")
     private String baseUrl;
 
-//    private String uploadPath = systemUploadPath + "/Files";
-
     @Override
     public List<FilesProcessDTO> getFilesListByRole(String userId) {
         return fileMapper.getAccessibleFilesByRole(Integer.parseInt(userId));
@@ -114,16 +112,6 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public Result deleteFile(String fileId) {
-//        Integer userPermission = fileMapper.getUserPermissionByUsername(username);
-//        if (userPermission == null) {
-//            throw new RuntimeException("用户权限获取失败");
-//        }
-//
-//        boolean canDelete = permissionMapper.hasDeletePermission(fileId, userPermission);
-//        if (!canDelete) {
-//            throw new RuntimeException("无权限删除该文件");
-//        }
-
         FilesProcessDTO file = fileMapper.selectFileById(fileId);
         if (file != null) {
             // 删除文件
@@ -134,7 +122,6 @@ public class FileServiceImpl implements FileService {
 
             // 删除记录
             fileMapper.deleteById(fileId);
-//            permissionMapper.deleteByFileId(fileId);
             return fileMapper.selectFileById(fileId) != null?
                     Result.failure(400, "文件删除失败"):
                     Result.success("文件删除成功");

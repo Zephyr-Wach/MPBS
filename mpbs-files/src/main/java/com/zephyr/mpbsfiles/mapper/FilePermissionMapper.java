@@ -1,19 +1,23 @@
 package com.zephyr.mpbsfiles.mapper;
 
-
-import com.zephyr.mpbsfiles.dto.FilePermissionDTO;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.data.repository.query.Param;
 
 @Mapper
 public interface FilePermissionMapper {
-    @Select("SELECT can_delete FROM file_permissions WHERE file_id = #{fileId} AND role_id = #{roleId}")
+
+    /**
+     * 判断指定角色是否有删除指定文件的权限
+     * @param fileId 文件ID
+     * @param roleId 角色ID
+     * @return 是否有删除权限
+     */
     boolean hasDeletePermission(@Param("fileId") String fileId, @Param("roleId") Integer roleId);
 
-    @Delete("DELETE FROM file_permissions WHERE file_id = #{fileId}")
+    /**
+     * 根据文件ID删除文件信息
+     * @param fileId 文件ID
+     */
     void deleteByFileId(@Param("fileId") String fileId);
 
 }

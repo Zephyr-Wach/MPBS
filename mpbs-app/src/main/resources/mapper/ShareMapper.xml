@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zephyr.mpbsfiles.mapper.ShareMapper">
+    <insert id="insert" parameterType="com.zephyr.mpbsfiles.dto.ShareLink">
+        INSERT INTO temporary_links(id, file_id, expires_at, created_at, url)
+        VALUES (#{id}, #{fileId}, #{expiresAt}, #{createdAt}, #{url})
+    </insert>
+
+    <select id="getShareById" parameterType="string" resultType="com.zephyr.mpbsfiles.dto.ShareLink">
+        SELECT * FROM temporary_links WHERE id = #{id}
+    </select>
+</mapper>

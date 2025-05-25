@@ -1,11 +1,13 @@
 package com.zephyr.mpbsfiles.controller;
 
+import com.zephyr.mpbscommon.utils.BeanConvertUtil;
 import com.zephyr.mpbscommon.utils.Result;
 import com.zephyr.mpbsfiles.dto.FilePermissionDTO;
 import com.zephyr.mpbsfiles.dto.FilesProcessDTO;
 import com.zephyr.mpbsfiles.dto.ShareLink;
 import com.zephyr.mpbsfiles.mapper.ShareMapper;
 import com.zephyr.mpbsfiles.service.FileService;
+import com.zephyr.mpbsfiles.vo.FilesProcessVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -35,18 +37,22 @@ public class FilesController {
     private ShareMapper shareMapper;
 
     /**
-     * get files list by token
-     *
+     * 根据当前用户的token获取该用户角色可访问的文件列表
+     * @param authentication 认证信息
+     * @return 操作结果，包含文件列表或错误信息
      */
     @GetMapping("/getFilesList")
     public Result getFilesList(Authentication authentication) {
         return authentication == null || authentication.getAuthorities() == null || authentication.getAuthorities().isEmpty() ?
                 Result.failure(404, "token is invalid") :
-                Result.success(fileService.getFilesListByRole(authentication.getPrincipal().toString()));
+                Result.success(BeanConvertUtil.convertList(fileService.getFilesListByRole(authentication.getPrincipal().toString()), FilesProcessVO.class));
     }
 
     /**
-     * upload file
+     * 上传文件接口
+     * @param authentication 认证信息
+     * @param file 上传的文件
+     * @return 操作结果，包含上传后的文件信息或错误信息
      */
     @PostMapping("/upload")
     public Result uploadFile(Authentication authentication, @RequestParam("file") MultipartFile file) {
@@ -56,23 +62,24 @@ public class FilesController {
         String uploaderId = authentication.getPrincipal().toString();
         try {
             FilesProcessDTO dto = fileService.uploadFile(file, uploaderId);
-            return Result.success(dto);
+            return Result.success(BeanConvertUtil.convert(dto, FilesProcessVO.class));
         } catch (IOException | IllegalArgumentException e) {
             return Result.failure(500, e.getMessage());
         }
     }
 
     /**
-     * download file
+     * 下载文件接口
+     * @param authentication 认证信息
+     * @param id 文件ID
+     * @return 响应体，包含文件资源或错误状态码
      */
     @GetMapping("/download/{id}")
     public ResponseEntity<Resource> downloadFile(Authentication authentication, @PathVariable String id) {
-        // 鉴权校验
         if (authentication == null || authentication.getPrincipal() == null) {
             return ResponseEntity.status(401).build();
         }
 
-        // 根据id获取文件信息
         FilesProcessDTO dto = fileService.getFileById(id);
         if (dto == null) {
             return ResponseEntity.notFound().build();
@@ -84,10 +91,7 @@ public class FilesController {
         }
 
         try {
-            // 文件流资源
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-
-            // 解决文件名中文乱码，URL编码后替换空格
             String encodedFilename = URLEncoder.encode(dto.getFilename(), StandardCharsets.UTF_8.toString())
                     .replaceAll("\\+", "%20");
 
@@ -98,35 +102,36 @@ public class FilesController {
                     .body(resource);
 
         } catch (IOException e) {
-            // 读取文件异常
             return ResponseEntity.status(500).build();
         }
     }
 
     /**
-     * share file
+     * 分享文件接口
+     * @param fileId 文件ID
+     * @return 操作结果，包含分享链接信息或错误信息
      */
     @PostMapping("/{fileId}/share")
     public Result shareFile(@PathVariable String fileId) {
         return fileService.shareFile(fileId);
     }
-    @GetMapping("/share/download/{id}")
-    public ResponseEntity<Resource> downloadSharedFile( @PathVariable String id) {
-        // 根据id获取文件信息
-        ShareLink share = shareMapper.getShareById(id);
 
+    /**
+     * 通过分享链接下载文件
+     * @param id 分享链接ID
+     * @return 响应体，包含文件资源或错误状态码（404未找到，410已过期等）
+     */
+    @GetMapping("/share/download/{id}")
+    public ResponseEntity<Resource> downloadSharedFile(@PathVariable String id) {
+        ShareLink share = shareMapper.getShareById(id);
         if (share == null) {
             return ResponseEntity.notFound().build();
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        // 解析字符串为 LocalDateTime
         LocalDateTime expiresAt = LocalDateTime.parse(share.getExpiresAt(), formatter);
-        // 获取当前时间
         LocalDateTime now = LocalDateTime.now();
-        // 判断是否过期
         if (expiresAt.isBefore(now)) {
-            // 过期，返回 410 Gone
             return ResponseEntity.status(410).build();
         }
 
@@ -141,10 +146,7 @@ public class FilesController {
         }
 
         try {
-            // 文件流资源
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-
-            // 解决文件名中文乱码，URL编码后替换空格
             String encodedFilename = URLEncoder.encode(dto.getFilename(), StandardCharsets.UTF_8.toString())
                     .replaceAll("\\+", "%20");
 
@@ -155,18 +157,19 @@ public class FilesController {
                     .body(resource);
 
         } catch (IOException e) {
-            // 读取文件异常
             return ResponseEntity.status(500).build();
         }
     }
 
-
     /**
-     * delete file
+     * 删除文件接口
+     * @param fileId 文件ID
+     * @return 操作结果，成功或失败信息
      */
     @PostMapping("/{fileId}/del")
     public Result deleteFile(@PathVariable String fileId) {
         return fileService.deleteFile(fileId);
     }
+
 
 }

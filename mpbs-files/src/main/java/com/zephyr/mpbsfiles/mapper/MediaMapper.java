@@ -7,8 +7,19 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface MediaMapper extends BaseMapper<MediaEntity> {
-    // 插入文件信息，返回影响行数
+
+    /**
+     * 插入媒体文件信息
+     * @param file 媒体处理DTO
+     * @return 影响的行数
+     */
     int insertMedia(MediaProcessDTO file);
 
+    /**
+     * 根据媒体ID查询媒体文件信息
+     * @param id 媒体文件ID
+     * @return 媒体处理DTO
+     */
     MediaProcessDTO getMediaById(String id);
+
 }
