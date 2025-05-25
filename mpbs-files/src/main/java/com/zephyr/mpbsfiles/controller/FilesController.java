@@ -2,7 +2,6 @@ package com.zephyr.mpbsfiles.controller;
 
 import com.zephyr.mpbscommon.utils.BeanConvertUtil;
 import com.zephyr.mpbscommon.utils.Result;
-import com.zephyr.mpbsfiles.dto.FilePermissionDTO;
 import com.zephyr.mpbsfiles.dto.FilesProcessDTO;
 import com.zephyr.mpbsfiles.dto.ShareLink;
 import com.zephyr.mpbsfiles.mapper.ShareMapper;

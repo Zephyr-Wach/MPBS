@@ -1,19 +1,25 @@
 package com.zephyr.mpbsblog.mapper;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zephyr.mpbsblog.entity.BlogPostEntity;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.springframework.data.repository.query.Param;
 
 @Mapper
-public interface BlogPostMapper extends BaseMapper<BlogPostEntity>{
+public interface BlogPostMapper extends BaseMapper<BlogPostEntity> {
+
+    /**
+     * 插入一条博客文章记录
+     *
+     * @param blogPost 博客文章实体
+     * @return 受影响的行数
+     */
     int insert(BlogPostEntity blogPost);
 
-    @Select("SELECT id, title, content_md, content_html, cover_url, author_id, status, created_at, updated_at " +
-            "FROM blog_post WHERE id = #{id} AND status = 'published'")
+    /**
+     * 根据ID查询已发布的博客文章
+     *
+     * @param id 博客文章ID
+     * @return 博客文章实体，如果未发布或不存在则返回null
+     */
     BlogPostEntity selectByIdPublished(String id);
 }
