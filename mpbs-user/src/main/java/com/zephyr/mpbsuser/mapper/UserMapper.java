@@ -12,47 +12,75 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
-
-    @Select("SELECT * FROM user_info WHERE user_name = #{userName}")
+    /**
+     * 根据用户名查询用户信息
+     * @param userName 用户名
+     * @return 用户实体
+     */
     UserEntity findByUserName(@Param("username") String userName);
 
-    @Select("SELECT * FROM user_info WHERE user_name = #{userName} AND user_pwd = #{userPwd}")
+    /**
+     * 根据用户名和密码查询用户信息（用于登录验证）
+     * @param userName 用户名
+     * @param userPwd 用户密码
+     * @return 用户实体
+     */
     UserEntity findByUserNameAndUserPwd(@Param("userName") String userName, @Param("userPwd") String userPwd);
 
-    @Select("SELECT * FROM user_info WHERE user_id = #{userId} AND user_pwd =#{userPwd}")
+    /**
+     * 根据用户ID和密码查询用户信息（用于登录验证）
+     * @param userId 用户ID
+     * @param userPwd 用户密码
+     * @return 用户实体
+     */
     UserEntity findByUserIdAndUserPwd(@Param("userId") String userId, @Param("userPwd") String userPwd);
 
-    @Insert("INSERT INTO user_info (user_name, user_pwd, email) VALUES (#{userName}, #{userPwd}, #{email})")
-    @Options(useGeneratedKeys = true, keyProperty = "userId", keyColumn = "user_id")
+    /**
+     * 插入新用户注册信息
+     * @param registerDTO 注册数据传输对象
+     */
     void insert(RegisterDTO registerDTO);
 
-    @Select("SELECT COUNT(1) FROM user_info WHERE user_name = #{userName}")
+    /**
+     * 根据用户名统计用户数量（判断用户名是否存在）
+     * @param userName 用户名
+     * @return 用户数量
+     */
     int countByUserName(String userName);
 
-    @Update("UPDATE user_info SET user_pwd = #{newPassword} WHERE user_id = #{userId}")
+    /**
+     * 更新用户密码
+     * @param updatePassword 更新密码的数据传输对象
+     * @return 更新是否成功
+     */
     boolean updatePassword(UpdatePasswordDTO updatePassword);
 
-    @Select("SELECT * FROM user_info WHERE user_id = #{userId}")
+    /**
+     * 根据用户ID查询用户信息
+     * @param userId 用户ID
+     * @return 用户实体
+     */
     UserEntity findByUserId(String userId);
 
-    @Update("UPDATE user_info SET user_name = #{info.userName}, avatar_url = #{info.avatarUrl}, email = #{info.email} WHERE user_id = #{userId}")
+    /**
+     * 更新用户信息
+     * @param userId 用户ID
+     * @param info 用户更新信息数据传输对象
+     * @return 更新是否成功
+     */
     boolean updateInfo(@Param("userId") String userId, @Param("info") UpdateInfoDTO info);
 
-    @Select("SELECT * FROM user_info")
+    /**
+     * 查询所有用户列表
+     * @return 用户实体列表
+     */
     List<UserEntity> findAllUsers();
 
-    @Update({
-            "<script>",
-            "UPDATE user_info",
-            "<set>",
-            "<if test='info.userName != null'>user_name = #{info.userName},</if>",
-            "<if test='info.userPwd != null'>user_pwd = #{info.userPwd},</if>",
-            "<if test='info.email != null'>email = #{info.email},</if>",
-            "<if test='info.avatarUrl != null'>avatar_url = #{info.avatarUrl},</if>",
-            "<if test='info.userPermission != null'>user_permission = #{info.userPermission},</if>",
-            "</set>",
-            "WHERE user_id = #{userId}",
-            "</script>"
-    })
-    boolean updateUserInfo(String userId, UserInfoDTO info);
+    /**
+     * 更新用户详细信息
+     * @param userId 用户ID
+     * @param info 用户详细信息数据传输对象
+     * @return 更新是否成功
+     */
+    boolean updateUserInfo(@Param("userId") String userId, @Param("info") UserInfoDTO info);
 }

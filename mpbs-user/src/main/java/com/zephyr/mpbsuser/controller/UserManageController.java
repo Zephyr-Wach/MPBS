@@ -1,10 +1,9 @@
 package com.zephyr.mpbsuser.controller;
 
 import com.zephyr.mpbscommon.utils.Result;
-import com.zephyr.mpbssecurity.utils.PasswordUtils;
 import com.zephyr.mpbsuser.dto.UserInfoDTO;
-import com.zephyr.mpbsuser.entity.UserEntity;
 import com.zephyr.mpbsuser.service.UserService;
+import com.zephyr.mpbsuser.vo.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,15 +17,19 @@ public class UserManageController {
 
     /**
      * get user list
+     * @return user list
      */
     @GetMapping("/getUserList")
     public Result getUserList() {
-        List<UserEntity> users = userService.getAllUsers();
+        List<UserInfoVO> users = userService.getAllUsers();
         return Result.success(users);
     }
 
     /**
      * update user info
+     * @param userId user id
+     * @param info user info
+     * @return result
      */
     @PostMapping("/updateInfo")
     public Result updateInfo(@RequestParam String userId, @RequestBody UserInfoDTO info) {

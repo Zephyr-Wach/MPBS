@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zephyr.mpbsuser.mapper.UserMapper">
+    <select id="findByUserName" resultType="com.zephyr.mpbsuser.entity.UserEntity">
+        SELECT *
+        FROM user_info
+        WHERE user_name = #{userName}
+    </select>
+
+    <select id="findByUserNameAndUserPwd" resultType="com.zephyr.mpbsuser.entity.UserEntity">
+        SELECT *
+        FROM user_info
+        WHERE user_name = #{userName} AND user_pwd = #{userPwd}
+    </select>
+
+    <select id="findByUserIdAndUserPwd" resultType="com.zephyr.mpbsuser.entity.UserEntity">
+        SELECT *
+        FROM user_info
+        WHERE user_id = #{userId} AND user_pwd =#{userPwd}
+    </select>
+
+    <insert id="insert" parameterType="com.zephyr.mpbsuser.dto.RegisterDTO">
+        INSERT INTO user_info (user_name, user_pwd, email)
+        VALUES (#{userName}, #{userPwd}, #{email})
+    </insert>
+
+    <select id="countByUserName" resultType="int" parameterType="string">
+        SELECT COUNT(1)
+        FROM user_info
+        WHERE user_name = #{userName}
+    </select>
+
+    <update id="updatePassword" parameterType="com.zephyr.mpbsuser.dto.UpdatePasswordDTO">
+        UPDATE user_info
+        SET user_pwd = #{newPassword}
+        WHERE user_id = #{userId}
+    </update>
+
+    <select id="findByUserId" resultType="com.zephyr.mpbsuser.entity.UserEntity" parameterType="string">
+        SELECT *
+        FROM user_info
+        WHERE user_id = #{userId}
+    </select>
+
+    <update id="updateInfo" parameterType="map">
+        UPDATE user_info
+        SET
+            user_name = #{info.userName},
+            avatar_url = #{info.avatarUrl},
+            email = #{info.email}
+        WHERE user_id = #{userId}
+    </update>
+
+    <select id="findAllUsers" resultType="com.zephyr.mpbsuser.entity.UserEntity">
+        SELECT *
+        FROM user_info
+    </select>
+
+    <update id="updateUserInfo" parameterType="map">
+        UPDATE user_info
+        <set>
+            <if test="info.userName != null">user_name = #{info.userName},</if>
+            <if test="info.userPwd != null">user_pwd = #{info.userPwd},</if>
+            <if test="info.email != null">email = #{info.email},</if>
+            <if test="info.avatarUrl != null">avatar_url = #{info.avatarUrl},</if>
+            <if test="info.userPermission != null">user_permission = #{info.userPermission},</if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+</mapper>

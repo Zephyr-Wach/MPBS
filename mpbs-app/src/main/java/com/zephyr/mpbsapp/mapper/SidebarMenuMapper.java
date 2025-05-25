@@ -8,6 +8,5 @@ import java.util.List;
 
 @Mapper
 public interface SidebarMenuMapper {
-
     List<SidebarMenuEntity> selectMenusByRole(@Param("role") String role);
 }

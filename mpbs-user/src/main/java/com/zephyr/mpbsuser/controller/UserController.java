@@ -17,7 +17,8 @@ public class UserController {
 
     /**
      * login
-     * @return
+     * @param loginDTO 用户名+密码
+     * @return Result
      */
     @PostMapping("/login")
     public Result login(@RequestBody LoginDTO loginDTO) {
@@ -26,7 +27,8 @@ public class UserController {
 
     /**
      * register
-     * @return
+     * @param registerDTO 注册信息
+     * @return Result
      */
     @PostMapping("/register")
     public Result register(@RequestBody RegisterDTO registerDTO){
@@ -35,7 +37,8 @@ public class UserController {
 
     /**
      * checkUserName
-     * @return
+     * @param userName 用户名
+     * @return Result
      */
     @GetMapping("/checkUserName")
     public Result getUserInfo(@RequestParam String userName){return userService.checkByUserName(userName);}

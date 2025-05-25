@@ -1,11 +1,13 @@
 package com.zephyr.mpbsuser.service.Impl;
 
+import com.zephyr.mpbscommon.utils.BeanConvertUtil;
 import com.zephyr.mpbscommon.utils.JwtUtil;
 import com.zephyr.mpbscommon.utils.Result;
 import com.zephyr.mpbsuser.dto.*;
 import com.zephyr.mpbsuser.entity.UserEntity;
 import com.zephyr.mpbsuser.mapper.UserMapper;
 import com.zephyr.mpbsuser.service.UserService;
+import com.zephyr.mpbsuser.vo.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -40,7 +42,6 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userMapper.findByUserName(registerDTO.getUserName());
         return user != null ?
                 Result.success(new HashMap<String, Object>() {{
-//                    put("token", JwtUtil.generateToken(user.getUserId(),user.getUserPermission()));
                     put("username", user.getUserName());
                     put("userId", user.getUserId());
                 }}) :
@@ -88,7 +89,7 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication == null || !authentication.isAuthenticated()?
                 Result.failure(401, "未认证或身份信息缺失"):
-                Result.success(userMapper.findByUserId((String) authentication.getPrincipal()));
+                Result.success(BeanConvertUtil.convert( userMapper.findByUserId((String) authentication.getPrincipal()), UserInfoVO.class ));
     }
 
     @Override
@@ -97,9 +98,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserEntity> getAllUsers() {
-        // 查询所有用户，注意你原有Mapper没有此方法，需要补充
-        return userMapper.findAllUsers();
+    public List<UserInfoVO> getAllUsers() {
+        return BeanConvertUtil.convertList(userMapper.findAllUsers(), UserInfoVO.class ) ;
     }
 
     @Override

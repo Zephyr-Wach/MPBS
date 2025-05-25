@@ -17,8 +17,8 @@ public class UserWithTokenController {
 
     /**
      * update user password
-     * @param updatePasswordDTO
-     * @return
+     * @param updatePasswordDTO updatePasswordDTO
+     * @return Result
      */
     @PostMapping("/updatePassword")
     public Result updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
@@ -27,7 +27,7 @@ public class UserWithTokenController {
 
     /**
      * get info by token
-     * @return
+     * @return Result
      */
     @GetMapping("/getInfoByToken")
     public Result getInfoByToken() {
@@ -36,6 +36,8 @@ public class UserWithTokenController {
 
     /**
      * update user info
+     * @param info info
+     * @return Result
      */
     @PostMapping("/updateInfo")
     public Result updateInfo(@RequestBody UpdateInfoDTO info , Authentication authentication) {
