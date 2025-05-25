@@ -32,8 +32,6 @@ export interface BlogPost {
     coverUrl?: string;
     authorId?: string;
     status: string;
-    createdAt?: string;
-    updatedAt?: string;
 }
 
 interface ApiResponse<T> {

@@ -45,7 +45,9 @@ public class FilesController {
         return authentication == null || authentication.getAuthorities() == null || authentication.getAuthorities().isEmpty() ?
                 Result.failure(404, "token is invalid") :
                 Result.success(BeanConvertUtil.convertList(fileService.getFilesListByRole(authentication.getPrincipal().toString()), FilesProcessVO.class));
+//                Result.success(fileService.getFilesListByRole(authentication.getPrincipal().toString()));
     }
+
 
     /**
      * 上传文件接口

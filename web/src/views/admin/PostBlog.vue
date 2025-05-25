@@ -1,11 +1,6 @@
 <template>
   <div class="markdown-editor" style="display: flex; height: 70vh;">
-    <!-- 左侧：实时渲染 -->
-<!--    <div class="preview" style="flex: 1; padding: 1rem; border-right: 1px solid #ccc; overflow-y: auto;">-->
-<!--      <div v-html="renderedHtml"></div>-->
-<!--    </div>-->
     <div class="preview" style="flex: 1; padding: 1rem; border-right: 1px solid #ccc; overflow-y: auto;">
-      <!-- <div v-html="renderedHtml"></div> -->
       <div v-html="renderedHtml" style="text-align: left;"></div>
     </div>
 

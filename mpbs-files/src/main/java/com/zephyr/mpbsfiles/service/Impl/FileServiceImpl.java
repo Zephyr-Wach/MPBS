@@ -39,7 +39,11 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public List<FilesProcessDTO> getFilesListByRole(String userId) {
-        return fileMapper.getAccessibleFilesByRole(Integer.parseInt(userId));
+        List<FilesProcessDTO> list = fileMapper.getAccessibleFilesByRole(userId);
+        System.out.println("查询结果: " + list);
+        return list;
+
+//        return fileMapper.getAccessibleFilesByRole(userId);
     }
 
     @Override

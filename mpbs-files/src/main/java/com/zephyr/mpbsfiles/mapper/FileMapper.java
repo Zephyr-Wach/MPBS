@@ -16,7 +16,7 @@ public interface FileMapper {
      * @param roleId 角色ID
      * @return 文件处理DTO列表
      */
-    List<FilesProcessDTO> getAccessibleFilesByRole(@Param("roleId") int roleId);
+    List<FilesProcessDTO> getAccessibleFilesByRole(@Param("roleId") String roleId);
 
     /**
      * 插入文件信息
