@@ -16,7 +16,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { getBlogDetail } from '@/api/admin/blog';
+import { getBlogDetail } from '@/api/public/blog';
 import { marked } from 'marked';
 
 const blog = ref<null | {

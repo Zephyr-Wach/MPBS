@@ -23,12 +23,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/files/share/download/**").permitAll()
                 .antMatchers("/static/**").permitAll()
-                .antMatchers("/blog/**").permitAll()
-                .antMatchers("/public/**").permitAll()   // 公开接口，token 可选
-                .antMatchers("/usr/**").permitAll()      // 登录注册接口，token 可选
-                .antMatchers("/admin/**").hasRole("ULTIMATE") // 需要 ULTIMATE 角色
-                .anyRequest().authenticated();           // 其他接口都需要登录
-        // 添加 JWT 过滤器，在 UsernamePasswordAuthenticationFilter 之前
+                .antMatchers("/blog/getBlogList").permitAll()
+                .antMatchers("/blog/detail/**").permitAll()
+                .antMatchers("/blog/getCommentsByPost/**").permitAll()
+                .antMatchers("/public/**").permitAll()
+                .antMatchers("/usr/**").permitAll()
+                .antMatchers("/admin/**").hasRole("ULTIMATE")
+                .anyRequest().authenticated();
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

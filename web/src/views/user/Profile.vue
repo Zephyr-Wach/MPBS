@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { getUserInfo, updateUserInfo, updatePassword } from '@/api/user/user';
-import { uploadFile, generateUrl } from '@/api/public/media';
+import { uploadFile, generateUrl } from '@/api/admin/media';
 
 interface UserInfo {
   userId: string;

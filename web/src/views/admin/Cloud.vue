@@ -26,8 +26,8 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { getFilesList, uploadFile, downloadFile, FilesProcessDTO } from '@/api/user/cloud';
-import { getFileShareLink, delFile } from '@/api/admin/file';
+import { getFilesList, uploadFile, downloadFile, FilesProcessDTO } from '@/api/admin/cloud';
+import { getFileShareLink, delFile } from '@/api/admin/cloud';
 
 const files = ref<FilesProcessDTO[]>([]);
 

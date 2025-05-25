@@ -42,3 +42,16 @@ export const downloadFile = (id: string) => {
     }).then(res => res);
 };
 
+export function getFileShareLink(fileId: string) {
+    return request({
+        url: `/files/${fileId}/share`,
+        method: 'post',
+    });
+}
+
+export function delFile(fileId: string) {
+    return request({
+        url: `/files/${fileId}/del`,
+        method: 'post',
+    });
+}

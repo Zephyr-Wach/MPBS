@@ -36,7 +36,8 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { getBlogDetail, updateBlog } from '@/api/admin/blog';
+import { updateBlog } from '@/api/admin/blog';
+import { getBlogDetail } from '@/api/public/blog';
 
 const route = useRoute();
 const router = useRouter();

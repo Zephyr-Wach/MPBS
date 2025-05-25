@@ -28,7 +28,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'cloud',
                 name: 'Cloud',
-                component: () => import('@/views/Cloud.vue'),
+                component: () => import('@/views/admin/Cloud.vue'),
                 meta: { requiresAuth: true }
             },
             {
@@ -66,7 +66,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'profile',
                 name: 'Profile',
-                component: () => import('@/views/Profile.vue'),
+                component: () => import('@/views/user/Profile.vue'),
                 meta: { requiresAuth: true }, // 需要登录
             },
         ],

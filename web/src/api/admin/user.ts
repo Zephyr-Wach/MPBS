@@ -1,5 +1,4 @@
 import request from '@/utils/request';
-import {MediaProcessDTO} from "@/api/public/media";
 
 //getUserInfoList
 export const getUserInfoList = () => {

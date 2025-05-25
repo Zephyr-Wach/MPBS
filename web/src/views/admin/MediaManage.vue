@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { uploadFile, generateUrl } from '@/api/public/media';
-import { getMediaList, deleteMedia } from '@/api/admin/blog';
+import { uploadFile, generateUrl, getMediaList, deleteMedia } from '@/api/admin/media';
 
 const fileInput = ref<HTMLInputElement | null>(null);
 const uploading = ref(false);

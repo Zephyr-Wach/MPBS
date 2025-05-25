@@ -73,7 +73,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { getBlogList } from '@/api/admin/blog';
+import { getBlogList } from '@/api/public/blog';
 
 const page = ref(1);
 const pages = ref(1);
