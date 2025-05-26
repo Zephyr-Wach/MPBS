@@ -39,6 +39,36 @@ export async function loginAndSaveToken(userName: string, userPwd: string) {
     }
 }
 
+//loginByEmailCode
+interface EmailLoginParams {
+    email: string;
+    code: string;
+}
+export function loginByEmailCode(params: EmailLoginParams): Promise<any> {
+    return request({
+        url: '/usr/loginByEmail',
+        method: 'post',
+        data: params,
+    });
+}
+export async function EmailLoginAndSaveToken(email: string, code: string) {
+    try {
+        const res = await loginByEmailCode({ email, code });
+        if (res.code === 0 && res.data.token) {
+            // 保存 token 到 localStorage
+            localStorage.setItem('token', res.data.token);
+            console.log('登录成功，token已保存'+res.data.token);
+            // 可以返回用户信息等
+            return res.data;
+        } else {
+            throw new Error(res.message || '登录失败');
+        }
+    } catch (error) {
+        console.error('登录出错:', error);
+        throw error;
+    }
+}
+
 // register
 interface RegisterParams {
     userName: string;

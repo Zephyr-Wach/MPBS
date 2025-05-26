@@ -2,51 +2,156 @@
   <div class="modal-backdrop" @click.self="close">
     <div class="modal">
       <h2>登录</h2>
-      <form @submit.prevent="handleLogin" class="login-form">
+
+      <!-- 切换登录方式按钮 -->
+      <div style="text-align:center; margin-bottom:12px;">
+        <button @click="toggleLoginType" style="background:none; border:none; color:#3498db; cursor:pointer;">
+          {{ isEmailLogin ? '切换为用户名密码登录' : '切换为邮箱验证码登录' }}
+        </button>
+      </div>
+
+      <!-- 用户名密码登录 -->
+      <form v-if="!isEmailLogin" @submit.prevent="handleUserLogin" class="login-form">
         <input v-model="userName" placeholder="用户名" required />
         <input type="password" v-model="userPwd" placeholder="密码" required />
         <div class="btn-group">
           <button type="submit" :disabled="loading">{{ loading ? '登录中...' : '登录' }}</button>
           <button type="button" class="close-btn" @click="close">关闭</button>
         </div>
-        <p class="register-tip">
-          还没有账号，
-          <a href="#" @click.prevent="$emit('showRegister')">点击注册</a>
-        </p>
-
       </form>
+
+      <!-- 邮箱验证码登录 -->
+      <form v-else @submit.prevent="handleEmailLogin" class="login-form">
+        <input v-model="email" type="email" placeholder="邮箱" required />
+        <div style="display:flex; gap: 8px;">
+          <input v-model="code" placeholder="验证码" required style="flex:1;" />
+          <button type="button" @click="sendCode" :disabled="codeSending && countdown > 0" style="width: 100px;">
+            {{ countdown > 0 ? `${countdown}s后重发` : '发送验证码' }}
+          </button>
+
+        </div>
+        <div class="btn-group">
+          <button type="submit" :disabled="loading">{{ loading ? '登录中...' : '登录' }}</button>
+          <button type="button" class="close-btn" @click="close">关闭</button>
+        </div>
+      </form>
+
       <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { loginAndSaveToken } from '@/api/public/user.js';
+  import { ref, onUnmounted } from 'vue';
+  import { loginAndSaveToken, EmailLoginAndSaveToken } from '@/api/public/user';
+  import { sendCodeToEmail } from '@/api/public/email';
 
-const userName = ref('');
-const userPwd = ref('');
-const loading = ref(false);
-const errorMsg = ref('');
+  const userName = ref('');
+  const userPwd = ref('');
+  const loading = ref(false);
+  const errorMsg = ref('');
+  const isEmailLogin = ref(false);
+  const email = ref('');
+  const code = ref('');
+  const codeSending = ref(false);
+  const countdown = ref(0);
 
-const emit = defineEmits(['close', 'loginSuccess']);
+  let timer = null;
 
-function close() {
+  const emit = defineEmits(['close', 'loginSuccess']);
+
+  function close() {
   emit('close');
 }
 
-async function handleLogin() {
+  // 简单邮箱格式校验
+  function isValidEmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}
+
+  function toggleLoginType() {
+  errorMsg.value = '';
+  isEmailLogin.value = !isEmailLogin.value;
+  // 切换登录方式时清空所有相关字段和状态
+  userName.value = '';
+  userPwd.value = '';
+  email.value = '';
+  code.value = '';
+  codeSending.value = false;
+  countdown.value = 0;
+  if (timer) {
+  clearInterval(timer);
+  timer = null;
+}
+}
+
+  async function handleUserLogin() {
   loading.value = true;
   errorMsg.value = '';
   try {
-    const userData = await loginAndSaveToken(userName.value, userPwd.value);
-    emit('loginSuccess', userData);
-  } catch (e) {
-    errorMsg.value = e.message || '登录失败，请重试';
-  } finally {
-    loading.value = false;
-  }
+  const userData = await loginAndSaveToken(userName.value, userPwd.value);
+  emit('loginSuccess', userData);
+} catch (e) {
+  errorMsg.value = e.message || '登录失败，请重试';
+} finally {
+  loading.value = false;
 }
+}
+
+  async function sendCode() {
+  if (!email.value) {
+  errorMsg.value = '请输入邮箱';
+  return;
+}
+  if (!isValidEmail(email.value)) {
+  errorMsg.value = '邮箱格式不正确';
+  return;
+}
+  errorMsg.value = '';
+  codeSending.value = true;
+
+  try {
+  await sendCodeToEmail(email.value);
+  countdown.value = 60;
+  timer = setInterval(() => {
+  countdown.value--;
+  if (countdown.value <= 0) {
+  clearInterval(timer);
+  timer = null;
+  codeSending.value = false;
+}
+}, 1000);
+} catch (e) {
+  errorMsg.value = e.message || '发送验证码失败';
+  codeSending.value = false;
+}
+}
+
+  async function handleEmailLogin() {
+  if (!isValidEmail(email.value)) {
+  errorMsg.value = '邮箱格式不正确';
+  return;
+}
+  loading.value = true;
+  errorMsg.value = '';
+  try {
+  const userData = await EmailLoginAndSaveToken(email.value, code.value);
+  emit('loginSuccess', userData);
+} catch (e) {
+  errorMsg.value = e.message || '邮箱登录失败，请重试';
+} finally {
+  loading.value = false;
+}
+}
+
+  onUnmounted(() => {
+  if (timer) {
+  clearInterval(timer);
+  timer = null;
+  codeSending.value = false;
+}
+});
 </script>
 
 <style scoped>
