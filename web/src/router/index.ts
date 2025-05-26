@@ -22,8 +22,13 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'blog/detail/:id',
                 name: 'BlogDetail',
-                component: () => import('@/views/BlogDetail.vue'),  // 博客详情页
-                props: true, // 这样组件可以直接通过 props 接收 id
+                component: () => import('@/views/BlogDetail.vue'),
+                props: true,
+            },
+            {
+                path: '/blog/detail/:id',
+                name: 'BlogDetail',
+                component: () => import('@/views/BlogDetail.vue')
             },
             {
                 path: 'cloud',
@@ -67,7 +72,7 @@ const routes: RouteRecordRaw[] = [
                 path: 'profile',
                 name: 'Profile',
                 component: () => import('@/views/user/Profile.vue'),
-                meta: { requiresAuth: true }, // 需要登录
+                meta: { requiresAuth: true },
             },
         ],
     },

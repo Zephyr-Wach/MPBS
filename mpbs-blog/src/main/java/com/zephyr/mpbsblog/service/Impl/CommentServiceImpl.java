@@ -1,6 +1,7 @@
 package com.zephyr.mpbsblog.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.zephyr.mpbsblog.dto.CommentDTO;
 import com.zephyr.mpbsblog.entity.BlogPostEntity;
 import com.zephyr.mpbsblog.entity.Comment;
 import com.zephyr.mpbsblog.mapper.BlogPostMapper;
@@ -26,24 +27,21 @@ public class CommentServiceImpl implements CommentService {
     private BlogPostMapper blogPostMapper; // 用于校验文章是否存在
 
     @Override
-    public void addComment(Comment comment) {
+    public void addComment(CommentDTO comment) {
         // 检查博客是否存在
         BlogPostEntity blogPost = blogPostMapper.selectById(comment.getPostId());
         if (blogPost == null) {
             throw new RuntimeException("博客不存在");
         }
-        // 设置默认值
-        comment.setCreatedAt(LocalDateTime.now());
-        comment.setUpdatedAt(LocalDateTime.now());
-        commentMapper.insert(comment);
+        commentMapper.insertComment(comment);
     }
 
     @Override
-    public List<CommentVO> getCommentTreeByPostId(Long postId) {
+    public List<CommentVO> getCommentTreeByPostId(String postId) {
         List<CommentVO> flatList = commentMapper.getCommentVOsByPostId(postId);
 
         // 1. 构建一个 map<id, CommentVO>
-        Map<Long, CommentVO> idMap = new HashMap<>();
+        Map<String, CommentVO> idMap = new HashMap<>();
         for (CommentVO comment : flatList) {
             comment.setChildren(new ArrayList<>());
             idMap.put(comment.getId(), comment);
@@ -66,7 +64,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public boolean deleteCommentById(Long commentId, Long userId, boolean isAdmin) {
+    public boolean deleteCommentById(String commentId, String userId, boolean isAdmin) {
         Comment comment = commentMapper.selectById(commentId);
         if (comment == null) {
             return false;
@@ -82,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
         return true;
     }
 
-    private void deleteWithChildren(Long commentId) {
+    private void deleteWithChildren(String commentId) {
         // 先删子评论
         List<Comment> children = commentMapper.selectList(
                 new QueryWrapper<Comment>().eq("parent_id", commentId)

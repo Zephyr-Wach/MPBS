@@ -1,6 +1,7 @@
 package com.zephyr.mpbsblog.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.zephyr.mpbsblog.dto.CommentDTO;
 import com.zephyr.mpbsblog.entity.BlogPostEntity;
 import com.zephyr.mpbsblog.entity.Comment;
 import com.zephyr.mpbsblog.service.BlogPostService;
@@ -105,8 +106,8 @@ public class BlogController {
      * @return 操作结果，成功或失败信息
      */
     @PostMapping("/addComment")
-    public Result<?> addComment(@RequestBody Comment comment, Authentication authentication) {
-        comment.setUserId(Long.valueOf(authentication.getPrincipal().toString()));
+    public Result<?> addComment(@RequestBody CommentDTO comment, Authentication authentication) {
+        comment.setUserId(authentication.getPrincipal().toString());
         try {
             commentService.addComment(comment);
             return Result.success("评论成功");
@@ -121,7 +122,7 @@ public class BlogController {
      * @return 评论树形列表
      */
     @GetMapping("/getCommentsByPost/{postId}")
-    public Result<List<CommentVO>> getCommentTree(@PathVariable Long postId) {
+    public Result<List<CommentVO>> getCommentTree(@PathVariable String postId) {
         List<CommentVO> commentTree = commentService.getCommentTreeByPostId(postId);
         return Result.success(commentTree);
     }
@@ -133,8 +134,8 @@ public class BlogController {
      * @return 操作结果，成功或权限不足失败
      */
     @DeleteMapping("/comment/delete/{id}")
-    public Result<?> deleteComment(@PathVariable Long id, Authentication authentication) {
-        Long userId = Long.parseLong(authentication.getPrincipal().toString());
+    public Result<?> deleteComment(@PathVariable String id, Authentication authentication) {
+        String userId = authentication.getPrincipal().toString();
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(auth -> auth.getAuthority().equals("ROLE_ULTIMATE"));
         boolean success = commentService.deleteCommentById(id, userId, isAdmin);

@@ -2,7 +2,7 @@ import request from '@/utils/request';
 
 export const addComment = (obj: Object) => {
     return request({
-        url: '/blog/getCommentsByPost',
+        url: '/blog/addComment',
         method: 'post',
         data: obj,
     });
@@ -11,6 +11,6 @@ export const addComment = (obj: Object) => {
 export const deleteComment  = (id: String) => {
     return request({
         url: `/blog/comment/delete/${id}`,
-        method: 'post',
+        method: 'delete',
     });
 };

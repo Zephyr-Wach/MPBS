@@ -9,6 +9,7 @@
         class="cover-image"
     />
     <div class="content" v-html="blog.contentHtml || markdownToHtml(blog.contentMd)"></div>
+    <CommentSection :postId="blog?.id" />
   </div>
   <div v-else class="loading">加载中...</div>
 </template>
@@ -18,6 +19,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { getBlogDetail } from '@/api/public/blog';
 import { marked } from 'marked';
+import CommentSection from '@/components/CommentSection.vue';
 
 const blog = ref<null | {
   id: string;

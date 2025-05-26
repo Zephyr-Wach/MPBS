@@ -1,6 +1,7 @@
 package com.zephyr.mpbsblog.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.zephyr.mpbsblog.dto.CommentDTO;
 import com.zephyr.mpbsblog.entity.Comment;
 import com.zephyr.mpbsblog.vo.CommentVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -21,6 +22,13 @@ public interface CommentMapper extends BaseMapper<Comment> {
      * @param postId 文章ID
      * @return 评论视图列表
      */
-    List<CommentVO> getCommentVOsByPostId(@Param("postId") Long postId);
+    List<CommentVO> getCommentVOsByPostId(@Param("postId") String postId);
+
+    /**
+     * 插入评论
+     * @param comment 评论实体
+     * @return 插入结果
+     */
+    int insertComment(CommentDTO comment);
 }
 

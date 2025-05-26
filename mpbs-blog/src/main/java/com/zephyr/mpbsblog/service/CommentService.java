@@ -1,5 +1,6 @@
 package com.zephyr.mpbsblog.service;
 
+import com.zephyr.mpbsblog.dto.CommentDTO;
 import com.zephyr.mpbsblog.entity.Comment;
 import com.zephyr.mpbsblog.vo.CommentVO;
 
@@ -16,7 +17,7 @@ public interface CommentService {
      *
      * @param comment 评论实体
      */
-    void addComment(Comment comment);
+    void addComment(CommentDTO comment);
 
     /**
      * 根据文章ID获取评论树形结构
@@ -24,7 +25,7 @@ public interface CommentService {
      * @param postId 文章ID
      * @return 评论视图列表（树形结构）
      */
-    List<CommentVO> getCommentTreeByPostId(Long postId);
+    List<CommentVO> getCommentTreeByPostId(String postId);
 
     /**
      * 根据评论ID删除评论
@@ -34,5 +35,5 @@ public interface CommentService {
      * @param isAdmin   是否为管理员（管理员可删除任何评论）
      * @return 删除是否成功
      */
-    boolean deleteCommentById(Long commentId, Long userId, boolean isAdmin);
+    boolean deleteCommentById(String commentId, String userId, boolean isAdmin);
 }
