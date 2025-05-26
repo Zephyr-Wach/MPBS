@@ -447,124 +447,198 @@ async function verifyEmailCode() {
 
 <style scoped>
 .profile-container {
-  max-width: 400px;
-  margin: 20px auto;
-  font-family: Arial, sans-serif;
+  max-width: 420px;
+  margin: 30px auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  background: #fefefe;
+  padding: 20px 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(66, 158, 255, 0.15);
 }
+
 .avatar-box {
-  width: 100px;
-  height: 100px;
-  margin-bottom: 12px;
+  width: 110px;
+  height: 110px;
+  margin-bottom: 20px;
   background-color: #ddd;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   border-radius: 50%;
   overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 0 8px #2de2beaa;
+  transition: box-shadow 0.3s ease;
 }
+.avatar-box:hover {
+  box-shadow: 0 0 12px #2de2beff;
+}
+
 .avatar-text {
-  color: #666;
-  font-size: 14px;
+  color: #999;
+  font-size: 15px;
+  user-select: none;
+  text-align: center;
 }
+
 .info-row {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
+  font-size: 15px;
 }
 .info-row span:first-child {
-  width: 80px;
+  width: 90px;
   font-weight: 600;
+  color: #409eff;
 }
+
 .input-email {
   flex: 1;
-  padding: 4px 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 6px 10px;
+  border: 1.5px solid #ddd;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
 }
+.input-email:focus {
+  outline: none;
+  border-color: #2de2be;
+  background-color: #ffffff;
+}
+
 .update-button {
   width: 100%;
-  padding: 8px 0;
-  background-color: #409eff;
+  padding: 10px 0;
+  background-color: #2de2be;
   border: none;
   color: white;
-  font-size: 16px;
-  border-radius: 4px;
+  font-size: 17px;
+  font-weight: 600;
+  border-radius: 8px;
   cursor: pointer;
+  box-shadow: 0 3px 8px #2de2becc;
+  transition: background-color 0.3s ease;
+  margin-top: 12px;
 }
 .update-button:hover {
-  background-color: #66b1ff;
+  background-color: #1abfa8;
 }
+
 .error-msg {
   color: #f56c6c;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  text-align: center;
 }
+
 .success-msg {
-  color: #67c23a;
-  margin-bottom: 12px;
+  color: #2de2be;
+  margin-bottom: 16px;
+  font-weight: 600;
+  text-align: center;
 }
+
 .loading {
   text-align: center;
   color: #999;
-  margin-top: 40px;
+  margin-top: 50px;
+  font-size: 16px;
 }
 
 /* 弹窗通用样式 */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.4);
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(45, 226, 190, 0.15);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  backdrop-filter: blur(6px);
 }
 .modal-content {
-  background-color: white;
-  border-radius: 8px;
-  padding: 20px;
-  width: 320px;
-  max-width: 90vw;
+  background-color: #fff;
+  border-radius: 14px;
+  padding: 28px 24px;
+  width: 360px;
+  max-width: 95vw;
   box-sizing: border-box;
+  box-shadow: 0 8px 24px rgba(45, 226, 190, 0.3);
 }
 .modal-content h3 {
-  margin-bottom: 16px;
-  font-weight: 600;
+  margin-bottom: 20px;
+  font-weight: 700;
+  font-size: 22px;
+  color: #409eff;
+  text-align: center;
 }
 .modal-content input {
   width: 100%;
-  padding: 6px 10px;
-  margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
   box-sizing: border-box;
+  transition: border-color 0.3s ease;
 }
+.modal-content input:focus {
+  outline: none;
+  border-color: #2de2be;
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 14px;
 }
 .modal-actions button {
-  padding: 6px 12px;
-  border-radius: 4px;
+  padding: 8px 16px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: background-color 0.3s ease;
 }
 .modal-actions button:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 .modal-actions button:first-child {
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: #ddd;
+  color: #555;
+}
+.modal-actions button:first-child:hover:not(:disabled) {
+  background-color: #ccc;
 }
 .modal-actions button:last-child {
   background-color: #409eff;
   color: white;
 }
 .modal-actions button:last-child:hover:not(:disabled) {
-  background-color: #66b1ff;
+  background-color: #2de2be;
 }
+
+/* 验证码发送按钮 */
+.modal-content > div > button {
+  background-color: #409eff;
+  color: white;
+  border-radius: 6px;
+  padding: 8px 14px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+.modal-content > div > button:disabled {
+  background-color: #a0cfff;
+  cursor: not-allowed;
+}
+.modal-content > div > button:hover:not(:disabled) {
+  background-color: #2de2be;
+}
+
 </style>
