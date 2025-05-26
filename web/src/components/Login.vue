@@ -47,6 +47,7 @@
 import { ref, onUnmounted } from 'vue';
 import { loginAndSaveToken, EmailLoginAndSaveToken } from '@/api/public/user';
 import { sendCodeToEmail } from '@/api/public/email';
+import router from "@/router/index.js";
 
 const userName = ref('');
 const userPwd = ref('');
@@ -96,6 +97,7 @@ async function handleUserLogin() {
     errorMsg.value = e.message || '登录失败，请重试';
   } finally {
     loading.value = false;
+    router.go(0)
   }
 }
 
@@ -142,6 +144,7 @@ async function handleEmailLogin() {
     errorMsg.value = e.message || '邮箱登录失败，请重试';
   } finally {
     loading.value = false;
+    router.go(0)
   }
 }
 
