@@ -185,7 +185,7 @@ CREATE TABLE `user_info` (
   `email` VARCHAR(255) DEFAULT NULL,
   `avatar_url` VARCHAR(255) DEFAULT NULL,
   `user_permission` ENUM('NORMAL','JUNIOR','INTERMEDIATE','SENIOR','ULTIMATE') NOT NULL DEFAULT 'NORMAL',
-  `email_status` ENUM('unconfirmed','confirmed','undefined') DEFAULT 'unconfirmed',
+  `email_status` ENUM('unconfirmed','confirmed','undefined') DEFAULT 'undefined',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `uniq_user_name` (`user_name`),
   UNIQUE KEY `uniq_email` (`email`)
