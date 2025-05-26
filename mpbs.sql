@@ -195,7 +195,7 @@ CREATE TABLE `user_info`  (
 -- ----------------------------
 -- Records of user_info
 -- ----------------------------
-INSERT INTO `user_info` VALUES (1000000000, 'admin', 'admin', '', '', 'ULTIMATE', 'undefined');
+INSERT INTO `user_info` VALUES (1000000000, 'admin', '$2a$10$A7UvX3POX7I9F.Es8V/aa.CSzjerknd/V1dhGFidDohbsSAmdeMYu', '', '', 'ULTIMATE', 'undefined');
 
 -- ----------------------------
 -- Triggers structure for table blog_post
