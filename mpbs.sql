@@ -11,11 +11,36 @@
  Target Server Version : 80039 (8.0.39)
  File Encoding         : 65001
 
- Date: 24/05/2025 13:40:56
+ Date: 26/05/2025 10:02:49
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for blog_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_comment`;
+CREATE TABLE `blog_comment`  (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `post_id` bigint NOT NULL,
+  `user_id` bigint NOT NULL,
+  `parent_id` bigint NULL DEFAULT NULL,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_post_id`(`post_id` ASC) USING BTREE,
+  INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
+  INDEX `idx_parent_id`(`parent_id` ASC) USING BTREE,
+  CONSTRAINT `fk_comment_parent` FOREIGN KEY (`parent_id`) REFERENCES `blog_comment` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `fk_comment_post` FOREIGN KEY (`post_id`) REFERENCES `blog_post` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `fk_comment_user` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of blog_comment
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for blog_post
@@ -34,31 +59,12 @@ CREATE TABLE `blog_post`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `author_id`(`author_id` ASC) USING BTREE,
   CONSTRAINT `blog_post_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `user_info` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of blog_post
 -- ----------------------------
--- ----------------------------
--- Table structure for blog_comment
--- ----------------------------
-DROP TABLE IF EXISTS `blog_comment`;
-CREATE TABLE `blog_comment`  (
-                                 `id` bigint NOT NULL AUTO_INCREMENT,
-                                 `post_id` bigint NOT NULL,
-                                 `user_id` bigint NOT NULL,
-                                 `parent_id` bigint NULL DEFAULT NULL,
-                                 `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-                                 `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
-                                 `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                                 PRIMARY KEY (`id`) USING BTREE,
-                                 INDEX `idx_post_id`(`post_id` ASC) USING BTREE,
-                                 INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
-                                 INDEX `idx_parent_id`(`parent_id` ASC) USING BTREE,
-                                 CONSTRAINT `fk_comment_parent` FOREIGN KEY (`parent_id`) REFERENCES `blog_comment` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-                                 CONSTRAINT `fk_comment_post` FOREIGN KEY (`post_id`) REFERENCES `blog_post` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-                                 CONSTRAINT `fk_comment_user` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
 -- ----------------------------
 -- Table structure for file_permissions
 -- ----------------------------
@@ -74,7 +80,7 @@ CREATE TABLE `file_permissions`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `id`(`id` ASC) USING BTREE,
   UNIQUE INDEX `file_id`(`file_id` ASC, `role_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 100000012 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 100000001 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of file_permissions
@@ -172,20 +178,24 @@ CREATE TABLE `temporary_links`  (
 -- Table structure for user_info
 -- ----------------------------
 DROP TABLE IF EXISTS `user_info`;
-CREATE TABLE `user_info`  (
-  `user_id` bigint NOT NULL AUTO_INCREMENT,
-  `user_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `user_pwd` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `avatar_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `user_permission` enum('NORMAl','JUNIOR','INTERMEDIATE','SENIOR','ULTIMATE') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'NORMAl',
-  PRIMARY KEY (`user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1000000014 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+CREATE TABLE `user_info` (
+  `user_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `user_name` VARCHAR(255) NOT NULL,
+  `user_pwd` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) DEFAULT NULL,
+  `avatar_url` VARCHAR(255) DEFAULT NULL,
+  `user_permission` ENUM('NORMAL','JUNIOR','INTERMEDIATE','SENIOR','ULTIMATE') NOT NULL DEFAULT 'NORMAL',
+  `email_status` ENUM('unconfirmed','confirmed','undefined') DEFAULT 'unconfirmed',
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `uniq_user_name` (`user_name`),
+  UNIQUE KEY `uniq_email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=1000000001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 -- ----------------------------
 -- Records of user_info
 -- ----------------------------
-INSERT INTO `user_info` VALUES (1000000010, 'admin', 'admin', '', '', 'ULTIMATE');
+INSERT INTO `user_info` VALUES (1000000000, 'admin', 'admin', '11@11.com', '', 'ULTIMATE', 'unconfirmed');
 
 -- ----------------------------
 -- Triggers structure for table blog_post
