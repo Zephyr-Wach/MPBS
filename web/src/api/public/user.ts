@@ -10,7 +10,8 @@ interface LoginResponse {
     message: string;
     data: {
         userId: string;
-        token: string;
+        token: string;         // 访问token
+        refreshToken: string;  // 刷新token
         username: string;
     };
 }
@@ -24,11 +25,11 @@ export function login(params: LoginParams): Promise<LoginResponse> {
 export async function loginAndSaveToken(userName: string, userPwd: string) {
     try {
         const res = await login({ userName, userPwd });
-        if (res.code === 0 && res.data.token) {
-            // 保存 token 到 localStorage
+        if (res.code === 0 && res.data.token && res.data.refreshToken) {
+            // 保存 token 和 refreshToken 到 localStorage 或其他安全存储
             localStorage.setItem('token', res.data.token);
-            console.log('登录成功，token已保存'+res.data.token);
-            // 可以返回用户信息等
+            localStorage.setItem('refreshToken', res.data.refreshToken);
+            console.log('登录成功，token和refreshToken已保存');
             return res.data;
         } else {
             throw new Error(res.message || '登录失败');
@@ -54,11 +55,10 @@ export function loginByEmailCode(params: EmailLoginParams): Promise<any> {
 export async function EmailLoginAndSaveToken(email: string, code: string) {
     try {
         const res = await loginByEmailCode({ email, code });
-        if (res.code === 0 && res.data.token) {
-            // 保存 token 到 localStorage
+        if (res.code === 0 && res.data.token && res.data.refreshToken) {
             localStorage.setItem('token', res.data.token);
-            console.log('登录成功，token已保存'+res.data.token);
-            // 可以返回用户信息等
+            localStorage.setItem('refreshToken', res.data.refreshToken);
+            console.log('邮箱登录成功，token和refreshToken已保存');
             return res.data;
         } else {
             throw new Error(res.message || '登录失败');

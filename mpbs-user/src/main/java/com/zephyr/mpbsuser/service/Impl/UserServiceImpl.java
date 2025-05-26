@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
         return user != null ?
                 Result.success(new HashMap<String, Object>() {{
                     put("token", JwtUtil.generateToken(user.getUserId(),user.getUserPermission()));
+                    put("refreshToken", JwtUtil.generateRefreshToken(user.getUserId(), user.getUserPermission()));
                     put("username", user.getUserName());
                     put("userId", user.getUserId());
                 }}) :
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService {
         return Objects.equals(user.getEmailStatus(), "confirmed") ?
                 Result.success(new HashMap<String, Object>() {{
                     put("token", JwtUtil.generateToken(user.getUserId(),user.getUserPermission()));
+                    put("refreshToken", JwtUtil.generateRefreshToken(user.getUserId(), user.getUserPermission()));
                     put("username", user.getUserName());
                     put("userId", user.getUserId());
                 }}) :
