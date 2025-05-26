@@ -1,5 +1,6 @@
 package com.zephyr.mpbsuser.service.Impl;
 
+import com.zephyr.mpbscommon.utils.PasswordUtil;
 import com.zephyr.mpbscommon.utils.BeanConvertUtil;
 import com.zephyr.mpbscommon.utils.JwtUtil;
 import com.zephyr.mpbscommon.utils.Result;
@@ -26,16 +27,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result login(LoginDTO loginDTO) {
-        UserEntity user = userMapper.findByUserNameAndUserPwd(loginDTO.getUserName(), loginDTO.getUserPwd());
-        return user != null ?
-                Result.success(new HashMap<String, Object>() {{
-                    put("token", JwtUtil.generateToken(user.getUserId(),user.getUserPermission()));
-                    put("refreshToken", JwtUtil.generateRefreshToken(user.getUserId(), user.getUserPermission()));
-                    put("username", user.getUserName());
-                    put("userId", user.getUserId());
-                }}) :
-                Result.failure(400, "用户名或密码错误");
+        // 先查出用户
+        UserEntity user = userMapper.findByUserName(loginDTO.getUserName());
+
+        // 校验密码是否匹配
+        if (user != null && PasswordUtil.matches(loginDTO.getUserPwd(), user.getUserPwd())) {
+            return Result.success(new HashMap<String, Object>() {{
+                put("token", JwtUtil.generateToken(user.getUserId(), user.getUserPermission()));
+                put("refreshToken", JwtUtil.generateRefreshToken(user.getUserId(), user.getUserPermission()));
+                put("username", user.getUserName());
+                put("userId", user.getUserId());
+            }});
+        } else {
+            return Result.failure(400, "用户名或密码错误");
+        }
     }
+
 
     @Override
     public Result emailLogin(String email) {
@@ -52,6 +59,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result register(RegisterDTO registerDTO) {
+        String encryptedPwd = PasswordUtil.encryptPassword(registerDTO.getUserPwd());
+        registerDTO.setUserPwd(encryptedPwd);
         userMapper.insert(registerDTO);
         UserEntity user = userMapper.findByUserName(registerDTO.getUserName());
         return user != null ?

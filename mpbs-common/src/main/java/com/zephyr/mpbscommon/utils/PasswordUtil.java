@@ -1,8 +1,8 @@
-package com.zephyr.mpbssecurity.utils;
+package com.zephyr.mpbscommon.utils;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-public class PasswordUtils {
+public class PasswordUtil {
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
