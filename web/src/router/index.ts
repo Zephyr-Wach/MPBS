@@ -40,11 +40,13 @@ const routes: RouteRecordRaw[] = [
                 path: 'admin/users',
                 name: 'UserManage',
                 component: () => import('@/views/admin/UserManage.vue'),
+                meta: { requiresAuth: true },
             },
             {
                 path: 'admin/blogs',
                 name: 'BlogManage',
                 component: () => import('@/views/admin/BlogManage.vue'),
+                meta: { requiresAuth: true },
             },
             {
                 path: 'admin/blogs/edit/:id',
@@ -57,11 +59,13 @@ const routes: RouteRecordRaw[] = [
                 path: 'admin/clouds',
                 name: 'CloudManage',
                 component: () => import('@/views/admin/MediaManage.vue'),
+                meta: { requiresAuth: true },
             },
             {
                 path: 'admin/deliver',
                 name: 'DeliverBlog',
                 component: () => import('@/views/admin/PostBlog.vue'),
+                meta: { requiresAuth: true },
             },
             {
                 path: 'about',

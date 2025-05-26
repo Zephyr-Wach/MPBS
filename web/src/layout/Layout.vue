@@ -27,17 +27,23 @@
   </div>
 </template>
 
+<script setup lang="ts">
+import { showLoginModal } from '@/router'
+import { useAuth } from '@/composables/useAuth'
+import Sidebar from '@/components/SideBar.vue'
+import Navbar from '@/components/Navbar.vue'
+import Login from '@/components/Login.vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
+const { login } = useAuth()
 
-<script setup>
-import Sidebar from '@/components/SideBar.vue';
-import Navbar from '@/components/Navbar.vue';
-import Login from '@/components/Login.vue';
-import { showLoginModal } from '@/router';
-
-function onLoginSuccess(userData) {
-  showLoginModal.value = false;
-
+function onLoginSuccess(userData: { token: string; refreshToken: string }) {
+  login(userData.token, userData.refreshToken) // 更新状态
+  showLoginModal.value = false                  // 关闭登录弹窗
+  router.push("/").then(() => {
+    window.location.reload()
+  })
 }
 </script>
 

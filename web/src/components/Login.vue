@@ -2,7 +2,6 @@
   <div class="modal-backdrop" @click.self="close">
     <div class="modal">
       <h2>登录</h2>
-
       <!-- 切换登录方式按钮 -->
       <div style="text-align:center; margin-bottom:12px;">
         <button @click="toggleLoginType" style="background:none; border:none; color:#3498db; cursor:pointer;">
@@ -45,38 +44,36 @@
 </template>
 
 <script setup>
-  import { ref, onUnmounted } from 'vue';
-  import { loginAndSaveToken, EmailLoginAndSaveToken } from '@/api/public/user';
-  import { sendCodeToEmail } from '@/api/public/email';
+import { ref, onUnmounted } from 'vue';
+import { loginAndSaveToken, EmailLoginAndSaveToken } from '@/api/public/user';
+import { sendCodeToEmail } from '@/api/public/email';
 
-  const userName = ref('');
-  const userPwd = ref('');
-  const loading = ref(false);
-  const errorMsg = ref('');
-  const isEmailLogin = ref(false);
-  const email = ref('');
-  const code = ref('');
-  const codeSending = ref(false);
-  const countdown = ref(0);
+const userName = ref('');
+const userPwd = ref('');
+const loading = ref(false);
+const errorMsg = ref('');
+const isEmailLogin = ref(false);
+const email = ref('');
+const code = ref('');
+const codeSending = ref(false);
+const countdown = ref(0);
 
-  let timer = null;
+let timer = null;
 
-  const emit = defineEmits(['close', 'loginSuccess']);
+const emit = defineEmits(['close', 'loginSuccess']);
 
-  function close() {
+function close() {
   emit('close');
 }
 
-  // 简单邮箱格式校验
-  function isValidEmail(email) {
+function isValidEmail(email) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(email);
 }
 
-  function toggleLoginType() {
+function toggleLoginType() {
   errorMsg.value = '';
   isEmailLogin.value = !isEmailLogin.value;
-  // 切换登录方式时清空所有相关字段和状态
   userName.value = '';
   userPwd.value = '';
   email.value = '';
@@ -84,76 +81,76 @@
   codeSending.value = false;
   countdown.value = 0;
   if (timer) {
-  clearInterval(timer);
-  timer = null;
-}
+    clearInterval(timer);
+    timer = null;
+  }
 }
 
-  async function handleUserLogin() {
+async function handleUserLogin() {
   loading.value = true;
   errorMsg.value = '';
   try {
-  const userData = await loginAndSaveToken(userName.value, userPwd.value);
-  emit('loginSuccess', userData);
-} catch (e) {
-  errorMsg.value = e.message || '登录失败，请重试';
-} finally {
-  loading.value = false;
-}
+    const userData = await loginAndSaveToken(userName.value, userPwd.value);
+    emit('loginSuccess', userData);
+  } catch (e) {
+    errorMsg.value = e.message || '登录失败，请重试';
+  } finally {
+    loading.value = false;
+  }
 }
 
-  async function sendCode() {
+async function sendCode() {
   if (!email.value) {
-  errorMsg.value = '请输入邮箱';
-  return;
-}
+    errorMsg.value = '请输入邮箱';
+    return;
+  }
   if (!isValidEmail(email.value)) {
-  errorMsg.value = '邮箱格式不正确';
-  return;
-}
+    errorMsg.value = '邮箱格式不正确';
+    return;
+  }
   errorMsg.value = '';
   codeSending.value = true;
 
   try {
-  await sendCodeToEmail(email.value);
-  countdown.value = 60;
-  timer = setInterval(() => {
-  countdown.value--;
-  if (countdown.value <= 0) {
-  clearInterval(timer);
-  timer = null;
-  codeSending.value = false;
-}
-}, 1000);
-} catch (e) {
-  errorMsg.value = e.message || '发送验证码失败';
-  codeSending.value = false;
-}
+    await sendCodeToEmail(email.value);
+    countdown.value = 60;
+    timer = setInterval(() => {
+      countdown.value--;
+      if (countdown.value <= 0) {
+        clearInterval(timer);
+        timer = null;
+        codeSending.value = false;
+      }
+      }, 1000);
+  } catch (e) {
+    errorMsg.value = e.message || '发送验证码失败';
+    codeSending.value = false;
+  }
 }
 
-  async function handleEmailLogin() {
+async function handleEmailLogin() {
   if (!isValidEmail(email.value)) {
-  errorMsg.value = '邮箱格式不正确';
-  return;
-}
+    errorMsg.value = '邮箱格式不正确';
+    return;
+  }
   loading.value = true;
   errorMsg.value = '';
   try {
-  const userData = await EmailLoginAndSaveToken(email.value, code.value);
-  emit('loginSuccess', userData);
-} catch (e) {
-  errorMsg.value = e.message || '邮箱登录失败，请重试';
-} finally {
-  loading.value = false;
-}
+    const userData = await EmailLoginAndSaveToken(email.value, code.value);
+    emit('loginSuccess', userData);
+  } catch (e) {
+    errorMsg.value = e.message || '邮箱登录失败，请重试';
+  } finally {
+    loading.value = false;
+  }
 }
 
-  onUnmounted(() => {
+onUnmounted(() => {
   if (timer) {
-  clearInterval(timer);
-  timer = null;
-  codeSending.value = false;
-}
+    clearInterval(timer);
+    timer = null;
+    codeSending.value = false;
+  }
 });
 </script>
 

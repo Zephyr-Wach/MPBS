@@ -65,6 +65,7 @@
             <if test="info.email != null">email = #{info.email},</if>
             <if test="info.avatarUrl != null">avatar_url = #{info.avatarUrl},</if>
             <if test="info.userPermission != null">user_permission = #{info.userPermission},</if>
+            <if test="info.emailStatus != null">user_permission = #{info.emailStatus},</if>
         </set>
         WHERE user_id = #{userId}
     </update>

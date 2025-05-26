@@ -1,18 +1,50 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuth } from '@/composables/useAuth'
+
+const showDropdown = ref(false)
+const router = useRouter()
+
+const { isLoggedIn, logout } = useAuth()
+
+function handleLogout(): void {
+  logout()
+  router.push('/')
+}
+</script>
+
 <template>
   <header class="navbar">
-    <h1 class="logo">
-      <img src="@/assets/logo.ico" alt="logo" class="logo-img" />
-    </h1>
+    <a href="/" class="logo" aria-label="首页">
+      <img src="@/assets/logo.ico" alt="网站Logo" class="logo-img" />
+    </a>
     <nav>
       <ul class="nav-links">
-        <router-link to="/profile">个人中心</router-link>
+        <li v-if="!isLoggedIn">
+          <!-- 未登录显示登录链接 -->
+          <router-link to="/profile" class="dropdown-toggle">登录</router-link>
+        </li>
+        <li
+            v-else
+            class="dropdown"
+            @mouseenter="showDropdown = true"
+            @mouseleave="showDropdown = false"
+        >
+          <!-- 已登录显示个人中心并带下拉菜单 -->
+          <router-link to="/profile" class="dropdown-toggle">个人中心</router-link>
+          <transition name="fade">
+            <div v-if="showDropdown" class="dropdown-menu">
+              <button class="dropdown-item" @click="handleLogout">退出登录</button>
+            </div>
+          </transition>
+        </li>
       </ul>
     </nav>
   </header>
 </template>
 
-<script setup>
-</script>
+
 
 <style scoped>
 .navbar {
@@ -21,10 +53,9 @@
   left: 0;
   width: 100vw;
   height: 60px;
-  /* 从左到右，渐变 */
   background: linear-gradient(to right, #ffffff, #2de2be);
-  color: #2c3e50; /* 文字深色，和背景对比 */
-  padding: 0 1rem 0 1px; /* 上右下左 */
+  color: #2c3e50;
+  padding: 0 1rem 0 1px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -32,20 +63,17 @@
   box-sizing: border-box;
 }
 
-/* logo区域背景白色，和渐变区区分 */
 .logo {
-  height: 30px;
-  font-size: 1.5rem;
-  font-weight: bold;
   display: flex;
   align-items: center;
   background-color: #ffffff;
   padding: 5px 10px;
   border-radius: 4px;
+  height: 40px;
 }
 
 .logo-img {
-  height: 40px;
+  height: 30px;
   width: auto;
 }
 
@@ -53,15 +81,74 @@
   list-style: none;
   display: flex;
   gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  position: relative;
 }
 
 .nav-links a {
-  color: #2c3e50; /* 深色文字 */
+  color: #2c3e50;
   text-decoration: none;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .nav-links a:hover {
   text-decoration: underline;
+}
+
+.dropdown-toggle {
+  padding: 0.5rem 0.75rem;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  min-width: 140px;
+  padding: 0.5rem 0;
+  z-index: 2000;
+  user-select: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.dropdown-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  color: #333;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  font-size: 1rem;
+  width: 100%;
+  text-align: left;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #2de2be;
+  color: white;
+  border-radius: 8px;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.fade-enter-to, .fade-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>

@@ -103,6 +103,7 @@ async function handleRegister() {
   } finally {
     loading.value = false;
   }
+  emit('close');
 }
 </script>
 

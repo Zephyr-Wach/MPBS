@@ -38,13 +38,7 @@ public class FileServiceImpl implements FileService {
     private String baseUrl;
 
     @Override
-    public List<FilesProcessDTO> getFilesListByRole(String userId) {
-        List<FilesProcessDTO> list = fileMapper.getAccessibleFilesByRole(userId);
-        System.out.println("查询结果: " + list);
-        return list;
-
-//        return fileMapper.getAccessibleFilesByRole(userId);
-    }
+    public List<FilesProcessDTO> getFilesListByRole(String userId) {return fileMapper.getAccessibleFilesByRole(userId);}
 
     @Override
     public FilesProcessDTO uploadFile(MultipartFile file, String uploaderId) throws IOException {
