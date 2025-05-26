@@ -1,81 +1,41 @@
 <template>
-  <div class="comments-section" style="margin-top: 2rem; max-width: 800px; margin-left:auto; margin-right:auto;">
-    <h3>评论区</h3>
+  <div class="comments-section">
+    <h3 class="section-title">评论区</h3>
 
-    <div v-if="loading">加载中...</div>
+    <div v-if="loading" class="loading-text">加载中...</div>
+
     <div v-else>
-      <div v-if="commentTree.length === 0">暂无评论，快来抢沙发！</div>
+      <div v-if="commentTree.length === 0" class="no-comments">暂无评论，快来抢沙发！</div>
 
-      <ul>
-        <li v-for="comment in commentTree" :key="comment.id" style="margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">
-          <div>
-            <strong>{{ comment.userName }}</strong>
-            <small style="color:#999;">{{ formatDate(comment.createdAt) }}</small>
-
-            <!-- 删除按钮 -->
-            <button
-                v-if="canDeleteComment(comment.userId)"
-                @click="deleteThisComment(comment.id)"
-                style="float:right; color:red; border:none; background:none; cursor:pointer;"
-            >删除</button>
-
-            <!-- 回复按钮 -->
-            <button
-                @click="toggleReply(comment.id)"
-                style="float:right; margin-right: 10px; color:#409eff; border:none; background:none; cursor:pointer;"
-            >{{ replyCommentId === comment.id ? '取消回复' : '回复' }}</button>
-          </div>
-          <p>{{ comment.content }}</p>
-
-          <!-- 回复输入框 -->
-          <div v-if="replyCommentId === comment.id" style="margin-top: 0.5rem;">
-            <textarea
-                v-model="replyContent"
-                rows="2"
-                style="width: 100%;"
-                placeholder="请输入回复内容"
-            ></textarea>
-            <button
-                @click="submitComment(comment.id)"
-                :disabled="submitLoading"
-                style="margin-top: 0.5rem; background:#67c23a; color:white; border:none; border-radius: 4px; padding: 0.3rem 1rem;"
-            >{{ submitLoading ? '提交中...' : '提交回复' }}</button>
-          </div>
-
-          <!-- 子评论 -->
-          <ul v-if="comment.children && comment.children.length" style="margin-left: 1.5rem; margin-top:0.5rem;">
-            <li v-for="child in comment.children" :key="child.id" style="margin-bottom: 0.5rem;">
-              <strong>{{ child.userName }}</strong>
-              <small style="color:#999;">{{ formatDate(child.createdAt) }}</small>
-
-              <!-- 删除按钮 -->
-              <button
-                  v-if="canDeleteComment(child.userId)"
-                  @click="deleteThisComment(child.id)"
-                  style="float:right; color:red; border:none; background:none; cursor:pointer;"
-              >删除</button>
-
-              <p>{{ child.content }}</p>
-            </li>
-          </ul>
-        </li>
+      <ul class="comment-list">
+        <CommentItem
+            v-for="comment in commentTree"
+            :key="comment.id"
+            :comment="comment"
+            :current-user="currentUser"
+            :reply-comment-id="replyCommentId"
+            :submit-loading="submitLoading"
+            @toggle-reply="toggleReply"
+            @submit-comment="submitCommentFromChild"
+            @delete-comment="deleteThisComment"
+        />
       </ul>
 
-      <!-- 顶级评论 -->
-      <div style="margin-top: 2rem;">
+      <!-- 顶级评论输入 -->
+      <div class="new-comment">
         <h4>发表评论</h4>
         <textarea
             v-model="newComment"
             placeholder="请输入评论内容"
             rows="4"
-            style="width: 100%;"
             :disabled="!isLoggedIn"
         ></textarea>
         <button
-            @click="submitComment(null)"
+            @click="submitComment(null, newComment)"
             :disabled="submitLoading || !isLoggedIn"
-            style="margin-top: 0.5rem; padding: 0.5rem 1rem; background:#409eff; color:#fff; border:none; border-radius: 4px;"
         >
+
+
           {{ submitLoading ? '提交中...' : isLoggedIn ? '提交评论' : '请先登录' }}
         </button>
       </div>
@@ -89,6 +49,7 @@ import { getCommentList } from '@/api/public/comment';
 import { addComment, deleteComment } from '@/api/user/comment';
 import { getUserInfo } from '@/api/user/user';
 import { useRouter } from 'vue-router';
+import CommentItem from './CommentItem.vue';
 
 const router = useRouter();
 
@@ -103,16 +64,10 @@ const commentTree = ref([]);
 const loading = ref(false);
 const submitLoading = ref(false);
 const newComment = ref('');
-const replyCommentId = ref<string | null>(null); // 当前正在回复的评论id
-const replyContent = ref('');
+const replyCommentId = ref<string | null>(null);
 
 const currentUser = ref({ userId: '', userPermission: '' });
 const isLoggedIn = ref(false);
-
-function formatDate(dateStr) {
-  const date = new Date(dateStr);
-  return date.toLocaleString();
-}
 
 async function loadUser() {
   try {
@@ -120,10 +75,8 @@ async function loadUser() {
     if (res.code === 0) {
       currentUser.value = res.data;
       isLoggedIn.value = true;
-    } else {
-      isLoggedIn.value = false;
     }
-  } catch (e) {
+  } catch {
     isLoggedIn.value = false;
   }
 }
@@ -150,31 +103,16 @@ function toggleReply(commentId: string) {
     router.push({ name: 'Login' });
     return;
   }
-  if (replyCommentId.value === commentId) {
-    replyCommentId.value = null;
-    replyContent.value = '';
-  } else {
-    replyCommentId.value = commentId;
-    replyContent.value = '';
-  }
+  replyCommentId.value = replyCommentId.value === commentId ? null : commentId;
 }
 
-function canDeleteComment(commentUserId: string) {
-  const permission = currentUser.value.userPermission;
-  const allowed = ['INTERMEDIATE', 'SENIOR', 'ULTIMATE'];
-  return (
-      isLoggedIn.value &&
-      (commentUserId === currentUser.value.userId || allowed.includes(permission))
-  );
-}
-
-async function submitComment(parentId: string | null) {
+async function submitComment(parentId: string | null, content: string) {
   if (!isLoggedIn.value) {
     router.push({ name: 'Login' });
     return;
   }
 
-  const content = parentId ? replyContent.value.trim() : newComment.value.trim();
+  content = content.trim();
   if (!content) {
     alert('请输入评论内容');
     return;
@@ -184,16 +122,15 @@ async function submitComment(parentId: string | null) {
   try {
     const res = await addComment({
       postId: props.postId,
-      parentId: parentId || null,
-      content: content,
+      parentId,
+      content
     });
     if (res.code === 0) {
       newComment.value = '';
-      replyContent.value = '';
       replyCommentId.value = null;
       await loadComments();
     } else {
-      alert('评论提交失败：' + res.message);
+      alert('评论失败：' + res.message);
     }
   } catch (e) {
     alert('提交评论出错');
@@ -202,6 +139,12 @@ async function submitComment(parentId: string | null) {
     submitLoading.value = false;
   }
 }
+
+
+function submitCommentFromChild({ parentId, content }: { parentId: string, content: string }) {
+  submitComment(parentId, content);
+}
+
 
 async function deleteThisComment(id: string) {
   if (!confirm('确认删除这条评论吗？')) return;
@@ -223,3 +166,98 @@ onMounted(async () => {
   await loadComments();
 });
 </script>
+
+<style scoped>
+.comments-section {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(64, 158, 255, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2de2be;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #409eff;
+  padding-bottom: 0.3rem;
+}
+
+.loading-text,
+.no-comments {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  margin: 2rem 0;
+}
+
+.comment-list {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 2rem;
+}
+
+.new-comment {
+  border-top: 1px solid #ddd;
+  padding-top: 1rem;
+}
+
+.new-comment h4 {
+  font-weight: 600;
+  color: #409eff;
+  margin-bottom: 0.75rem;
+}
+
+.new-comment textarea {
+  width: 100%;
+  border-radius: 10px;
+  border: 1.5px solid #ddd;
+  padding: 0.75rem 1rem;
+  resize: vertical;
+  font-size: 1rem;
+  color: #444;
+  transition: border-color 0.3s ease;
+  outline: none;
+}
+
+.new-comment textarea:focus {
+  border-color: #2de2be;
+  box-shadow: 0 0 6px #2de2beaa;
+}
+
+.new-comment textarea:disabled {
+  background-color: #f5f5f5;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.new-comment button {
+  margin-top: 0.75rem;
+  padding: 0.55rem 1.4rem;
+  background-color: #409eff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+.new-comment button:disabled {
+  background-color: #ddd;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.new-comment button:not(:disabled):hover {
+  background-color: #2de2be;
+}
+
+</style>
