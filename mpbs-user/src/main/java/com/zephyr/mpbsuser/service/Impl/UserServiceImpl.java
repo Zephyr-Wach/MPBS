@@ -120,10 +120,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updateEmailStatus(String email, String status) {
-        UserEntity user = userMapper.findByEmail(email);
-        user.setEmailStatus(status);
-        userMapper.updateEmailStatus(email, status);
-        return Objects.equals(userMapper.findByEmail(email).getEmailStatus(), status);
+    public boolean updateEmailStatus(String userId, String email, String status) {
+        UserEntity user = userMapper.findByUserId(userId);
+        user.setEmail(email);
+        user.setEmailStatus("confirmed");
+        return userMapper.updateUserInfo(userId, BeanConvertUtil.convert(user, UserInfoDTO.class));
     }
 }

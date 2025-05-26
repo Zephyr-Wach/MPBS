@@ -2,20 +2,26 @@
 import { ref, onMounted } from 'vue';
 import { getUserInfo, updateUserInfo, updatePassword } from '@/api/user/user';
 import { uploadFile, generateUrl } from '@/api/admin/media';
+import { checkEmail, checkEmailExist } from '@/api/user/email';
+import { sendCodeToEmail } from '@/api/public/email';
 
 interface UserInfo {
   userId: string;
   userName: string;
   userPwd: string | null;
   email: string | null;
+  emailStatus: string;  // 'confirmed' | 'unconfirmed' | 'undefined'
   avatarUrl: string | null;
   userPermission: string;
 }
+
 
 const userInfo = ref<UserInfo | null>(null);
 const error = ref<string | null>(null);
 const successMsg = ref<string | null>(null);
 const uploading = ref(false);
+const sendCodeCooldown = ref(0);
+let cooldownTimer: number | null = null;
 
 async function fetchUserInfo() {
   try {
@@ -170,6 +176,122 @@ async function submitChangePassword() {
   }
 }
 
+// --- 新增邮箱验证相关 ---
+
+const emailVerificationDialog = ref(false);
+const emailForVerification = ref('');  // 待验证邮箱
+const emailCode = ref('');
+const emailError = ref<string | null>(null);
+const emailSuccess = ref<string | null>(null);
+const sendingCode = ref(false);
+const verifying = ref(false);
+
+function handleEmailClick() {
+  if (userInfo.value?.emailStatus !== 'confirmed') {
+    openEmailVerification();
+  }
+}
+
+function openEmailVerification() {
+  emailError.value = null;
+  emailSuccess.value = null;
+  emailCode.value = '';
+  if (userInfo.value?.email) {
+    emailForVerification.value = userInfo.value.email;
+  } else {
+    emailForVerification.value = '';
+  }
+  emailVerificationDialog.value = true;
+}
+
+async function sendVerificationCode() {
+  emailError.value = null;
+  emailSuccess.value = null;
+
+  if (!emailForVerification.value) {
+    emailError.value = '请输入邮箱地址';
+    return;
+  }
+  if (!validateEmail(emailForVerification.value)) {
+    emailError.value = '邮箱格式不正确';
+    return;
+  }
+
+  if (sendCodeCooldown.value > 0) {
+    emailError.value = `请等待${sendCodeCooldown.value}秒后再发送`;
+    return;
+  }
+
+  // 如果是新增邮箱，先检查是否已注册
+  if (userInfo.value?.emailStatus === 'undefined') {
+    try {
+      const existRes = await checkEmailExist(emailForVerification.value);
+      if (existRes.code === 0 && existRes.data.exists) {
+        emailError.value = '该邮箱已被注册';
+        return;
+      }
+    } catch {
+      emailError.value = '邮箱校验接口异常';
+      return;
+    }
+  }
+
+  sendingCode.value = true;
+  try {
+    const sendRes = await sendCodeToEmail(emailForVerification.value);
+    if (sendRes.code === 0) {
+      emailSuccess.value = '验证码已发送，请查收邮箱';
+      // 开始冷却倒计时60秒
+      sendCodeCooldown.value = 60;
+      cooldownTimer = setInterval(() => {
+        sendCodeCooldown.value--;
+        if (sendCodeCooldown.value <= 0 && cooldownTimer) {
+          clearInterval(cooldownTimer);
+          cooldownTimer = null;
+        }
+      }, 1000);
+    } else {
+      emailError.value = sendRes.message || '验证码发送失败';
+    }
+  } catch {
+    emailError.value = '验证码发送异常';
+  } finally {
+    sendingCode.value = false;
+  }
+}
+
+async function verifyEmailCode() {
+  emailError.value = null;
+  emailSuccess.value = null;
+
+  if (!emailCode.value) {
+    emailError.value = '请输入验证码';
+    return;
+  }
+  verifying.value = true;
+  try {
+    const verifyRes = await checkEmail({
+      email: emailForVerification.value,
+      code: emailCode.value
+    });
+    if (verifyRes.code === 0) {
+      emailSuccess.value = '邮箱验证成功';
+      // 更新用户信息状态和邮箱
+      if (userInfo.value) {
+        userInfo.value.email = emailForVerification.value;
+        userInfo.value.emailStatus = 'confirmed';
+      }
+      emailVerificationDialog.value = false;
+    } else {
+      emailError.value = verifyRes.message || '验证码验证失败';
+    }
+  } catch {
+    emailError.value = '邮箱验证接口异常';
+  } finally {
+    verifying.value = false;
+  }
+}
+
 </script>
 
 <template>
@@ -202,15 +324,36 @@ async function submitChangePassword() {
       </div>
       <div class="info-row"><span>用户ID:</span> {{ userInfo.userId }}</div>
       <div class="info-row"><span>用户名:</span> {{ userInfo.userName }}</div>
+      <!-- 主界面邮箱展示 -->
       <div class="info-row">
         <span>邮箱:</span>
         <input
             type="email"
-            v-model="userInfo.email"
-            placeholder="请输入邮箱"
+            :value="userInfo.email || ''"
+            readonly
+            placeholder="未设置邮箱"
             class="input-email"
+
+            style="cursor: pointer; background-color: #f9f9f9;"
         />
       </div>
+
+
+      <div class="info-row">
+        <span>邮箱状态:</span>
+        <template v-if="userInfo.emailStatus === 'confirmed'">
+          <span style="color: green;">已验证</span>
+        </template>
+        <template v-else-if="userInfo.emailStatus === 'unconfirmed'">
+          <span style="color: orange;">未验证</span>
+          <button @click="openEmailVerification" style="margin-left: 8px;">验证邮箱</button>
+        </template>
+        <template v-else-if="userInfo.emailStatus === 'undefined'">
+          <span style="color: gray;">未设置邮箱</span>
+          <button @click="handleEmailClick" style="margin-left: 8px;">添加邮箱</button>
+        </template>
+      </div>
+
       <div class="info-row"><span>权限:</span> {{ userInfo.userPermission }}</div>
       <button class="update-button" @click="updateInfo">修改</button>
 
@@ -250,7 +393,51 @@ async function submitChangePassword() {
         <div class="modal-actions">
           <button @click="closePwdDialog" :disabled="loadingPassword">取消</button>
           <button @click="submitChangePassword" :disabled="loadingPassword">
-            {{ loadingPassword ? '提交中...' : '提交修改' }}
+            {{ loadingPassword ? '提交中...' : '提交' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 邮箱验证弹窗 -->
+    <div
+        v-if="emailVerificationDialog"
+        class="modal-overlay"
+        @click.self="emailVerificationDialog = false"
+    >
+      <div class="modal-content">
+        <h3>{{ userInfo?.emailStatus === 'undefined' ? '添加邮箱并验证' : '邮箱验证' }}</h3>
+
+        <div v-if="emailError" class="error-msg">{{ emailError }}</div>
+        <div v-if="emailSuccess" class="success-msg">{{ emailSuccess }}</div>
+
+        <input
+            type="email"
+            v-model="emailForVerification"
+            placeholder="请输入邮箱"
+            :disabled="userInfo?.emailStatus === 'unconfirmed'"
+            style="margin-bottom: 12px;"
+        />
+        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+          <input
+              type="text"
+              v-model="emailCode"
+              placeholder="请输入验证码"
+              style="flex: 1;"
+          />
+          <button
+              @click="sendVerificationCode"
+              :disabled="sendingCode || sendCodeCooldown > 0 || !emailForVerification || !validateEmail(emailForVerification)"
+          >
+            {{ sendingCode ? '发送中...' : sendCodeCooldown > 0 ? `重新发送(${sendCodeCooldown}s)` : '发送验证码' }}
+          </button>
+
+        </div>
+
+        <div class="modal-actions">
+          <button @click="emailVerificationDialog = false" :disabled="verifying">取消</button>
+          <button @click="verifyEmailCode" :disabled="verifying">
+            {{ verifying ? '验证中...' : '提交验证' }}
           </button>
         </div>
       </div>
@@ -261,157 +448,123 @@ async function submitChangePassword() {
 <style scoped>
 .profile-container {
   max-width: 400px;
-  margin: 40px auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background-color: #fafafa;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
 }
-
-h2 {
-  text-align: center;
-  margin-bottom: 24px;
-  color: #333;
-}
-
-.error-msg {
-  color: #d93025;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.success-msg {
-  color: #4caf50;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.profile-info {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
 .avatar-box {
   width: 100px;
   height: 100px;
-  margin: 0 auto 20px auto;
-  border: 2px dashed #bbb;
-  border-radius: 50%;
+  margin-bottom: 12px;
+  background-color: #ddd;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #fff;
-  color: #666;
-  font-size: 12px;
-  text-align: center;
-  padding: 8px;
-  word-break: break-word;
-  position: relative;
+  border-radius: 50%;
   overflow: hidden;
 }
-
 .avatar-text {
-  line-height: 1.2;
+  color: #666;
+  font-size: 14px;
 }
-
 .info-row {
+  margin-bottom: 12px;
   display: flex;
-  justify-content: space-between;
-  font-size: 16px;
-  color: #444;
-  border-bottom: 1px solid #eaeaea;
-  padding-bottom: 6px;
+  align-items: center;
 }
-
-.info-row span {
+.info-row span:first-child {
+  width: 80px;
   font-weight: 600;
-  color: #222;
 }
-
+.input-email {
+  flex: 1;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.update-button {
+  width: 100%;
+  padding: 8px 0;
+  background-color: #409eff;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.update-button:hover {
+  background-color: #66b1ff;
+}
+.error-msg {
+  color: #f56c6c;
+  margin-bottom: 12px;
+}
+.success-msg {
+  color: #67c23a;
+  margin-bottom: 12px;
+}
 .loading {
   text-align: center;
-  color: #888;
-  font-style: italic;
+  color: #999;
+  margin-top: 40px;
 }
 
-/* 弹窗遮罩 */
+/* 弹窗通用样式 */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.4);
+  background-color: rgba(0,0,0,0.4);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
 }
-
-/* 弹窗内容 */
 .modal-content {
-  background: white;
-  padding: 24px;
-  width: 320px;
+  background-color: white;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 0.2);
-  display: flex;
-  flex-direction: column;
+  padding: 20px;
+  width: 320px;
+  max-width: 90vw;
+  box-sizing: border-box;
 }
-
 .modal-content h3 {
   margin-bottom: 16px;
-  text-align: center;
+  font-weight: 600;
 }
-
 .modal-content input {
+  width: 100%;
+  padding: 6px 10px;
   margin-bottom: 12px;
-  padding: 8px 12px;
-  font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box;
 }
-
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
+  gap: 8px;
 }
-
 .modal-actions button {
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: none;
   cursor: pointer;
 }
-
 .modal-actions button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
-.input-email {
-  width: 220px;         /* 限制宽度 */
-  padding: 6px 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  outline: none;
-  transition: border-color 0.3s ease;
+.modal-actions button:first-child {
+  background-color: #f0f0f0;
   color: #333;
-  text-align: right;    /* 文本靠右 */
 }
-
-.input-email::placeholder {
-  color: #aaa;
-  text-align: right;    /* placeholder 也靠右 */
+.modal-actions button:last-child {
+  background-color: #409eff;
+  color: white;
 }
-
-.input-email:focus {
-  border-color: #409eff;
-  box-shadow: 0 0 5px rgba(64,158,255,0.5);
+.modal-actions button:last-child:hover:not(:disabled) {
+  background-color: #66b1ff;
 }
-
 </style>

@@ -35,7 +35,10 @@
           <button type="button" class="close-btn" @click="close">关闭</button>
         </div>
       </form>
-
+      <p class="register-tip">
+        还没有账号，
+        <a href="#" @click.prevent="$emit('showRegister')">点击注册</a>
+      </p>
       <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
     </div>
   </div>

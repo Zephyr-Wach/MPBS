@@ -72,9 +72,10 @@ public interface UserService {
 
     /**
      * 修改邮箱状态
+     * @param userId 用户id
      * @param email 邮箱
      * @param status 状态
      * @return 修改结果
      */
-    boolean updateEmailStatus(String email, String status);
+    boolean updateEmailStatus(String userId, String email, String status);
 }

@@ -9,4 +9,5 @@ public class UserInfoDTO {
     private String email;
     private String avatarUrl;
     private String userPermission; // 权限字段
+    private String emailStatus;
 }

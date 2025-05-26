@@ -11,3 +11,11 @@ export function checkEmail(params: checkParams){
         data: params,
     });
 }
+
+export function checkEmailExist(email: string) {
+    return request({
+        url: '/email/checkEmailExist',
+        method: 'get',
+        params: { email },
+    });
+}
