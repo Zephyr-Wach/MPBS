@@ -69,4 +69,13 @@
         WHERE user_id = #{userId}
     </update>
 
+    <select id="findByEmail" resultType="com.zephyr.mpbsuser.entity.UserEntity">
+        SELECT * FROM user_info WHERE email = #{email}
+    </select>
+
+    <!-- 更新邮箱状态 -->
+    <update id="updateEmailStatus">
+        UPDATE user_info SET email_status = #{status} WHERE email = #{email}
+    </update>
+
 </mapper>

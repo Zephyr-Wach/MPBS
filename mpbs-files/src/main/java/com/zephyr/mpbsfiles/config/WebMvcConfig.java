@@ -22,8 +22,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
             systemUploadPath += "/";
         }
         mediaPath = "file:" + systemUploadPath ;
-//                + "Media/";
-        System.out.println("映射的静态资源路径：" + mediaPath);
     }
 
     @Override

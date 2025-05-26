@@ -83,4 +83,19 @@ public interface UserMapper {
      * @return 更新是否成功
      */
     boolean updateUserInfo(@Param("userId") String userId, @Param("info") UserInfoDTO info);
+
+    /**
+     * 根据邮箱查询用户信息
+     * @param email 邮箱
+     * @return 用户实体
+     */
+    UserEntity findByEmail(@Param("email") String email);
+
+    /**
+     * 更新用户邮箱状态
+     * @param email  邮箱
+     * @param status 状态
+     * @return 更新是否成功
+     */
+    int updateEmailStatus(@Param("email") String email, @Param("status") String status);
 }

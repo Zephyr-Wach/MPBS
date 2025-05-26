@@ -8,12 +8,18 @@ import java.util.List;
 
 public interface UserService {
 
-    /**\
+    /**
      * 用户登录
      * @param loginDTO 登录数据
      * @return 登录结果
      */
     Result login( LoginDTO loginDTO);
+
+    /**
+     * 用户邮箱登陆
+     * @return loginDTO 登录数据
+     */
+    Result emailLogin(String email);
 
     /**
      * 用户注册
@@ -63,4 +69,12 @@ public interface UserService {
      * @return 修改结果
      */
     boolean updateUserInfo(String userId, UserInfoDTO info);
+
+    /**
+     * 修改邮箱状态
+     * @param email 邮箱
+     * @param status 状态
+     * @return 修改结果
+     */
+    boolean updateEmailStatus(String email, String status);
 }

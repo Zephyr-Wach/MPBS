@@ -37,6 +37,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Result emailLogin(String email) {
+        UserEntity user = userMapper.findByEmail(email);
+        return Objects.equals(user.getEmailStatus(), "confirmed") ?
+                Result.success(new HashMap<String, Object>() {{
+                    put("token", JwtUtil.generateToken(user.getUserId(),user.getUserPermission()));
+                    put("username", user.getUserName());
+                    put("userId", user.getUserId());
+                }}) :
+                Result.failure(400, "邮箱未验证，无法登陆");
+    }
+
+    @Override
     public Result register(RegisterDTO registerDTO) {
         userMapper.insert(registerDTO);
         UserEntity user = userMapper.findByUserName(registerDTO.getUserName());
@@ -105,5 +117,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean updateUserInfo(String userId, UserInfoDTO info) {
         return userMapper.updateUserInfo(userId, info);
+    }
+
+    @Override
+    public boolean updateEmailStatus(String email, String status) {
+        UserEntity user = userMapper.findByEmail(email);
+        user.setEmailStatus(status);
+        userMapper.updateEmailStatus(email, status);
+        return Objects.equals(userMapper.findByEmail(email).getEmailStatus(), status);
     }
 }

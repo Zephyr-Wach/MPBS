@@ -8,16 +8,19 @@ dependencies {
     implementation project(':mpbs-common')
     implementation project(':mpbs-security')
 
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis' // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-mail'        // 邮件发送
+    implementation 'cn.hutool:hutool-all:5.8.25'                             // Hutool 工具包
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-web'       // Web相关
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'   // JPA，如果用MyBatis可以改成MyBatis依赖
-    implementation 'mysql:mysql-connector-java'                              // MySQL驱动
+    implementation 'org.springframework.boot:spring-boot-starter-web'         // Web相关
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'    // JPA
+    implementation 'mysql:mysql-connector-java'                               // MySQL驱动
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2' // MyBatis Starter
-    dependencies {
-        compileOnly 'org.projectlombok:lombok'
-        annotationProcessor 'org.projectlombok:lombok'
-    }
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 }
+
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'

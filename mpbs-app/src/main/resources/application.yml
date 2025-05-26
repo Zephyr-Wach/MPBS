@@ -1,22 +1,6 @@
 server:
   port: 6688
 
-spring:
-  servlet:
-    multipart:
-      enabled: true           # 开启文件上传支持
-      max-file-size: 50MB     # 单个文件最大大小，可以改成你想要的，比如50MB、200MB等
-      max-request-size: 200MB # 一次请求能上传的所有文件总大小，可以单独设置，比max-file-size大
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/mpbs?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
-    username:
-    password:
-
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-
-
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.zephyr.mpbsapp.entity
@@ -28,15 +12,56 @@ logging:
   level:
     root: INFO
 
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+  servlet:
+    multipart:
+      enabled: true           # 开启文件上传支持
+      max-file-size: 50MB     # 单个文件最大大小，可以改成你想要的，比如50MB、200MB等
+      max-request-size: 200MB # 一次请求能上传的所有文件总大小，可以单独设置，比max-file-size大
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/mpbs?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+    username:
+    password:
+
+  redis:
+    host: localhost
+    port: 6379
+    # 如果有密码：
+    # password: your_password
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1ms
+
+  mail:
+    host: smtp.163.com
+    port: 465
+    username:
+    password:
+    default-encoding: UTF-8
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.socketFactory.port: 465
+      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+
 jwt:
-  secret: SecretKey
-  expiration: 3600000
+  secret:
+  expiration:
 
 public:
   base-url:
 #  https://files.example.com
 #  http://localhost:80
+#  http://mpbs.tech/
 file:
   upload-path:
-#  "D:/mpbs"
+#  "D:/Users/wangc/Downloads/mpbs"
 #  /home/MPBS
