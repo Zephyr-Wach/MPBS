@@ -2,6 +2,10 @@
 
 MPBS（My Personal Blog Site）是一个基于 Java + Gradle 构建的多模块博客系统，支持用户认证、博客管理、文件上传、角色权限、媒体展示等功能，适合学习与个人博客部署。
 
+
+这是我的第一个开源项目，会有一些不完善的地方，欢迎大家提issue和PR，一起完善博客功能。
+
+
 - 🌐 演示站点：[http://mpbs.tech](http://mpbs.tech)
 - 🪪 开源协议：[MIT License](LICENSE)
 - 👤 项目作者：Zephyr
@@ -39,6 +43,9 @@ MPBS（My Personal Blog Site）是一个基于 Java + Gradle 构建的多模块�
 ![首页](/web/public/2-1.png)
 ![Blog](/web/public/2-2.png)
 ![关于&联系](/web/public/2-3.png)
+
+3.日志查询
+![日志查询](/web/public/3-1.png)
 
 ## 🧰 技术栈
 
