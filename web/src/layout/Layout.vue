@@ -11,7 +11,7 @@
             <p>© 2025 MPBS. 本站内容已在 <a href="https://github.com/Zephyr-Wach/MPBS" target="_blank">GitHub</a> 开源，遵循 MIT 协议。</p>
             <p>本站为个人技术展示用途，未开展任何商业行为。</p>
             <p class="record">
-              <span>ICP备案号：<a href="https://beian.miit.gov.cn" target="_blank">填写备案号后替换这里</a></span>
+              <span>ICP备案号：<a href="https://beian.miit.gov.cn" target="_blank">苏ICP备2025185583号-1</a></span>
             </p>
           </div>
         </footer>
@@ -82,9 +82,8 @@ function onLoginSuccess(userData: { token: string; refreshToken: string }) {
   overflow-y: auto;
 }
 
-/* 新增的页脚样式：暗色风格，不固定位置 */
 .footer {
-  margin-top: 40px;
+  margin-top: auto; /* ✅ 修改：自动推到底部 */
   text-align: center;
   font-size: 13px;
   color: #bbb;
@@ -92,12 +91,13 @@ function onLoginSuccess(userData: { token: string; refreshToken: string }) {
   padding: 12px 0;
   border-radius: 8px;
 }
+
 .footer a {
   color: #bbb;
   text-decoration: none;
 }
+
 .footer a:hover {
   text-decoration: underline;
 }
-
 </style>
