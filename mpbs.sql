@@ -130,15 +130,15 @@ CREATE TABLE `medias`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `sidebar_menu`;
 CREATE TABLE `sidebar_menu`  (
-  `id` bigint NOT NULL,
-  `parent_id` bigint NULL DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `permission_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `order_num` int NULL DEFAULT NULL,
-  `is_visible` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
+    `id` bigint NOT NULL,
+    `parent_id` bigint NULL DEFAULT NULL,
+    `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+    `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+    `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+    `permission_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+    `order_num` int NULL DEFAULT NULL,
+    `is_visible` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+    PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -155,6 +155,10 @@ INSERT INTO `sidebar_menu` VALUES (8, 4, '发表Blog', '/admin/deliver', NULL, '
 INSERT INTO `sidebar_menu` VALUES (9, NULL, '关于&联系', '/about', NULL, NULL, NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (10, 11, '云盘', '/cloud', NULL, 'ROLE_SENIOR', NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (11, NULL, '管理', NULL, NULL, 'ROLE_SENIOR', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (12, 4, '日志列表', '/admin/log', NULL, 'ROLE_ULTIMATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (13, 11, '日志列表', '/admin/log', NULL, 'ROLE_SENIOR', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (14, NULL, '管理', NULL, NULL, 'ROLE_INTERMEDIATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (15, 14, '日志列表', '/admin/log', NULL, 'ROLE_INTERMEDIATE', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for temporary_links
@@ -234,19 +238,23 @@ END
 ;;
 delimiter ;
 
+-- ----------------------------
+-- Table structure for operation_log
+-- ----------------------------
 DROP TABLE IF EXISTS `operation_log`;
-CREATE TABLE operation_log (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '日志ID',
-    user_account VARCHAR(64) NOT NULL COMMENT '用户账号',
-    operation_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
-    operation_type VARCHAR(32) NOT NULL COMMENT '操作类型',
-    source_ip VARCHAR(45) COMMENT '客户端IP',
-    target_ip VARCHAR(45) COMMENT '服务器IP',
-    source_port INT COMMENT '客户端端口',
-    client_hardware TEXT COMMENT '客户端硬件信息(User-Agent)',
-    operation_detail TEXT COMMENT '操作详情',
-    INDEX idx_user_account (user_account),
-    INDEX idx_operation_time (operation_time)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统操作日志表';
+CREATE TABLE `operation_log`  (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '日志ID',
+    `user_account` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户账号',
+    `operation_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
+    `operation_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '操作类型',
+    `source_ip` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '客户端IP',
+    `target_ip` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '服务器IP',
+    `source_port` int NULL DEFAULT NULL COMMENT '客户端端口',
+    `client_hardware` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '客户端硬件信息(User-Agent)',
+    `operation_detail` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '操作详情',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_user_account`(`user_account` ASC) USING BTREE,
+    INDEX `idx_operation_time`(`operation_time` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统操作日志表' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

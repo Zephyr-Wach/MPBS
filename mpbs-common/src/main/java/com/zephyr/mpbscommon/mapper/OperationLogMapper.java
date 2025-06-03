@@ -1,5 +1,6 @@
 package com.zephyr.mpbscommon.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.zephyr.mpbscommon.entity.OperationLog;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -7,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 操作日志 Mapper 接口
  */
 @Mapper
-public interface OperationLogMapper {
+public interface OperationLogMapper extends BaseMapper<OperationLog> {
 
     /**
      * 插入操作日志记录
