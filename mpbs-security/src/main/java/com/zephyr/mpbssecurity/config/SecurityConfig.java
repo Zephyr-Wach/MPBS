@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/blog/update/**").hasRole("ULTIMATE")
                 .antMatchers("/blog/delete/**").hasRole("ULTIMATE")
                 .antMatchers("/files/**").hasAnyRole("ULTIMATE", "SENIOR")
-
+                .antMatchers("/logs/**").hasAnyRole("ULTIMATE", "SENIOR", "INTERMEDIATE")
                 .anyRequest().authenticated();
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }

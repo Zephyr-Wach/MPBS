@@ -13,7 +13,16 @@
       </div>
       <div>
         <label>操作类型：</label>
-        <input v-model="filters.operationType" placeholder="请输入操作类型" />
+        <select v-model="filters.operationType">
+          <option value="">全部</option>
+          <option
+              v-for="type in operationTypes"
+              :key="type"
+              :value="type"
+          >
+            {{ type }}
+          </option>
+        </select>
       </div>
       <div>
         <label>开始时间：</label>
@@ -87,6 +96,40 @@
 import {ref, computed} from 'vue';
 import {getLogsList} from '@/api/admin/log';
 
+const operationTypes = [
+  '根据当前登录用户角色获取侧边栏菜单列表',
+  '刷新token',
+  '发表博客文章',
+  '分页获取文章列表',
+  '获取指定ID的博客详情',
+  '修改指定ID的博客文章',
+  '删除指定ID的博客文章',
+  '新增评论',
+  '获取指定博客文章的所有评论',
+  '删除指定ID的评论',
+  '获取操作日志列表',
+  '上传图片或视频',
+  '生成媒体文件访问URL',
+  '删除图片或视频',
+  '获取当前用户的图片/视频列表',
+  '删除文件',
+  '通过分享链接下载文件',
+  '分享文件',
+  '下载文件',
+  '上传文件',
+  '根据当前用户的token获取该用户角色可访问的文件列表',
+  '更新密码',
+  '获取用户信息',
+  '更新用户信息',
+  '获取用户列表',
+  'LOGIN',
+  '邮箱登陆',
+  'REGISTER',
+  '检查用户名',
+  '校验邮箱',
+  '发送验证码',
+  '检查邮箱是否存在',
+];
 const filters = ref({
   userAccount: '',
   operationType: '',
@@ -328,6 +371,20 @@ div[style*="justify-content: flex-end"] select {
 }
 
 div[style*="justify-content: flex-end"] select:focus {
+  border-color: #33AAEE;
+  box-shadow: 0 0 6px #33AAEE;
+}
+form select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1.5px solid #ddd;
+  font-size: 0.95rem;
+  outline: none;
+  width: 180px;
+  transition: border-color 0.3s ease;
+}
+
+form select:focus {
   border-color: #33AAEE;
   box-shadow: 0 0 6px #33AAEE;
 }
