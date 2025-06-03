@@ -38,40 +38,43 @@
       </div>
     </form>
 
-    <table
-        border="1"
-        cellspacing="0"
-        cellpadding="8"
-        style="width: 100%; margin-top: 20px; border-collapse: collapse;"
-    >
-      <thead>
-      <tr>
-        <th>用户账号</th>
-        <th>操作类型</th>
-        <th>操作时间</th>
-        <th>源IP</th>
-        <th>目标IP</th>
-        <th>源端口</th>
-        <th>客户端硬件</th>
-        <th>操作详情</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="log in logs" :key="log.id">
-        <td>{{ log.userAccount }}</td>
-        <td>{{ log.operationType }}</td>
-        <td>{{ formatDateTime(log.operationTime) }}</td>
-        <td>{{ log.sourceIp }}</td>
-        <td>{{ log.targetIp }}</td>
-        <td>{{ log.sourcePort }}</td>
-        <td>{{ log.clientHardware }}</td>
-        <td>{{ log.operationDetail }}</td>
-      </tr>
-      <tr v-if="logs.length === 0">
-        <td colspan="8" style="text-align: center;">暂无数据</td>
-      </tr>
-      </tbody>
-    </table>
+    <!-- 用 div 包裹表格，添加 overflow-x: auto -->
+    <div style="overflow-x: auto;">
+      <table
+          cellspacing="0"
+          cellpadding="8"
+          style="width: 100%; margin-top: 20px; border-collapse: collapse; min-width: 1000px;"
+      >
+        <thead>
+        <tr>
+          <th>用户账号</th>
+          <th>操作类型</th>
+          <th>操作时间</th>
+          <th>源IP</th>
+          <th>目标IP</th>
+          <th>源端口</th>
+          <th>客户端硬件</th>
+          <th>操作详情</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="log in logs" :key="log.id">
+          <td>{{ log.userAccount }}</td>
+          <td>{{ log.operationType }}</td>
+          <td>{{ formatDateTime(log.operationTime) }}</td>
+          <td>{{ log.sourceIp }}</td>
+          <td>{{ log.targetIp }}</td>
+          <td>{{ log.sourcePort }}</td>
+          <td>{{ log.clientHardware }}</td>
+          <td>{{ log.operationDetail }}</td>
+        </tr>
+        <tr v-if="logs.length === 0">
+          <td colspan="8" style="text-align: center;">暂无数据</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
 
     <div
         style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 12px; align-items: center;"
@@ -83,11 +86,13 @@
       <button :disabled="page === totalPages" @click="handlePageChange(page + 1)">
         下一页
       </button>
+      每页显示日志数量:
       <select v-model.number="pageSize" @change="handleSizeChange">
         <option :value="10">10</option>
         <option :value="20">20</option>
         <option :value="50">50</option>
       </select>
+      条
     </div>
   </div>
 </template>
@@ -307,7 +312,11 @@ th, td {
   border: 1px solid #ddd;
   text-align: center;
   vertical-align: middle;
+  max-width: 200px;             /* 限制最大宽度 */
+  word-break: break-word;       /* 单词内换行 */
+  white-space: normal;          /* 支持多行显示 */
 }
+
 
 tbody tr:nth-child(even) {
   background-color: #f9f9f9;
