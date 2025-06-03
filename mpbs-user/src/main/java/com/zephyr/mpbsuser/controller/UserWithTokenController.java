@@ -1,5 +1,6 @@
 package com.zephyr.mpbsuser.controller;
 
+import com.zephyr.mpbscommon.annotation.LogOperation;
 import com.zephyr.mpbscommon.utils.Result;
 import com.zephyr.mpbsuser.dto.UpdateInfoDTO;
 import com.zephyr.mpbsuser.dto.UpdatePasswordDTO;
@@ -20,6 +21,7 @@ public class UserWithTokenController {
      * @return Result
      */
     @PostMapping("/updatePassword")
+    @LogOperation(operationType = "更新密码")
     public Result updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
         return userService.updatePassword(updatePasswordDTO);
     }
@@ -29,6 +31,7 @@ public class UserWithTokenController {
      * @return Result
      */
     @GetMapping("/getInfoByToken")
+    @LogOperation(operationType = "获取用户信息")
     public Result getInfoByToken() {
         return userService.getUserInfo();
     }
@@ -39,6 +42,7 @@ public class UserWithTokenController {
      * @return Result
      */
     @PostMapping("/updateInfo")
+    @LogOperation(operationType = "更新用户信息")
     public Result updateInfo(@RequestBody UpdateInfoDTO info , Authentication authentication) {
         return authentication == null || authentication.getAuthorities() == null || authentication.getAuthorities().isEmpty() ?
                 Result.failure(404, "token is invalid") :

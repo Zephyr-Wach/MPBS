@@ -1,5 +1,6 @@
 package com.zephyr.mpbsuser.controller;
 
+import com.zephyr.mpbscommon.annotation.LogOperation;
 import com.zephyr.mpbsuser.dto.EmailLoginRequest;
 import com.zephyr.mpbsuser.dto.LoginDTO;
 import com.zephyr.mpbsuser.dto.RegisterDTO;
@@ -25,6 +26,7 @@ public class UserController {
      * @return Result
      */
     @PostMapping("/login")
+    @LogOperation(operationType = "LOGIN")
     public Result login(@RequestBody LoginDTO loginDTO) {
         return userService.login(loginDTO);
     }
@@ -35,6 +37,7 @@ public class UserController {
      * @return 登陆结果
      */
     @PostMapping("/loginByEmail")
+    @LogOperation(operationType = "邮箱登陆")
     public Result loginByEmail(@RequestBody EmailLoginRequest request) {
         return emailService.verifyEmailCode(request.getEmail(), request.getCode())?
                 userService.emailLogin(request.getEmail()):
@@ -47,6 +50,7 @@ public class UserController {
      * @return Result
      */
     @PostMapping("/register")
+    @LogOperation(operationType = "REGISTER")
     public Result register(@RequestBody RegisterDTO registerDTO){
         return userService.register(registerDTO);
     }
@@ -57,5 +61,6 @@ public class UserController {
      * @return Result
      */
     @GetMapping("/checkUserName")
+    @LogOperation(operationType = "检查用户名")
     public Result getUserInfo(@RequestParam String userName){return userService.checkByUserName(userName);}
 }

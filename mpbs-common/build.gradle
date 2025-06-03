@@ -10,6 +10,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'mysql:mysql-connector-java'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'com.baomidou:mybatis-plus-boot-starter:3.5.3.1'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 }
 
 sourceCompatibility = '1.8'

@@ -1,5 +1,6 @@
 package com.zephyr.mpbsfiles.controller;
 
+import com.zephyr.mpbscommon.annotation.LogOperation;
 import com.zephyr.mpbscommon.utils.BeanConvertUtil;
 import com.zephyr.mpbscommon.utils.Result;
 import com.zephyr.mpbsfiles.dto.MediaProcessDTO;
@@ -28,6 +29,7 @@ public class MediaController {
      * @return 操作结果，包含上传后的媒体信息或错误信息
      */
     @PostMapping("/upload")
+    @LogOperation(operationType = "上传图片或视频")
     public Result uploadFile(Authentication authentication, @RequestParam("file") MultipartFile file) {
         if (authentication == null || authentication.getPrincipal() == null) {
             return Result.failure(401, "token is invalid");
@@ -47,6 +49,7 @@ public class MediaController {
      * @return 操作结果，包含媒体访问URL或错误信息
      */
     @GetMapping("/generateUrl/{mediaId}")
+    @LogOperation(operationType = "生成媒体文件访问URL")
     public Result generateMediaUrl(@PathVariable("mediaId") String mediaId) {
         MediaProcessDTO dto = mediaService.getMediaById(mediaId);
         if (dto == null) {
@@ -66,6 +69,7 @@ public class MediaController {
      * @return 操作结果，成功或失败信息（无权限或文件不存在）
      */
     @DeleteMapping("/delete")
+    @LogOperation(operationType = "删除图片或视频")
     public Result deleteMedia(Authentication authentication, @RequestParam("mediaId") String mediaId) {
         if (authentication == null || authentication.getPrincipal() == null) {
             return Result.failure(401, "token is invalid");
@@ -83,6 +87,7 @@ public class MediaController {
      * @return 操作结果，包含分页后的媒体列表
      */
     @RequestMapping("/list")
+    @LogOperation(operationType = "获取当前用户的图片/视频列表")
     public Result listMedia(
             Authentication authentication,
             @RequestParam(defaultValue = "1") int page,

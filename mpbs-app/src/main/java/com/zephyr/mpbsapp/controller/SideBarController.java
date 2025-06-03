@@ -2,6 +2,7 @@ package com.zephyr.mpbsapp.controller;
 
 import com.zephyr.mpbsapp.vo.SidebarMenuVO;
 import com.zephyr.mpbsapp.service.SideBarService;
+import com.zephyr.mpbscommon.annotation.LogOperation;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,7 @@ public class SideBarController {
      * @return 侧边栏菜单列表，若无权限则返回默认菜单或空菜单
      */
     @GetMapping("/getSideBarList")
+    @LogOperation(operationType = "根据当前登录用户角色获取侧边栏菜单列表")
     public List<SidebarMenuVO> getSideBarList(Authentication authentication) {
         return authentication == null || authentication.getAuthorities() == null || authentication.getAuthorities().isEmpty() ?
                 sideBarMenuService.getMenuByRole(null) :

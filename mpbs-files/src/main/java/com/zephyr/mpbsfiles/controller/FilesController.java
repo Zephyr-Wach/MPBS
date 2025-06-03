@@ -1,5 +1,6 @@
 package com.zephyr.mpbsfiles.controller;
 
+import com.zephyr.mpbscommon.annotation.LogOperation;
 import com.zephyr.mpbscommon.utils.BeanConvertUtil;
 import com.zephyr.mpbscommon.utils.Result;
 import com.zephyr.mpbsfiles.dto.FilesProcessDTO;
@@ -41,6 +42,7 @@ public class FilesController {
      * @return 操作结果，包含文件列表或错误信息
      */
     @GetMapping("/getFilesList")
+    @LogOperation(operationType = "根据当前用户的token获取该用户角色可访问的文件列表")
     public Result getFilesList(Authentication authentication) {
         return authentication == null || authentication.getAuthorities() == null || authentication.getAuthorities().isEmpty() ?
                 Result.failure(404, "token is invalid") :
@@ -56,6 +58,7 @@ public class FilesController {
      * @return 操作结果，包含上传后的文件信息或错误信息
      */
     @PostMapping("/upload")
+    @LogOperation(operationType = "上传文件")
     public Result uploadFile(Authentication authentication, @RequestParam("file") MultipartFile file) {
         if (authentication == null || authentication.getPrincipal() == null) {
             return Result.failure(401, "token is invalid");
@@ -76,6 +79,7 @@ public class FilesController {
      * @return 响应体，包含文件资源或错误状态码
      */
     @GetMapping("/download/{id}")
+    @LogOperation(operationType = "下载文件")
     public ResponseEntity<Resource> downloadFile(Authentication authentication, @PathVariable String id) {
         if (authentication == null || authentication.getPrincipal() == null) {
             return ResponseEntity.status(401).build();
@@ -113,6 +117,7 @@ public class FilesController {
      * @return 操作结果，包含分享链接信息或错误信息
      */
     @PostMapping("/{fileId}/share")
+    @LogOperation(operationType = "分享文件")
     public Result shareFile(@PathVariable String fileId) {
         return fileService.shareFile(fileId);
     }
@@ -123,6 +128,7 @@ public class FilesController {
      * @return 响应体，包含文件资源或错误状态码（404未找到，410已过期等）
      */
     @GetMapping("/share/download/{id}")
+    @LogOperation(operationType = "通过分享链接下载文件")
     public ResponseEntity<Resource> downloadSharedFile(@PathVariable String id) {
         ShareLink share = shareMapper.getShareById(id);
         if (share == null) {
@@ -168,6 +174,7 @@ public class FilesController {
      * @return 操作结果，成功或失败信息
      */
     @PostMapping("/{fileId}/del")
+    @LogOperation(operationType = "删除文件")
     public Result deleteFile(@PathVariable String fileId) {
         return fileService.deleteFile(fileId);
     }

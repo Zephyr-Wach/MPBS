@@ -1,5 +1,6 @@
 package com.zephyr.mpbsuser.controller;
 
+import com.zephyr.mpbscommon.annotation.LogOperation;
 import com.zephyr.mpbscommon.utils.Result;
 import com.zephyr.mpbsuser.dto.checkEmailDTO;
 import com.zephyr.mpbsuser.mapper.UserMapper;
@@ -26,6 +27,7 @@ public class EmailController {
      * @return 发送结果
      */
     @GetMapping("/sendCode")
+    @LogOperation(operationType = "发送验证码")
     public Result sendCode(String email) {
         return emailService.sendEmailCode(email) ? Result.success() : Result.failure(500, "发送失败,1分钟后在尝试");
     }
@@ -36,6 +38,7 @@ public class EmailController {
      * @return 校验结果
      */
     @PostMapping("/checkEmail")
+    @LogOperation(operationType = "校验邮箱")
     public Result checkEmail(@RequestBody checkEmailDTO checkEmailDTO, Authentication authentication) {
         return emailService.verifyEmailCode(checkEmailDTO.getEmail(), checkEmailDTO.getCode())?
                 (userService.updateEmailStatus(authentication.getPrincipal().toString(), checkEmailDTO.getEmail(), "confirmed")?
@@ -50,6 +53,7 @@ public class EmailController {
      * @return 检查结果
      */
     @GetMapping("/checkEmailExist")
+    @LogOperation(operationType = "检查邮箱是否存在")
     public Result checkEmailExist(String email) {
         return userMapper.findByEmail(email) != null?
                 Result.success():

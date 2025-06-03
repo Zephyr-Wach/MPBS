@@ -1,5 +1,6 @@
 package com.zephyr.mpbsauth.controller;
 
+import com.zephyr.mpbscommon.annotation.LogOperation;
 import com.zephyr.mpbscommon.utils.JwtUtil;
 import com.zephyr.mpbscommon.utils.Result;
 import io.jsonwebtoken.Claims;
@@ -16,6 +17,7 @@ import java.util.Map;
 public class AuthController {
 
     @PostMapping("/refresh")
+    @LogOperation(operationType = "刷新token")
     public Result refreshAccessToken(@RequestBody Map<String, String> map) {
         String refreshToken = map.get("refreshToken");
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zephyr.mpbscommon.mapper.OperationLogMapper">
+
+    <insert id="insert" parameterType="com.zephyr.mpbscommon.entity.OperationLog" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO operation_log
+        (user_account, operation_time, operation_type, source_ip, target_ip, source_port, client_hardware, operation_detail)
+        VALUES
+            (#{userAccount}, #{operationTime}, #{operationType}, #{sourceIp}, #{targetIp}, #{sourcePort}, #{clientHardware}, #{operationDetail})
+    </insert>
+
+</mapper>

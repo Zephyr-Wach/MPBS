@@ -3,11 +3,11 @@ package com.zephyr.mpbsblog.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zephyr.mpbsblog.dto.CommentDTO;
 import com.zephyr.mpbsblog.entity.BlogPostEntity;
-import com.zephyr.mpbsblog.entity.Comment;
 import com.zephyr.mpbsblog.service.BlogPostService;
 import com.zephyr.mpbsblog.service.CommentService;
 import com.zephyr.mpbsblog.vo.BlogVO;
 import com.zephyr.mpbsblog.vo.CommentVO;
+import com.zephyr.mpbscommon.annotation.LogOperation;
 import com.zephyr.mpbscommon.utils.BeanConvertUtil;
 import com.zephyr.mpbscommon.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +34,7 @@ public class BlogController {
      * @return 统一结果对象，包含成功或失败信息
      */
     @PostMapping("/post")
+    @LogOperation(operationType = "发表博客文章")
     public Result postBlog(@RequestBody BlogPostEntity blogPost, Authentication authentication) {
         blogPost.setAuthorId(authentication.getPrincipal().toString());
         return blogPostService.postBlog(blogPost);
@@ -46,6 +47,7 @@ public class BlogController {
      * @return 分页博客列表
      */
     @GetMapping("/getBlogList")
+    @LogOperation(operationType = "分页获取文章列表")
     public Result getBlogList(@RequestParam(defaultValue = "1") int pageNum,
                               @RequestParam(defaultValue = "10") int pageSize) {
         IPage<BlogVO> pageResult = blogPostService.getBlogList(pageNum, pageSize);
@@ -58,6 +60,7 @@ public class BlogController {
      * @return 博客详情或404错误
      */
     @GetMapping("/detail/{id}")
+    @LogOperation(operationType = "获取指定ID的博客详情")
     public Result getBlogDetail(@PathVariable String id) {
         BlogPostEntity blog = blogPostService.getBlogDetail(id);
         if (blog == null) {
@@ -73,6 +76,7 @@ public class BlogController {
      * @return 操作结果，成功或失败信息
      */
     @PutMapping("/update/{id}")
+    @LogOperation(operationType = "修改指定ID的博客文章")
     public Result<?> updateBlog(@PathVariable String id, @RequestBody BlogPostEntity blogPost) {
         blogPost.setId(id);
         blogPost.setUpdatedAt(new Date());
@@ -90,6 +94,7 @@ public class BlogController {
      * @return 操作结果，成功或失败信息
      */
     @DeleteMapping("/delete/{id}")
+    @LogOperation(operationType = "删除指定ID的博客文章")
     public Result<?> deleteBlog(@PathVariable String id) {
         boolean removed = blogPostService.removeById(id);
         if (removed) {
@@ -106,6 +111,7 @@ public class BlogController {
      * @return 操作结果，成功或失败信息
      */
     @PostMapping("/addComment")
+    @LogOperation(operationType = "新增评论")
     public Result<?> addComment(@RequestBody CommentDTO comment, Authentication authentication) {
         comment.setUserId(authentication.getPrincipal().toString());
         try {
@@ -122,6 +128,7 @@ public class BlogController {
      * @return 评论树形列表
      */
     @GetMapping("/getCommentsByPost/{postId}")
+    @LogOperation(operationType = "获取指定博客文章的所有评论")
     public Result<List<CommentVO>> getCommentTree(@PathVariable String postId) {
         List<CommentVO> commentTree = commentService.getCommentTreeByPostId(postId);
         return Result.success(commentTree);
@@ -134,6 +141,7 @@ public class BlogController {
      * @return 操作结果，成功或权限不足失败
      */
     @DeleteMapping("/comment/delete/{id}")
+    @LogOperation(operationType = "删除指定ID的评论")
     public Result<?> deleteComment(@PathVariable String id, Authentication authentication) {
         String userId = authentication.getPrincipal().toString();
         boolean isAdmin = authentication.getAuthorities().stream()

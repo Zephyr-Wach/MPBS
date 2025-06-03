@@ -1,5 +1,6 @@
 package com.zephyr.mpbsuser.controller;
 
+import com.zephyr.mpbscommon.annotation.LogOperation;
 import com.zephyr.mpbscommon.utils.Result;
 import com.zephyr.mpbsuser.dto.UserInfoDTO;
 import com.zephyr.mpbsuser.service.UserService;
@@ -20,6 +21,7 @@ public class UserManageController {
      * @return user list
      */
     @GetMapping("/getUserList")
+    @LogOperation (operationType = "获取用户列表")
     public Result getUserList() {
         List<UserInfoVO> users = userService.getAllUsers();
         return Result.success(users);
@@ -32,6 +34,7 @@ public class UserManageController {
      * @return result
      */
     @PostMapping("/updateInfo")
+    @LogOperation (operationType = "更新用户信息")
     public Result updateInfo(@RequestParam String userId, @RequestBody UserInfoDTO info) {
         boolean success = userService.updateUserInfo(userId, info);
         if (success) {
@@ -40,6 +43,4 @@ public class UserManageController {
             return Result.failure(400,"更新失败");
         }
     }
-
-
 }

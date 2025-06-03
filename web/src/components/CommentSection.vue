@@ -46,7 +46,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { getCommentList } from '@/api/public/comment';
-import { addComment, deleteComment } from '@/api/user/comment';
+import { addCommentWithEmailCheck, deleteComment } from '@/api/user/comment';
 import { getUserInfo } from '@/api/user/user';
 import { useRouter } from 'vue-router';
 import CommentItem from './CommentItem.vue';
@@ -120,7 +120,7 @@ async function submitComment(parentId: string | null, content: string) {
 
   submitLoading.value = true;
   try {
-    const res = await addComment({
+    const res = await addCommentWithEmailCheck({
       postId: props.postId,
       parentId,
       content
@@ -132,8 +132,13 @@ async function submitComment(parentId: string | null, content: string) {
     } else {
       alert('评论失败：' + res.message);
     }
-  } catch (e) {
-    alert('提交评论出错');
+  } catch (e: any) {
+    // 如果是邮箱没验证的自定义错误，提示对应信息
+    if (e.message === '请完成邮箱验证再评论') {
+      alert(e.message);
+    } else {
+      alert('提交评论出错');
+    }
     console.error(e);
   } finally {
     submitLoading.value = false;

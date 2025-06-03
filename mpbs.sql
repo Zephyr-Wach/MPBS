@@ -234,4 +234,19 @@ END
 ;;
 delimiter ;
 
+DROP TABLE IF EXISTS `operation_log`;
+CREATE TABLE operation_log (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '日志ID',
+    user_account VARCHAR(64) NOT NULL COMMENT '用户账号',
+    operation_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
+    operation_type VARCHAR(32) NOT NULL COMMENT '操作类型',
+    source_ip VARCHAR(45) COMMENT '客户端IP',
+    target_ip VARCHAR(45) COMMENT '服务器IP',
+    source_port INT COMMENT '客户端端口',
+    client_hardware TEXT COMMENT '客户端硬件信息(User-Agent)',
+    operation_detail TEXT COMMENT '操作详情',
+    INDEX idx_user_account (user_account),
+    INDEX idx_operation_time (operation_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统操作日志表';
+
 SET FOREIGN_KEY_CHECKS = 1;
