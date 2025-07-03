@@ -19,14 +19,14 @@ spring:
   servlet:
     multipart:
       enabled: true           # 开启文件上传支持
-      max-file-size: 50MB     # 单个文件最大大小，可以改成你想要的，比如50MB、200MB等
-      max-request-size: 200MB # 一次请求能上传的所有文件总大小，可以单独设置，比max-file-size大
+      max-file-size: 10240MB     # 单个文件最大大小，可以改成你想要的，比如50MB、200MB等
+      max-request-size: 10240MB # 一次请求能上传的所有文件总大小，可以单独设置，比max-file-size大
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/mpbs?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
-    username:
-    password:
+    username: MPBS
+    password: "Hd.!.FW#R4-rjX*@YcdD"
 
   redis:
     host: localhost
@@ -43,8 +43,8 @@ spring:
   mail:
     host: smtp.163.com
     port: 465
-    username:
-    password:
+    username: mpbs_service@163.com
+    password: EXSAA3iAdtsLRUSx
     default-encoding: UTF-8
     properties:
       mail.smtp.auth: true
@@ -53,15 +53,16 @@ spring:
       mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
 
 jwt:
-  secret:
-  expiration:
+  secret: mbpsSecretKeyHere
+  expiration: 3600000        # Access Token: 1 小时
+  refresh-expiration: 604800000  # Refresh Token: 7 天（单位：毫秒）
 
 public:
-  base-url:
+  base-url: http://mpbs.tech/
 #  https://files.example.com
 #  http://localhost:80
 #  http://mpbs.tech/
 file:
-  upload-path:
+  upload-path: /home/MPBS/Storage/
 #  "D:/Users/wangc/Downloads/mpbs"
 #  /home/MPBS

@@ -146,7 +146,7 @@ CREATE TABLE `sidebar_menu`  (
 -- ----------------------------
 INSERT INTO `sidebar_menu` VALUES (1, NULL, '首页', '/', NULL, NULL, NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (2, NULL, 'Blog', '/blog', NULL, NULL, NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (3, 4, '云盘', '/cloud', NULL, 'ROLE_ULTIMATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (3, NULL, '笔记&合集', '/gather', NULL, NULL, NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (4, NULL, '管理', NULL, NULL, 'ROLE_ULTIMATE', NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (5, 4, '用户管理', '/admin/users', NULL, 'ROLE_ULTIMATE', NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (6, 4, 'Blog管理', '/admin/blogs', NULL, 'ROLE_ULTIMATE', NULL, NULL);
@@ -159,6 +159,7 @@ INSERT INTO `sidebar_menu` VALUES (12, 4, '日志列表', '/admin/log', NULL, 'R
 INSERT INTO `sidebar_menu` VALUES (13, 11, '日志列表', '/admin/log', NULL, 'ROLE_SENIOR', NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (14, NULL, '管理', NULL, NULL, 'ROLE_INTERMEDIATE', NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (15, 14, '日志列表', '/admin/log', NULL, 'ROLE_INTERMEDIATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (17, 4, '云盘', '/cloud', NULL, 'ROLE_ULTIMATE', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for temporary_links
