@@ -13,11 +13,8 @@ dependencies {
     implementation 'mysql:mysql-connector-java'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
 
-    // 新增 MyBatis Plus 依赖
     implementation 'com.baomidou:mybatis-plus-boot-starter:3.5.3.1'
-
     runtimeOnly 'mysql:mysql-connector-java:8.0.33'
-
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 }
