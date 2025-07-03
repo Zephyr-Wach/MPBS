@@ -7,6 +7,7 @@ import com.zephyr.mpbsblog.service.BlogPostService;
 import com.zephyr.mpbsblog.service.CommentService;
 import com.zephyr.mpbsblog.vo.BlogVO;
 import com.zephyr.mpbsblog.vo.CommentVO;
+import com.zephyr.mpbsblog.vo.SearchBlogVo;
 import com.zephyr.mpbscommon.annotation.LogOperation;
 import com.zephyr.mpbscommon.utils.BeanConvertUtil;
 import com.zephyr.mpbscommon.utils.Result;
@@ -51,6 +52,36 @@ public class BlogController {
     public Result getBlogList(@RequestParam(defaultValue = "1") int pageNum,
                               @RequestParam(defaultValue = "10") int pageSize) {
         IPage<BlogVO> pageResult = blogPostService.getBlogList(pageNum, pageSize);
+        return Result.success(pageResult);
+    }
+
+    /**
+     * 模糊查询blogTitle
+     * @param keyword 关键词
+     * @return 分页返回所有包含关键词的文章
+     *
+     */
+    @GetMapping("/searchTitle")
+    @LogOperation(operationType = "模糊查询blog")
+    public Result searchTitle(@RequestParam String keyword) {
+        IPage<SearchBlogVo> pageResult = blogPostService.searchBlogTitleList(keyword);
+        return Result.success(pageResult);
+    }
+
+    /**
+     * 模糊查询blog
+     * @param keyword 关键词
+     * @param pageNum 页码，默认1
+     * @param pageSize 每页条数，默认10
+     * @return 分页返回所有包含关键词的文章
+     *
+     */
+    @GetMapping("/search")
+    @LogOperation(operationType = "模糊查询blog")
+    public Result search(@RequestParam String keyword,
+                         @RequestParam(defaultValue = "1") int pageNum,
+                         @RequestParam(defaultValue = "10") int pageSize) {
+        IPage<BlogVO> pageResult = blogPostService.searchBlogList(keyword, pageNum, pageSize);
         return Result.success(pageResult);
     }
 

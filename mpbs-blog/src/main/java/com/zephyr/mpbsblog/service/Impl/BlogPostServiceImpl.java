@@ -7,6 +7,7 @@ import com.zephyr.mpbsblog.entity.BlogPostEntity;
 import com.zephyr.mpbsblog.mapper.BlogPostMapper;
 import com.zephyr.mpbsblog.service.BlogPostService;
 import com.zephyr.mpbsblog.vo.BlogVO;
+import com.zephyr.mpbsblog.vo.SearchBlogVo;
 import com.zephyr.mpbscommon.utils.BeanConvertUtil;
 import com.zephyr.mpbscommon.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,61 @@ public class BlogPostServiceImpl extends ServiceImpl<BlogPostMapper, BlogPostEnt
 
         return voPage;
     }
+
+    @Override
+    public IPage<SearchBlogVo> searchBlogTitleList(String keyword) {
+        // 1. 构造分页参数
+        Page<BlogPostEntity> page = new Page<>(1, 10);
+
+        // 2. 构造模糊查询条件
+        QueryWrapper<BlogPostEntity> query = new QueryWrapper<>();
+        query.eq("status", "published")
+                .and(wrapper -> wrapper
+                        .like("title", keyword)
+                        .or()
+                        .like("content_md", keyword))
+                .orderByDesc("created_at");
+
+        // 3. 分页查询实体列表
+        IPage<BlogPostEntity> entityPage = blogPostMapper.selectPage(page, query);
+
+        // 4. 实体转 VO
+        List<SearchBlogVo> voList = BeanConvertUtil.convertList(entityPage.getRecords(), SearchBlogVo.class);
+
+        // 5. 构造 VO 分页结果返回
+        Page<SearchBlogVo> voPage = new Page<>(entityPage.getCurrent(), entityPage.getSize(), entityPage.getTotal());
+        voPage.setRecords(voList);
+
+        return voPage;
+    }
+
+    @Override
+    public IPage<BlogVO> searchBlogList(String keyword, int pageNum, int pageSize) {
+        // 1. 构造分页参数
+        Page<BlogPostEntity> page = new Page<>(pageNum, pageSize);
+
+        // 2. 构造模糊查询条件
+        QueryWrapper<BlogPostEntity> query = new QueryWrapper<>();
+        query.eq("status", "published")
+                .and(wrapper -> wrapper
+                        .like("title", keyword)
+                        .or()
+                        .like("content_md", keyword))
+                .orderByDesc("created_at");
+
+        // 3. 分页查询实体列表
+        IPage<BlogPostEntity> entityPage = blogPostMapper.selectPage(page, query);
+
+        // 4. 实体转 VO
+        List<BlogVO> voList = BeanConvertUtil.convertList(entityPage.getRecords(), BlogVO.class);
+
+        // 5. 构造 VO 分页结果返回
+        Page<BlogVO> voPage = new Page<>(entityPage.getCurrent(), entityPage.getSize(), entityPage.getTotal());
+        voPage.setRecords(voList);
+
+        return voPage;
+    }
+
 
 
     @Override

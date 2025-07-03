@@ -48,3 +48,45 @@ export function getBlogDetail(id: string): Promise<BlogDetailResponse> {
         method: 'get',
     });
 }
+interface BlogSearchResponse {
+    code: number;
+    message: string;
+    data: {
+        total: number;
+        pages: number;
+        current: number;
+        list: BlogListItem[];
+    };
+}
+
+export function searchBlog(keyword: string, page = 1, size = 1): Promise<BlogSearchResponse> {
+    return request({
+        url: '/blog/search',
+        method: 'get',
+        params: { keyword, page, size },
+    });
+}
+
+export interface BlogTitleItem {
+    id: string;
+    title: string;
+    contentMd: string;
+    createdAt: string;
+}
+
+interface BlogSearchTitleResponse {
+    code: number;
+    message: string;
+    data: {
+        records: BlogTitleItem[];
+        total: number;
+    };
+}
+
+export function searchBlogTitle(keyword: string): Promise<BlogSearchTitleResponse> {
+    return request({
+        url: '/blog/searchTitle',
+        method: 'get',
+        params: { keyword },
+    });
+}

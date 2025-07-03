@@ -26,6 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/email/sendCode").permitAll()
                 .antMatchers("/blog/getBlogList").permitAll()
                 .antMatchers("/blog/detail/**").permitAll()
+                .antMatchers("/blog/search/**").permitAll()
+                .antMatchers("/blog/searchTitle/**").permitAll()
                 .antMatchers("/blog/getCommentsByPost/**").permitAll()
                 .antMatchers("/public/**").permitAll()
                 .antMatchers("/usr/**").permitAll()
