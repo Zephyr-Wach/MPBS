@@ -24,6 +24,7 @@ dependencies {
     implementation project(':mpbs-files')
     implementation project(':mpbs-security')
     implementation project(':mpbs-user')
+    implementation(project(':mpbs-gather'))
 
     implementation 'javax.persistence:javax.persistence-api:2.2'
     implementation 'org.springframework.boot:spring-boot-starter-security'

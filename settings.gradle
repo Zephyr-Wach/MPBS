@@ -1,3 +1,3 @@
 rootProject.name = 'mpbs'
 
-include 'mpbs-common', 'mpbs-user', 'mpbs-blog', 'mpbs-files', 'mpbs-auth', 'mpbs-security', 'mpbs-app'
+include 'mpbs-common', 'mpbs-user', 'mpbs-blog', 'mpbs-files', 'mpbs-auth', 'mpbs-security', 'mpbs-app', 'mpbs-gather'
