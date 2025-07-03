@@ -99,8 +99,6 @@ watch(searchKeyword, () => {
 </script>
 
 <style scoped>
-
-
 .note-collection-container {
   display: flex;
   height: 100%;

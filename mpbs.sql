@@ -147,19 +147,28 @@ CREATE TABLE `sidebar_menu`  (
 INSERT INTO `sidebar_menu` VALUES (1, NULL, '首页', '/', NULL, NULL, NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (2, NULL, 'Blog', '/blog', NULL, NULL, NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (3, NULL, '笔记&合集', '/gather', NULL, NULL, NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (4, NULL, '管理', NULL, NULL, 'ROLE_ULTIMATE', NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (5, 4, '用户管理', '/admin/users', NULL, 'ROLE_ULTIMATE', NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (6, 4, 'Blog管理', '/admin/blogs', NULL, 'ROLE_ULTIMATE', NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (7, 4, '媒体管理', '/admin/clouds', NULL, 'ROLE_ULTIMATE', NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (8, 4, '发表Blog', '/admin/deliver', NULL, 'ROLE_ULTIMATE', NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (9, NULL, '关于&联系', '/about', NULL, NULL, NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (10, 11, '云盘', '/cloud', NULL, 'ROLE_SENIOR', NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (11, NULL, '管理', NULL, NULL, 'ROLE_SENIOR', NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (12, 4, '日志列表', '/admin/log', NULL, 'ROLE_ULTIMATE', NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (13, 11, '日志列表', '/admin/log', NULL, 'ROLE_SENIOR', NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (14, NULL, '管理', NULL, NULL, 'ROLE_INTERMEDIATE', NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (15, 14, '日志列表', '/admin/log', NULL, 'ROLE_INTERMEDIATE', NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (17, 4, '云盘', '/cloud', NULL, 'ROLE_ULTIMATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (10, NULL, '管理', NULL, NULL, 'ROLE_ULTIMATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (11, 10, '云盘', '/cloud', NULL, 'ROLE_ULTIMATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (12, 10, '媒体管理', '/admin/clouds', NULL, 'ROLE_ULTIMATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (13, 10, '发表Blog', '/admin/deliver', NULL, 'ROLE_ULTIMATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (14, 10, '发表笔记&合集', '/admin/gather', NULL, 'ROLE_ULTIMATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (15, 10, 'Blog管理', '/admin/blogs', NULL, 'ROLE_ULTIMATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (16, 10, '笔记&合集管理', '/admin/gather', NULL, 'ROLE_ULTIMATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (28, 10, '用户管理', '/admin/users', NULL, 'ROLE_ULTIMATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (29, 10, '日志列表', '/admin/log', NULL, 'ROLE_ULTIMATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (30, NULL, '管理', NULL, NULL, 'ROLE_SENIOR', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (31, 30, '云盘', '/cloud', NULL, 'ROLE_SENIOR', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (32, 30, '媒体管理', '/admin/clouds', NULL, 'ROLE_SENIOR', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (33, 30, 'Blog管理', '/admin/blogs', NULL, 'ROLE_SENIOR', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (34, 30, '笔记&合集管理', '/admin/gather', NULL, 'ROLE_SENIOR', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (35, 30, '用户管理', '/admin/users', NULL, 'ROLE_SENIOR', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (36, 30, '日志列表', '/admin/log', NULL, 'ROLE_SENIOR', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (40, NULL, '管理', NULL, NULL, 'ROLE_INTERMEDIATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (41, 40, '用户管理', '/admin/users', NULL, 'ROLE_INTERMEDIATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (42, 40, '日志列表', '/admin/log', NULL, 'ROLE_INTERMEDIATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (50, NULL, '管理', NULL, NULL, 'ROLE_JUNIOR', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (51, 50, '日志列表', '/admin/log', NULL, 'ROLE_JUNIOR', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (60, NULL, '关于&联系', '/about', NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for temporary_links
@@ -257,5 +266,49 @@ CREATE TABLE `operation_log`  (
     INDEX `idx_user_account`(`user_account` ASC) USING BTREE,
     INDEX `idx_operation_time`(`operation_time` ASC) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统操作日志表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for note
+-- ----------------------------
+DROP TABLE IF EXISTS `note`;
+CREATE TABLE `note`  (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '笔记ID',
+    `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '笔记标题',
+    `content_md` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT 'Markdown 内容',
+    `content_html` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT 'HTML 内容',
+    `is_public` tinyint(1) NULL DEFAULT 0 COMMENT '是否公开（默认私有）',
+    `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for note_collection
+-- ----------------------------
+DROP TABLE IF EXISTS `note_collection`;
+CREATE TABLE `note_collection`  (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '合集ID',
+    `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '合集标题',
+    `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '合集描述',
+    `author_id` bigint NOT NULL COMMENT '作者ID',
+    `is_public` tinyint(1) NULL DEFAULT 0 COMMENT '是否公开（默认私有）',
+    `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for note_collection_relation
+-- ----------------------------
+DROP TABLE IF EXISTS `note_collection_relation`;
+CREATE TABLE `note_collection_relation`  (
+    `collection_id` bigint NOT NULL COMMENT '合集ID',
+    `note_id` bigint NOT NULL COMMENT '笔记ID',
+    `order_index` int NULL DEFAULT 0 COMMENT '合集中的顺序',
+    PRIMARY KEY (`collection_id`, `note_id`) USING BTREE,
+    INDEX `note_id`(`note_id` ASC) USING BTREE,
+    CONSTRAINT `note_collection_relation_ibfk_1` FOREIGN KEY (`collection_id`) REFERENCES `note_collection` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+    CONSTRAINT `note_collection_relation_ibfk_2` FOREIGN KEY (`note_id`) REFERENCES `note` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

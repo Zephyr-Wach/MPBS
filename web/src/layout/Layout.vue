@@ -39,8 +39,8 @@ const router = useRouter()
 const { login } = useAuth()
 
 function onLoginSuccess(userData: { token: string; refreshToken: string }) {
-  login(userData.token, userData.refreshToken) // 更新状态
-  showLoginModal.value = false                  // 关闭登录弹窗
+  login(userData.token, userData.refreshToken)
+  showLoginModal.value = false
   router.push("/").then(() => {
     window.location.reload()
   })
@@ -83,7 +83,7 @@ function onLoginSuccess(userData: { token: string; refreshToken: string }) {
 }
 
 .footer {
-  margin-top: auto; /* ✅ 修改：自动推到底部 */
+  margin-top: auto;
   text-align: center;
   font-size: 13px;
   color: #bbb;
