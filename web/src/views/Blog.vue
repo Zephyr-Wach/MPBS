@@ -51,7 +51,8 @@
         <span style="font-size: 0.8rem; color: #999;"> —— {{ formatDate(blog.createdAt) }}</span>
       </div>
 
-      <div v-if="blog.coverUrl" style="margin: 1rem 0; flex-grow: 1; display: flex; justify-content: center; align-items: center;">
+      <div v-if="blog.coverUrl"
+           style="margin: 1rem 0; flex-grow: 1; display: flex; justify-content: center; align-items: center;">
         <img
             :src="getFullCoverUrl(blog.coverUrl)"
             alt="封面"
@@ -95,9 +96,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
-import { useRouter } from 'vue-router';
-import { getBlogList, searchBlog, searchBlogTitle, BlogTitleItem } from '@/api/public/blog';
+import {ref, onMounted, onBeforeUnmount} from 'vue';
+import {useRouter} from 'vue-router';
+import {getBlogList, searchBlog, searchBlogTitle, BlogTitleItem} from '@/api/public/blog';
 
 const page = ref(1);
 const pages = ref(1);
@@ -165,7 +166,7 @@ function getFullCoverUrl(url) {
 }
 
 function goDetail(id) {
-  router.push({ path: `/blog/detail/${id}` });
+  router.push({path: `/blog/detail/${id}`});
 }
 
 function handleSearch() {
@@ -243,7 +244,7 @@ const disabledBtnStyle = {
 
 .search-bar {
   display: flex;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid #ddd;
@@ -280,19 +281,20 @@ const disabledBtnStyle = {
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   max-height: 240px;
   overflow-y: auto;
   list-style: none;
   padding: 0;
   margin: 0.25rem 0 0;
 }
+
 .suggestion-box {
   padding: 8px 0;
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   max-height: 240px;
   overflow-y: auto;
   list-style: none;
@@ -314,7 +316,7 @@ const disabledBtnStyle = {
   margin: 0;
 
   border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   background-color: #fff;
   line-height: 1.4em;
   max-height: 2.8em;
