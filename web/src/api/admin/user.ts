@@ -3,7 +3,7 @@ import request from '@/utils/request';
 //getUserInfoList
 export const getUserInfoList = () => {
     return request({
-        url: '/admin/getUserList',
+        url: '/INTERMEDIATE/getUserList',
         method: 'get',
     });
 };
@@ -17,7 +17,7 @@ interface UserInfoDTO {
 
 export const updateUserInfo = (userId: string, info: UserInfoDTO) => {
     return request({
-        url: `/admin/updateInfo?userId=${encodeURIComponent(userId)}`,
+        url: `/INTERMEDIATE/updateInfo?userId=${encodeURIComponent(userId)}`,
         method: 'post',
         data: info,
         headers: {

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/NORMAL/user")
 public class UserWithTokenController {
     @Autowired
     private UserService userService;

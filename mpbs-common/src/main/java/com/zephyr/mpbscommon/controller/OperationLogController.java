@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/logs")
+@RequestMapping("/JUNIOR/logs")
 public class OperationLogController {
 
     private final OperationLogService operationLogService;

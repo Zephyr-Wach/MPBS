@@ -17,7 +17,7 @@ interface LoginResponse {
 }
 export function login(params: LoginParams): Promise<LoginResponse> {
     return request({
-        url: '/usr/login',
+        url: '/public/usr/login',
         method: 'post',
         data: params,
     });
@@ -47,7 +47,7 @@ interface EmailLoginParams {
 }
 export function loginByEmailCode(params: EmailLoginParams): Promise<any> {
     return request({
-        url: '/usr/loginByEmail',
+        url: '/public/usr/loginByEmail',
         method: 'post',
         data: params,
     });
@@ -85,7 +85,7 @@ interface RegisterResponse {
 }
 export function register(params: RegisterParams): Promise<RegisterResponse> {
     return request({
-        url: '/usr/register',
+        url: '/public/usr/register',
         method: 'post',
         data: params,
     });
@@ -111,7 +111,7 @@ export async function registerAndSaveToken(userName: string, userPwd: string) {
 // checkUserName
 export const checkUserName = (userName: object) => {
     return request({
-        url: '/usr/checkUserName',
+        url: '/public/usr/checkUserName',
         method: 'get',
         params: userName,
     });

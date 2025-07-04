@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import com.zephyr.mpbscommon.utils.Result;
 
 @RestController
-@RequestMapping("/usr")
+@RequestMapping("/public/usr")
 public class UserController {
 
     @Autowired

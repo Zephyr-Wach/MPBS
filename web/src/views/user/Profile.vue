@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { getUserInfo, updateUserInfo, updatePassword } from '@/api/user/user';
-import { uploadFile, generateUrl } from '@/api/admin/media';
+import { generateUrl } from '@/api/admin/media';
+import { upCover } from '@/api/user/user'
 import { checkEmail, checkEmailExist } from '@/api/user/email';
 import { sendCodeToEmail } from '@/api/public/email';
 
@@ -60,7 +61,7 @@ async function onFileChange(event: Event) {
   successMsg.value = null;
 
   try {
-    const uploadRes = await uploadFile(file);
+    const uploadRes = await upCover(file);
     const urlRes = await generateUrl(uploadRes.data.id);
 
     const baseURL = import.meta.env.VITE_API_BASE_URL;

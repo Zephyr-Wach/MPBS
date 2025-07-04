@@ -6,7 +6,7 @@ import request from '@/utils/request';
  */
 export function getCommentList(postId: String){
     return request({
-        url: `/blog/getCommentsByPost/${postId}`,
+        url: `/public/blog/getCommentsByPost/${postId}`,
         method: 'get',
     });
 }

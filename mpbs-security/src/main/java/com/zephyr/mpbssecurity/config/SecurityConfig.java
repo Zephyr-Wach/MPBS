@@ -21,22 +21,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/files/share/download/**").permitAll()
+
                 .antMatchers("/static/**").permitAll()
-                .antMatchers("/email/sendCode").permitAll()
-                .antMatchers("/blog/getBlogList").permitAll()
-                .antMatchers("/blog/detail/**").permitAll()
-                .antMatchers("/blog/search/**").permitAll()
-                .antMatchers("/blog/searchTitle/**").permitAll()
-                .antMatchers("/blog/getCommentsByPost/**").permitAll()
                 .antMatchers("/public/**").permitAll()
-                .antMatchers("/usr/**").permitAll()
-                .antMatchers("/admin/**").hasRole("ULTIMATE")
-                .antMatchers("/blog/post").hasRole("ULTIMATE")
-                .antMatchers("/blog/update/**").hasRole("ULTIMATE")
-                .antMatchers("/blog/delete/**").hasRole("ULTIMATE")
-                .antMatchers("/files/**").hasAnyRole("ULTIMATE", "SENIOR")
-                .antMatchers("/logs/**").hasAnyRole("ULTIMATE", "SENIOR", "INTERMEDIATE")
+                .antMatchers("/ULTIMATE/**").hasRole("ULTIMATE")
+                .antMatchers("/SENIOR/**").hasAnyRole("ULTIMATE", "SENIOR")
+                .antMatchers("/INTERMEDIATE/**").hasAnyRole("ULTIMATE", "SENIOR", "INTERMEDIATE")
+                .antMatchers("/JUNIOR/**").hasAnyRole("ULTIMATE", "SENIOR", "INTERMEDIATE", "JUNIOR")
+                .antMatchers("/NORMAL/**").hasAnyRole("ULTIMATE", "SENIOR", "INTERMEDIATE", "JUNIOR", "NORMAL")
+
                 .anyRequest().authenticated();
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }

@@ -159,8 +159,6 @@ INSERT INTO `sidebar_menu` VALUES (29, 10, '日志列表', '/admin/log', NULL, '
 INSERT INTO `sidebar_menu` VALUES (30, NULL, '管理', NULL, NULL, 'ROLE_SENIOR', NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (31, 30, '云盘', '/cloud', NULL, 'ROLE_SENIOR', NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (32, 30, '媒体管理', '/admin/clouds', NULL, 'ROLE_SENIOR', NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (33, 30, 'Blog管理', '/admin/blogs', NULL, 'ROLE_SENIOR', NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (34, 30, '笔记&合集管理', '/admin/gather', NULL, 'ROLE_SENIOR', NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (35, 30, '用户管理', '/admin/users', NULL, 'ROLE_SENIOR', NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (36, 30, '日志列表', '/admin/log', NULL, 'ROLE_SENIOR', NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (40, NULL, '管理', NULL, NULL, 'ROLE_INTERMEDIATE', NULL, NULL);

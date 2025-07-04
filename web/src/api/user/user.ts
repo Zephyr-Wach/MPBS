@@ -3,7 +3,7 @@ import request from '@/utils/request';
 //getUserInfo
 export const getUserInfo = () => {
     return request({
-        url: '/user/getInfoByToken',
+        url: '/NORMAL/user/getInfoByToken',
         method: 'get',
     });
 };
@@ -11,7 +11,7 @@ export const getUserInfo = () => {
 // updatePassword
 export const updatePassword = (obj: Object) => {
     return request({
-        url: '/user/updatePassword',
+        url: '/NORMAL/user/updatePassword',
         method: 'post',
         data: obj,
     });
@@ -20,7 +20,7 @@ export const updatePassword = (obj: Object) => {
 //updateUserInfo
 export const updateUserInfo = (userName: string, avatarUrl: string, email: string) => {
     return request({
-        url: '/user/updateInfo',
+        url: '/NORMAL/user/updateInfo',
         method: 'post',
         data: {
             userName,
@@ -29,3 +29,26 @@ export const updateUserInfo = (userName: string, avatarUrl: string, email: strin
         }
     });
 }
+
+export interface MediaProcessDTO {
+    id: string;
+    filename: string;
+    storagePath: string;
+    uploaderId: string;
+    createdAt: string;
+    size: string;
+    mimeType: string;
+}
+export const upCover = (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return request<MediaProcessDTO>({
+        url: '/NORMAL/media/upload',
+        method: 'post',
+        data: formData,
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+};

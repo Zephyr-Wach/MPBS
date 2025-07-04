@@ -3,7 +3,7 @@ import {getUserInfo} from "@/api/user/user";
 
 export const addComment = (obj: Object) => {
     return request({
-        url: '/blog/addComment',
+        url: '/public/blog/addComment',
         method: 'post',
         data: obj,
     });
@@ -28,7 +28,7 @@ export const addCommentWithEmailCheck = async (obj: Object) => {
 
 export const deleteComment  = (id: String) => {
     return request({
-        url: `/blog/comment/delete/${id}`,
+        url: `/public/blog/comment/delete/${id}`,
         method: 'delete',
     });
 };

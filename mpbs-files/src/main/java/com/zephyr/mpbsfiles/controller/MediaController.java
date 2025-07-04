@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 @RestController
-@RequestMapping("/media")
+@RequestMapping("/SENIOR/media")
 public class MediaController {
 
     @Autowired

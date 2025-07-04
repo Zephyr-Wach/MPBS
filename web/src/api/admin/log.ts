@@ -12,7 +12,7 @@ import request from '@/utils/request';
  */
 export function getLogsList(params = {}) {
     return request({
-        url: '/logs/list',
+        url: '/JUNIOR/logs/list',
         method: 'get',
         params,
     });

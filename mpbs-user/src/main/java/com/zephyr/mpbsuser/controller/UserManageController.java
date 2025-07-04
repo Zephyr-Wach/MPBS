@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/INTERMEDIATE")
 public class UserManageController {
     @Autowired
     private UserService userService;

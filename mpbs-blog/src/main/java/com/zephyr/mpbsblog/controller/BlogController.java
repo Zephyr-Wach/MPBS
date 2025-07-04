@@ -15,11 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/blog")
+@RequestMapping("/public/blog")
 public class BlogController {
 
     @Autowired
@@ -27,19 +26,6 @@ public class BlogController {
 
     @Autowired
     private CommentService commentService;
-
-    /**
-     * 发布博客文章
-     * @param blogPost 博客实体
-     * @param authentication 认证信息，获取当前用户ID作为作者
-     * @return 统一结果对象，包含成功或失败信息
-     */
-    @PostMapping("/post")
-    @LogOperation(operationType = "发表博客文章")
-    public Result postBlog(@RequestBody BlogPostEntity blogPost, Authentication authentication) {
-        blogPost.setAuthorId(authentication.getPrincipal().toString());
-        return blogPostService.postBlog(blogPost);
-    }
 
     /**
      * 获取博客列表，支持分页
@@ -98,41 +84,6 @@ public class BlogController {
             return Result.failure(404, "文章不存在或未发布");
         }
         return Result.success(BeanConvertUtil.convert(blog,BlogVO.class));
-    }
-
-    /**
-     * 修改指定ID的博客文章
-     * @param id 博客ID
-     * @param blogPost 新的博客数据
-     * @return 操作结果，成功或失败信息
-     */
-    @PutMapping("/update/{id}")
-    @LogOperation(operationType = "修改指定ID的博客文章")
-    public Result<?> updateBlog(@PathVariable String id, @RequestBody BlogPostEntity blogPost) {
-        blogPost.setId(id);
-        blogPost.setUpdatedAt(new Date());
-        boolean updated = blogPostService.updateById(blogPost);
-        if (updated) {
-            return Result.success("修改成功");
-        } else {
-            return Result.failure(400, "修改失败");
-        }
-    }
-
-    /**
-     * 删除指定ID的博客文章
-     * @param id 博客ID
-     * @return 操作结果，成功或失败信息
-     */
-    @DeleteMapping("/delete/{id}")
-    @LogOperation(operationType = "删除指定ID的博客文章")
-    public Result<?> deleteBlog(@PathVariable String id) {
-        boolean removed = blogPostService.removeById(id);
-        if (removed) {
-            return Result.success("删除成功");
-        } else {
-            return Result.failure(400, "删除失败");
-        }
     }
 
     /**

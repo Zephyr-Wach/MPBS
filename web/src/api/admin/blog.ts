@@ -18,7 +18,7 @@ interface BlogResponse {
 }
 export function postBlog(params: BlogParams): Promise<BlogResponse> {
     return request({
-        url: '/blog/post',
+        url: '/ULTIMATE/blog/post',
         method: 'post',
         data: params,
     });
@@ -42,7 +42,7 @@ interface ApiResponse<T> {
 
 export function updateBlog(id: string, blog: Partial<BlogPost>): Promise<ApiResponse<null>> {
     return request({
-        url: `/blog/update/${id}`,
+        url: `/ULTIMATE/blog/update/${id}`,
         method: 'put',
         data: blog,
     });
@@ -50,7 +50,7 @@ export function updateBlog(id: string, blog: Partial<BlogPost>): Promise<ApiResp
 
 export function deleteBlog(id: string): Promise<ApiResponse<null>> {
     return request({
-        url: `/blog/delete/${id}`,
+        url: `/ULTIMATE/blog/delete/${id}`,
         method: 'delete',
     });
 }

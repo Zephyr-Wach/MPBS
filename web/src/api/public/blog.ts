@@ -21,7 +21,7 @@ interface BlogListResponse {
 
 export function getBlogList(page = 1, size = 10): Promise<BlogListResponse> {
     return request({
-        url: '/blog/getBlogList',
+        url: '/public/blog/getBlogList',
         method: 'get',
         params: { page, size },
     });
@@ -44,7 +44,7 @@ interface BlogDetailResponse {
 
 export function getBlogDetail(id: string): Promise<BlogDetailResponse> {
     return request({
-        url: `/blog/detail/${id}`,
+        url: `/public/blog/detail/${id}`,
         method: 'get',
     });
 }
@@ -61,7 +61,7 @@ interface BlogSearchResponse {
 
 export function searchBlog(keyword: string, page = 1, size = 1): Promise<BlogSearchResponse> {
     return request({
-        url: '/blog/search',
+        url: '/public/blog/search',
         method: 'get',
         params: { keyword, page, size },
     });
@@ -85,7 +85,7 @@ interface BlogSearchTitleResponse {
 
 export function searchBlogTitle(keyword: string): Promise<BlogSearchTitleResponse> {
     return request({
-        url: '/blog/searchTitle',
+        url: '/public/blog/searchTitle',
         method: 'get',
         params: { keyword },
     });

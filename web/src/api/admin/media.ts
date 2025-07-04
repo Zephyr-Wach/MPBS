@@ -14,7 +14,7 @@ export const uploadFile = (file: File) => {
     formData.append('file', file);
 
     return request<MediaProcessDTO>({
-        url: '/media/upload',
+        url: '/SENIOR/media/upload',
         method: 'post',
         data: formData,
         headers: {
@@ -25,7 +25,7 @@ export const uploadFile = (file: File) => {
 
 export const generateUrl = (mediaId: string) => {
     return request<string>({
-        url: `/media/generateUrl/${mediaId}`,
+        url: `/SENIOR/media/generateUrl/${mediaId}`,
         method: 'get',
     });
 };
@@ -38,7 +38,7 @@ interface MediaDeleteResponse {
 }
 export function deleteMedia(mediaId: string): Promise<MediaDeleteResponse> {
     return request({
-        url: '/media/delete',
+        url: '/SENIOR/media/delete',
         method: 'delete',
         params: { mediaId },  // delete接口用params传mediaId
     });
@@ -74,7 +74,7 @@ interface MediaListResponse {
 // 获取媒体文件列表（分页）
 export function getMediaList(page = 1, size = 10): Promise<MediaListResponse> {
     return request({
-        url: '/media/list',
+        url: '/SENIOR/media/list',
         method: 'get',
         params: { page, size },
     });

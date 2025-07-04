@@ -6,7 +6,7 @@ interface checkParams {
 }
 export function checkEmail(params: checkParams){
     return request({
-        url: '/email/checkEmail',
+        url: '/public/email/checkEmail',
         method: 'post',
         data: params,
     });
@@ -14,7 +14,7 @@ export function checkEmail(params: checkParams){
 
 export function checkEmailExist(email: string) {
     return request({
-        url: '/email/checkEmailExist',
+        url: '/public/email/checkEmailExist',
         method: 'get',
         params: { email },
     });

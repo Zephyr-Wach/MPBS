@@ -13,7 +13,7 @@ export interface FilesProcessDTO {
 // 获取文件列表
 export const getFilesList = () => {
     return request<FilesProcessDTO[]>({
-        url: '/files/getFilesList',
+        url: '/SENIOR/files/getFilesList',
         method: 'get',
     });
 };
@@ -24,7 +24,7 @@ export const uploadFile = (file: File) => {
     formData.append('file', file);
 
     return request<FilesProcessDTO>({
-        url: '/files/upload',
+        url: '/SENIOR/files/upload',
         method: 'post',
         data: formData,
         headers: {
@@ -36,7 +36,7 @@ export const uploadFile = (file: File) => {
 // 下载文件
 export const downloadFile = (id: string) => {
     return request({
-        url: `/files/download/${id}`,
+        url: `/SENIOR/files/download/${id}`,
         method: 'get',
         responseType: 'blob',
     }).then(res => res);
@@ -44,14 +44,14 @@ export const downloadFile = (id: string) => {
 
 export function getFileShareLink(fileId: string) {
     return request({
-        url: `/files/${fileId}/share`,
+        url: `/SENIOR/files/${fileId}/share`,
         method: 'post',
     });
 }
 
 export function delFile(fileId: string) {
     return request({
-        url: `/files/${fileId}/del`,
+        url: `/SENIOR/files/${fileId}/del`,
         method: 'post',
     });
 }
