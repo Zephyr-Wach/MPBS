@@ -22,7 +22,6 @@ public class MediaServiceImpl implements MediaService {
 
     @Value("${file.upload-path}")
     private String mediaPath;
-//    private String mediaPath = systemUploadPath + "/Media";
 
     @Override
     public MediaProcessDTO uploadMedia(MultipartFile file, String uploaderId) throws IOException {
