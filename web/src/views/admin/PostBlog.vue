@@ -28,10 +28,6 @@
         placeholder="封面图片 URL (可选)"
         style="width: 300px; padding: 0.5rem; font-size: 16px; margin-right: 1rem;"
     />
-    <select v-model="status" style="padding: 0.5rem; font-size: 16px;">
-      <option value="published">已发布</option>
-      <option value="draft">草稿</option>
-    </select>
     <button @click="handlePostBlog" :disabled="loading" style="margin-left: 1rem; padding: 0.5rem 1rem;">
       {{ loading ? '发布中...' : '发布博客' }}
     </button>
@@ -40,18 +36,40 @@
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
-import { marked } from 'marked';
+import MarkdownIt from 'markdown-it'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/github.css'
 import { postBlog } from '@/api/admin/blog';
 
 // 表单数据
 const title = ref('');
-const markdown = ref('');
+// const markdown = ref('');
 const coverUrl = ref('');
 const status = ref('published');
 const loading = ref(false);
 
 // 实时渲染 HTML
-const renderedHtml = computed(() => marked.parse(markdown.value));
+// const renderedHtml = computed(() => marked.parse(markdown.value));
+const md = new MarkdownIt({
+  html: true, // 允许 HTML 标签
+  linkify: true, // 自动链接
+  typographer: true, // 替换一些排版符号
+  highlight: (str, lang) => {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return `<pre class="hljs"><code>${hljs.highlight(str, { language: lang }).value}</code></pre>`
+      } catch (_) {}
+    }
+    return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`
+  }
+})
+
+const markdown = ref(`# Hello Markdown!\n\n\`\`\`js\nconsole.log("hello")\n\`\`\``)
+
+const renderedHtml = computed(() => md.render(markdown.value))
+
+
+
 
 // 发布博客
 const handlePostBlog = async () => {
@@ -92,5 +110,19 @@ const handlePostBlog = async () => {
 </script>
 
 <style scoped>
-/* 你可以根据需要调整样式 */
+.markdown-output pre {
+  background: #f6f8fa;
+  padding: 1em;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+.markdown-output code {
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+}
+
+.markdown-preview pre code {
+  white-space: pre-wrap;
+}
+
+
 </style>

@@ -8,17 +8,19 @@
         alt="封面"
         class="cover-image"
     />
-    <div class="content" v-html="blog.contentHtml || markdownToHtml(blog.contentMd)"></div>
+    <div class="content" v-html="renderedHtml"></div>
     <CommentSection :postId="blog?.id" />
   </div>
   <div v-else class="loading">加载中...</div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { getBlogDetail } from '@/api/public/blog';
-import { marked } from 'marked';
+import MarkdownIt from 'markdown-it';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github.css';
 import CommentSection from '@/components/CommentSection.vue';
 
 const blog = ref<null | {
@@ -27,7 +29,6 @@ const blog = ref<null | {
   coverUrl?: string;
   createdAt: string;
   contentMd: string;
-  contentHtml?: string;
 }>(null);
 
 const route = useRoute();
@@ -46,9 +47,25 @@ function formatDate(dateStr: string) {
   return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
 }
 
-function markdownToHtml(md: string) {
-  return marked(md);
-}
+// 初始化 markdown-it，并配置 highlight.js
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return `<pre class="hljs"><code>${hljs.highlight(str, { language: lang }).value}</code></pre>`;
+      } catch (__) {}
+    }
+    return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`;
+  },
+});
+
+const renderedHtml = computed(() => {
+  if (!blog.value) return '';
+  return md.render(blog.value.contentMd || '');
+});
 
 const loadDetail = async () => {
   const id = route.params.id as string;
@@ -118,11 +135,13 @@ onMounted(loadDetail);
   white-space: normal;
   word-break: break-word;
 }
-.content * {
-  white-space: normal !important;
-  overflow-wrap: anywhere !important;
+
+/* 代码块样式，确保换行和高亮 */
+.content pre.hljs,
+.content code.hljs {
+  white-space: pre-wrap !important;
   word-break: break-word !important;
-  box-sizing: border-box;
+  overflow-wrap: anywhere !important;
 }
 
 .content p {
@@ -137,17 +156,7 @@ onMounted(loadDetail);
   margin: 1rem 0;
   box-shadow: 0 1px 5px rgba(64, 158, 255, 0.2);
 }
-/* 👇 修复 <pre><code> 内容不换行的问题 */
-.content pre {
-  white-space: pre-wrap;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-}
-.content code {
-  white-space: pre-wrap;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-}
+
 .loading {
   text-align: center;
   color: #bbb;
@@ -155,5 +164,4 @@ onMounted(loadDetail);
   padding: 3rem 0;
   user-select: none;
 }
-
 </style>
