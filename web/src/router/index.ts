@@ -35,6 +35,9 @@ const routes: RouteRecordRaw[] = [
                 name: 'gather',
                 component: () => import('@/views/Gather.vue'),
             },
+
+
+
             {
                 path: 'cloud',
                 name: 'Cloud',
