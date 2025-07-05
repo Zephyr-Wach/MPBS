@@ -76,10 +76,21 @@
 
             <div v-if="item.expanded">
               <p v-if="!item.notes">加载中...</p>
-              <ul v-else>
-                <li v-for="note in item.notes" :key="note.id">{{ note }}</li>
-              </ul>
+              <draggable
+                  v-else
+                  v-model="item.notes"
+                  item-key="id"
+                  @end="() => onNotesDragEnd(item)"
+                  tag="ul"
+              >
+                <template #item="{ element }">
+                  <li style="padding: 4px 8px; border: 1px solid #ddd; margin-bottom: 4px; background: #fafafa; cursor: grab;">
+                    {{ element }}
+                  </li>
+                </template>
+              </draggable>
             </div>
+
           </li>
         </ul>
         <button @click="closeManageCollection">关闭</button>
@@ -243,6 +254,30 @@ const deleteCollection = async (item) => {
     alert('删除失败');
   }
 };
+
+async function onNotesDragEnd(item) {
+  // 构造排序对象
+  const order = {};
+  item.notes.forEach((noteId, idx) => {
+    order[noteId] = idx + 1; // 从1开始排序
+  });
+
+  try {
+    await request({
+      url: '/ULTIMATE/gather/updateOrder',
+      method: 'post',
+      data: {
+        gatherId: item.id,
+        order,
+      },
+    });
+    alert('排序保存成功');
+  } catch (e) {
+    alert('排序保存失败');
+  }
+}
+
+
 </script>
 
 <style scoped>
