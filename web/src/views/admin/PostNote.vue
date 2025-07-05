@@ -22,15 +22,31 @@
     />
 
     <button @click="handleAddCollection" :disabled="collectionloading" style="margin-left: 1rem; padding: 0.5rem 1rem;">
-      {{ loading ? '添加中...' : '选择合集' }}
+      <template v-if="collectionloading">
+        添加中...
+      </template>
+      <template v-else-if="selectedCollection">
+        已选合集：{{ selectedCollection.title }}
+      </template>
+      <template v-else>
+        选择合集
+      </template>
     </button>
+
     <div v-if="showCollectionSelector" class="modal-overlay" @click.self="closeSelector">
       <div class="collectionSelector">
-        <h3>选择合集</h3>
-        <div v-if="loading">加载中...</div>
-        <div v-else-if="collections.value.length === 0">暂无合集</div>
+        <h3 v-if="selectedCollection">已选择合集：{{ selectedCollection.title }}</h3>
+        <h3 v-else>选择合集</h3>
+        <div v-if="collectionloading">加载中...</div>
+        <div v-else-if="collections.length === 0">暂无合集</div>
         <ul v-else>
-          <li v-for="item in collections.value" :key="item.id" @click="selectCollection(item)" class="item">
+          <li
+              v-for="item in collections"
+              :key="item.id"
+              class="item"
+              :class="{ selected: selectedCollection && selectedCollection.id === item.id }"
+              @click="selectCollection(item)"
+          >
             {{ item.title }}
           </li>
         </ul>
@@ -41,9 +57,8 @@
     <section>
         <label for="isPublic">是否公开：</label>
         <select v-model="isPublic" id="isPublic">
-          <option disabled value="">请选择</option>
-          <option value="1">是</option>
           <option value="0">否</option>
+          <option value="1">是</option>
         </select>
     </section>
 
@@ -68,8 +83,9 @@ const loading = ref(false);
 const collectionloading = ref(false);
 const showCollectionSelector = ref(false);
 const collections = ref([]);
-
-// 实时渲染 HTML
+const selectedCollection = ref(null);
+const markdown = ref(`# Hello Markdown!\n\n\`\`\`js\nconsole.log("hello")\n\`\`\``)
+const renderedHtml = computed(() => md.render(markdown.value))
 const md = new MarkdownIt({
   html: true,
   linkify: true,
@@ -84,11 +100,6 @@ const md = new MarkdownIt({
   }
 })
 
-const markdown = ref(`# Hello Markdown!\n\n\`\`\`js\nconsole.log("hello")\n\`\`\``)
-
-const renderedHtml = computed(() => md.render(markdown.value))
-
-// 发布笔记
 const handlePostNote = async () => {
   if (!title.value.trim()) {
     alert('请输入文章标题');
@@ -98,7 +109,6 @@ const handlePostNote = async () => {
     alert('请输入文章内容');
     return;
   }
-
   loading.value = true;
   try {
     const res = await postNote({
@@ -122,27 +132,34 @@ const handlePostNote = async () => {
     loading.value = false;
   }
 };
+
 const handleAddCollection = async () => {
   showCollectionSelector.value = true
-  loading.value = true
-
+  collectionloading.value = true
   try {
     const res = await listCollections();
-    if (res.data.code === 0) {
-      collections.value = res.data.data
+    if (res.code === 0) {
+      collections.value = res.data;
     } else {
-      console.error('加载失败:', res.data.message)
+      console.error('加载失败:', res.message);
     }
   } catch (e) {
     console.error('请求异常:', e)
   } finally {
-    loading.value = false
+    collectionloading.value = false;
   }
 }
+
+const selectCollection = (item) => {
+  selectedCollection.value = item;
+  showCollectionSelector.value = false; // 选择后关闭弹窗（可选）
+  console.log('选中了合集:', item);
+};
 
 const closeSelector = () => {
   showCollectionSelector.value = false;
 };
+
 </script>
 
 <style scoped>
@@ -161,7 +178,7 @@ const closeSelector = () => {
 }
 .modal-overlay {
   position: fixed;
-  top: 0;
+  top: 50px;
   left: 0;
   width: 100vw;
   height: 100vh;
@@ -180,4 +197,21 @@ const closeSelector = () => {
   max-width: 90%;
   box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
+.item {
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 0.25rem 0;
+  transition: background-color 0.2s;
+}
+
+.item:hover {
+  background-color: #f0f0f0;
+}
+
+.item.selected {
+  background-color: #409eff;
+  color: white;
+}
+
 </style>
