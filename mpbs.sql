@@ -150,7 +150,7 @@ INSERT INTO `sidebar_menu` VALUES (10, NULL, '管理', NULL, NULL, 'ROLE_ULTIMAT
 INSERT INTO `sidebar_menu` VALUES (11, 10, '云盘', '/cloud', NULL, 'ROLE_ULTIMATE', NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (12, 10, '媒体管理', '/admin/clouds', NULL, 'ROLE_ULTIMATE', NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (13, 10, '发表Blog', '/admin/deliver', NULL, 'ROLE_ULTIMATE', NULL, NULL);
-INSERT INTO `sidebar_menu` VALUES (14, 10, '发表笔记&合集', '/admin/gather', NULL, 'ROLE_ULTIMATE', NULL, NULL);
+INSERT INTO `sidebar_menu` VALUES (14, 10, '发表笔记&合集', '/admin/postNote', NULL, 'ROLE_ULTIMATE', NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (15, 10, 'Blog管理', '/admin/blogs', NULL, 'ROLE_ULTIMATE', NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (16, 10, '笔记&合集管理', '/admin/gather', NULL, 'ROLE_ULTIMATE', NULL, NULL);
 INSERT INTO `sidebar_menu` VALUES (28, 10, '用户管理', '/admin/users', NULL, 'ROLE_ULTIMATE', NULL, NULL);
