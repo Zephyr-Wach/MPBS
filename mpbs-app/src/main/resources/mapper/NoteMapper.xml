@@ -5,10 +5,10 @@
 <mapper namespace="com.zephyr.mpbsgather.mapper.NoteMapper">
     <!-- 插入 NoteCollectionEntity -->
     <insert id="insert" parameterType="com.zephyr.mpbsgather.entity.NoteEntity" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO note_collection
-        (title, content, created_at)
+        INSERT INTO note
+        (title, content_md, created_at)
         VALUES
-        (#{title}, #{content}, #{createdAt})
+        (#{title}, #{contentMd}, #{createdAt})
     </insert>
 
     <select id="queryAuthorIdByNoteId" parameterType="String" resultType="String">
@@ -18,17 +18,17 @@
     </select>
 
     <update id="updateById" parameterType="com.zephyr.mpbsgather.entity.NoteEntity">
-        UPDATE note_collection
+        UPDATE note
         SET
             title = #{title},
-            content = #{content},
+            content_md = #{contentMd},
             updated_at = NOW()
         WHERE id = #{id}
     </update>
 
     <!-- 根据 ID 删除 -->
     <delete id="deleteById" parameterType="String">
-        DELETE FROM note_collection WHERE id = #{id}
+        DELETE FROM note WHERE id = #{id}
     </delete>
 
     <!-- 根据 noteId 查询完整 NoteEntity -->

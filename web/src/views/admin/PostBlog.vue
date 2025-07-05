@@ -68,9 +68,6 @@ const markdown = ref(`# Hello Markdown!\n\n\`\`\`js\nconsole.log("hello")\n\`\`\
 
 const renderedHtml = computed(() => md.render(markdown.value))
 
-
-
-
 // 发布博客
 const handlePostBlog = async () => {
   if (!title.value.trim()) {
@@ -87,7 +84,6 @@ const handlePostBlog = async () => {
     const res = await postBlog({
       title: title.value.trim(),
       contentMd: markdown.value.trim(),
-      contentHtml: renderedHtml.value,
       coverUrl: coverUrl.value.trim() || undefined,
       status: status.value,
     });

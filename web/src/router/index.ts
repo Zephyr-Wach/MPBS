@@ -35,8 +35,11 @@ const routes: RouteRecordRaw[] = [
                 name: 'gather',
                 component: () => import('@/views/Gather.vue'),
             },
-
-
+            {
+                path: '/admin/postNote',
+                name: 'postNote',
+                component: () => import('@/views/admin/PostNote.vue'),
+            },
 
             {
                 path: 'cloud',
