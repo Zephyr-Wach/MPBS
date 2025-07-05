@@ -9,20 +9,41 @@
           class="search-input"
       />
       <el-scrollbar class="note-list-scroll">
-        <el-menu
-            :default-active="currentNoteId ? String(currentNoteId) : ''"
-            @select="handleSelect"
-            :router="false"
-        >
-          <el-menu-item
-              v-for="note in noteList"
-              :key="note.id"
-              :index="String(note.id)"
-              class="note-menu-item"
+
+        <el-scrollbar class="note-list-scroll">
+          <el-menu
+              :default-active="currentNoteId ? String(currentNoteId) : ''"
+              :default-openeds="openedCollections"
+              @open="handleOpenCollection"
+              @select="handleSelectNote"
+              :router="false"
+              unique-opened
           >
-            {{ note.title }}
-          </el-menu-item>
-        </el-menu>
+            <el-sub-menu
+                v-for="collection in collectionList"
+                :key="collection.id"
+                :index="String(collection.id)"
+                :title="collection.title"
+            >
+              <template #title>
+                {{ collection.title }}
+              </template>
+              <template v-if="collectionNotes[collection.id]?.length > 0">
+                <el-menu-item
+                    v-for="note in collectionNotes[collection.id]"
+                    :key="note.noteId"
+                    :index="String(note.noteId)"
+                >
+                  {{ note.noteTitle }}
+                </el-menu-item>
+              </template>
+              <template v-else>
+                <el-menu-item disabled>暂无文章</el-menu-item>
+              </template>
+            </el-sub-menu>
+          </el-menu>
+        </el-scrollbar>
+
       </el-scrollbar>
     </div>
 
@@ -31,29 +52,27 @@
       <div v-if="currentNote" class="note-content" v-html="renderedMarkdown"></div>
       <div v-else class="empty-note">请选择左侧笔记查看内容</div>
 
-      <div class="navigation">
-        <el-button size="small" @click="goPrev" :disabled="!prevNoteId">上一篇</el-button>
-        <span>当前是第 {{ currentIndex + 1 }} 篇，共 {{ noteList.length }} 篇</span>
-        <el-button size="small" @click="goNext" :disabled="!nextNoteId">下一篇</el-button>
-      </div>
+<!--      <div class="navigation">-->
+<!--        <el-button size="small" @click="goPrev" :disabled="!hasPrev">上一篇</el-button>-->
+<!--        <span>当前是第 {{ currentIndex + 1 }} 篇，共 {{ currentNoteList.length }} 篇</span>-->
+<!--        <el-button size="small" @click="goNext" :disabled="!hasNext">下一篇</el-button>-->
+<!--      </div>-->
     </div>
   </div>
 </template>
 
 <script setup>
-import {ref, computed, watch, onMounted} from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import MarkdownIt from 'markdown-it';
 import debounce from 'lodash/debounce';
 import request from '@/utils/request';
 
-// 状态变量
 const searchKeyword = ref('');
-const noteList = ref([]);
+const collectionList = ref([]);
+const collectionNotes = ref({});
+const openedCollections = ref([]);
 const currentNoteId = ref(null);
 const currentNote = ref(null);
-const currentCollection = ref(null);
-const prevNoteId = ref(null);
-const nextNoteId = ref(null);
 const currentIndex = ref(-1);
 
 const md = new MarkdownIt({
@@ -63,89 +82,118 @@ const md = new MarkdownIt({
   breaks: true,
 });
 
+// 渲染当前笔记 markdown 内容
 const renderedMarkdown = computed(() => {
-  if (currentNote && currentNote.value && currentNote.value.content) {
-    return md.render(currentNote.value.content);
+  if (currentNote.value && currentNote.value.contentMd) {
+    return md.render(currentNote.value.contentMd);
   }
   return '';
 });
 
-// 异步获取笔记列表，支持搜索关键词
-const fetchNoteList = async () => {
+
+// 获取合集列表接口
+const fetchCollectionList = async () => {
   try {
     let res;
     const kw = searchKeyword.value.trim();
+
     if (!kw) {
-      // keyword 为空，调用列表接口
       res = await request.get('/public/gather/list');
-    } else {
-      // keyword 不为空，调用搜索接口
-      res = await request.get('/public/gather/search', {
-        params: { keyword: kw }
-      });
-    }
-
-    if (res.code === 0 && Array.isArray(res.data)) {
-      noteList.value = res.data;
-    } else {
-      noteList.value = [];
-    }
-
-    if (noteList.value.length > 0) {
-      if (!currentNoteId.value || !noteList.value.find(n => n.id === currentNoteId.value)) {
-        selectNote(noteList.value[0].id);
+      if (res.code === 0 && Array.isArray(res.data)) {
+        collectionList.value = res.data;
+      } else {
+        collectionList.value = [];
       }
     } else {
-      currentNoteId.value = null;
+      res = await request.get('/public/gather/search', {
+        params: { keyword: kw },
+      });
+      if (res.code === 0 && res.data && Array.isArray(res.data.records)) {
+        collectionList.value = res.data.records;
+      } else {
+        collectionList.value = [];
+      }
+    }
+
+    // 重置相关状态，只要 collectionList 赋值成功都清空
+    if (collectionList.value.length > 0) {
+      collectionNotes.value = {};
+      openedCollections.value = [];
       currentNote.value = null;
-      prevNoteId.value = null;
-      nextNoteId.value = null;
+      currentNoteId.value = null;
       currentIndex.value = -1;
     }
   } catch (error) {
-    console.error('获取笔记列表失败:', error);
-    noteList.value = [];
+    console.error('获取合集列表失败:', error);
+    collectionList.value = [];
   }
 };
 
-// 选中笔记，获取详情
-const selectNote = async (id) => {
-  currentNoteId.value = id;
-  currentNote.value = null;
-  try {
-    const res = await request.get(`/public/relation/queryGatherNotes?gatherId=${id}`);
-    currentNote.value = res.data;
-
-    currentIndex.value = noteList.value.findIndex(n => n.id === id);
-    prevNoteId.value = currentIndex.value > 0 ? noteList.value[currentIndex.value - 1].id : null;
-    nextNoteId.value = currentIndex.value < noteList.value.length - 1 ? noteList.value[currentIndex.value + 1].id : null;
-  } catch (error) {
-    console.error('获取笔记详情失败:', error);
-    currentNote.value = null;
+// 合集展开时，动态加载该合集笔记列表
+const handleOpenCollection = async (collectionId) => {
+  if (!collectionNotes.value[collectionId]) {
+    try {
+      const res = await request.get(`/public/relation/queryGatherNotes?gatherId=${collectionId}`);
+      if (res.code === 0 && Array.isArray(res.data)) {
+        collectionNotes.value[collectionId] = res.data;
+      } else {
+        collectionNotes.value[collectionId] = [];
+      }
+    } catch (error) {
+      console.error('获取合集笔记失败:', error);
+      collectionNotes.value[collectionId] = [];
+    }
+  }
+  if (!openedCollections.value.includes(collectionId)) {
+    openedCollections.value.push(collectionId);
   }
 };
 
-const handleSelect = (id) => {
-  selectNote(Number(id));
+// 点击笔记选中
+const handleSelectNote = async (noteId) => {
+  const res = await request.get(`/public/gather/getNote?noteId=${noteId}`);
+  currentNote.value = res.data;
 };
 
-const goPrev = () => {
-  if (prevNoteId.value) selectNote(prevNoteId.value);
-};
-
-const goNext = () => {
-  if (nextNoteId.value) selectNote(nextNoteId.value);
-};
-
-// 防抖搜索，避免频繁请求
-const debouncedFetchNoteList = debounce(fetchNoteList, 300);
-watch(searchKeyword, () => {
-  debouncedFetchNoteList();
+// 当前笔记所属合集笔记列表（用于上一篇下一篇）
+const currentNoteList = computed(() => {
+  if (!currentNoteId.value) return [];
+  for (const cid in collectionNotes.value) {
+    if (collectionNotes.value[cid].some(n => n.id === currentNoteId.value)) {
+      return collectionNotes.value[cid];
+    }
+  }
+  return [];
 });
 
-// 页面初始化加载列表
+// 判断是否有上一篇、下一篇
+const hasPrev = computed(() => currentIndex.value > 0);
+const hasNext = computed(() => currentIndex.value < currentNoteList.value.length - 1);
+
+// 上一篇
+const goPrev = () => {
+  if (hasPrev.value) {
+    const prevNote = currentNoteList.value[currentIndex.value - 1];
+    handleSelectNote(prevNote.id);
+  }
+};
+// 下一篇
+const goNext = () => {
+  if (hasNext.value) {
+    const nextNote = currentNoteList.value[currentIndex.value + 1];
+    handleSelectNote(nextNote.id);
+  }
+};
+
+// 搜索防抖
+const debouncedFetchCollectionList = debounce(fetchCollectionList, 300);
+watch(searchKeyword, () => {
+  debouncedFetchCollectionList();
+});
+
+// 页面初始化加载合集
 onMounted(() => {
-  fetchNoteList();
+  fetchCollectionList();
 });
 </script>
 
