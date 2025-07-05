@@ -6,7 +6,7 @@
 
     <!-- 根据 noteId 查询对应的 gatherId -->
     <select id="queryGatherIdByNoteId" parameterType="String" resultType="String">
-        SELECT gather_id
+        SELECT collection_id
         FROM note_collection_relation
         WHERE note_id = #{noteId}
             LIMIT 1
@@ -16,7 +16,7 @@
     <select id="countNoteIdByGatherId" parameterType="String" resultType="int">
         SELECT COUNT(note_id)
         FROM note_collection_relation
-        WHERE gather_id = #{gatherId}
+        WHERE collection_id = #{gatherId}
     </select>
 
     <!-- 根据 noteId 查询索引 index -->
@@ -31,7 +31,7 @@
     <select id="queryNoteIdByGatherId" parameterType="String" resultType="String">
         SELECT note_id
         FROM note_collection_relation
-        WHERE gather_id = #{gatherId}
+        WHERE collection_id = #{gatherId}
         ORDER BY order_index ASC
     </select>
 
