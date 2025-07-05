@@ -30,7 +30,6 @@ export function getBlogList(page = 1, size = 10): Promise<BlogListResponse> {
 interface BlogDetail {
     id: string;
     title: string;
-    contentHtml: string;
     contentMd: string;
     coverUrl?: string;
     createdAt: string;

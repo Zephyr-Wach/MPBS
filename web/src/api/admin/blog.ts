@@ -4,7 +4,6 @@ import request from '@/utils/request';
 interface BlogParams {
     title: string;
     contentMd: string;
-    contentHtml?: string;
     coverUrl?: string;
     status: string;
 }
@@ -28,7 +27,6 @@ export interface BlogPost {
     id: string;
     title: string;
     contentMd: string;
-    contentHtml?: string;
     coverUrl?: string;
     authorId?: string;
     status: string;
