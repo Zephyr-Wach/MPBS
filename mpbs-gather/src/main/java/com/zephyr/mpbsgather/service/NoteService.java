@@ -1,7 +1,7 @@
 package com.zephyr.mpbsgather.service;
 
 import com.zephyr.mpbscommon.utils.Result;
-import com.zephyr.mpbsgather.entity.NoteCollectionEntity;
+import com.zephyr.mpbsgather.entity.NoteEntity;
 
 /**
  * 笔记服务接口
@@ -16,7 +16,7 @@ public interface NoteService {
      * @param noteEntity 笔记实体对象，包含笔记的标题、内容、所属合集等信息
      * @return           返回操作结果（成功、失败或异常信息）
      */
-    Result addNote(String userId, NoteCollectionEntity noteEntity);
+    Result addNote(String userId, NoteEntity noteEntity);
 
     /**
      * 更新笔记
@@ -26,7 +26,7 @@ public interface NoteService {
      * @param noteEntity 更新后的笔记实体对象
      * @return           返回操作结果
      */
-    Result updateNote(String userId, String noteId, NoteCollectionEntity noteEntity);
+    Result updateNote(String userId, String noteId, NoteEntity noteEntity);
 
     /**
      * 删除笔记

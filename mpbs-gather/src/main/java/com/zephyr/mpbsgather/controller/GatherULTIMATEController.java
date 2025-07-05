@@ -3,10 +3,13 @@ package com.zephyr.mpbsgather.controller;
 import com.zephyr.mpbscommon.utils.BeanConvertUtil;
 import com.zephyr.mpbscommon.utils.Result;
 import com.zephyr.mpbsgather.dto.GatherDTO;
+import com.zephyr.mpbsgather.dto.GatherOrderUpdateDTO;
 import com.zephyr.mpbsgather.dto.NoteDTO;
 import com.zephyr.mpbsgather.entity.NoteCollectionEntity;
+import com.zephyr.mpbsgather.entity.NoteEntity;
 import com.zephyr.mpbsgather.service.CollectionService;
 import com.zephyr.mpbsgather.service.NoteService;
+import com.zephyr.mpbsgather.service.RelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,8 @@ public class GatherULTIMATEController {
 
     @Autowired
     private NoteService noteService;
+    @Autowired
+    private RelationService relationService;
     @PostMapping("/hello")
     public Result hello() {
         return Result.success("hello");
@@ -74,7 +79,7 @@ public class GatherULTIMATEController {
     public Result addNote(@RequestBody NoteDTO noteDTO, Authentication authentication) {
         return authentication == null || authentication.getAuthorities() == null || authentication.getAuthorities().isEmpty() ?
                 Result.failure(404, "token is invalid") :
-                noteService.addNote(authentication.getPrincipal().toString(), BeanConvertUtil.convert(noteDTO, NoteCollectionEntity.class));
+                noteService.addNote(authentication.getPrincipal().toString(), BeanConvertUtil.convert(noteDTO, NoteEntity.class));
     }
 
     /**
@@ -88,7 +93,7 @@ public class GatherULTIMATEController {
     public Result updateNote(@RequestParam String noteId, @RequestBody NoteDTO noteDTO, Authentication authentication) {
         return authentication == null || authentication.getAuthorities() == null || authentication.getAuthorities().isEmpty() ?
                 Result.failure(404, "token is invalid") :
-                noteService.updateNote(authentication.getPrincipal().toString(), noteId, BeanConvertUtil.convert(noteDTO, NoteCollectionEntity.class));
+                noteService.updateNote(authentication.getPrincipal().toString(), noteId, BeanConvertUtil.convert(noteDTO, NoteEntity.class));
     }
 
     /**
@@ -104,4 +109,13 @@ public class GatherULTIMATEController {
                 noteService.delNote(authentication.getPrincipal().toString(), noteId);
     }
 
+    /**
+     * 更新合集中笔记排序
+     * @param dto 合集ID和排序信息
+     * @return result
+     */
+    @PostMapping("/updateOrder")
+    public Result updateOrder(@RequestBody GatherOrderUpdateDTO dto) {
+        return relationService.updateGatherNoteOrder(dto);
+    }
 }

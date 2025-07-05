@@ -71,8 +71,6 @@ public class CollectionServiceImpl implements CollectionService {
         return voPage;
     }
 
-
-
     @Override
     public Result listCollection() {
         List<NoteCollectionEntity> list = gatherMapper.selectAllTitleAndDescription();

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zephyr.mpbsgather.mapper.NoteMapper">
+    <!-- 插入 NoteCollectionEntity -->
+    <insert id="insert" parameterType="com.zephyr.mpbsgather.entity.NoteEntity" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO note_collection
+        (title, content, created_at)
+        VALUES
+        (#{title}, #{content}, #{createdAt})
+    </insert>
+
+    <select id="queryAuthorIdByNoteId" parameterType="String" resultType="String">
+        SELECT author_id
+        FROM note
+        WHERE note_id = #{noteId}
+    </select>
+
+    <update id="updateById" parameterType="com.zephyr.mpbsgather.entity.NoteEntity">
+        UPDATE note_collection
+        SET
+            title = #{title},
+            content = #{content},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据 ID 删除 -->
+    <delete id="deleteById" parameterType="String">
+        DELETE FROM note_collection WHERE id = #{id}
+    </delete>
+
+    <!-- 根据 noteId 查询完整 NoteEntity -->
+    <select id="getAllById" parameterType="String" resultType="com.zephyr.mpbsgather.entity.NoteEntity">
+        SELECT *
+        FROM note
+        WHERE id = #{noteId}
+    </select>
+
+</mapper>

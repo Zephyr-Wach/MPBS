@@ -1,9 +1,11 @@
 package com.zephyr.mpbsgather.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@TableName("note")
 @Data
 public class NoteEntity {
     private String id;
