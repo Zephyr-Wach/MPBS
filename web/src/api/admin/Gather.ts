@@ -27,12 +27,14 @@ export function listCollections() {
     });
 }
 
-export function listNotesFromCollection() {
+export function listNotesFromCollection(params: { gatherId: string }) {
     return request({
-        url: '/public/relation/queryGatherNotes?gatherId=',
-        method: 'get'
+        url: '/public/relation/queryGatherNotes',
+        method: 'get',
+        params,
     });
 }
+
 
 interface updateCollectionParams {
     title: string;

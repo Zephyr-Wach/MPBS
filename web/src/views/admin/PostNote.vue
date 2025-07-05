@@ -61,17 +61,23 @@
           <li v-for="item in collections" :key="item.id">
             <div>
               <input v-if="item.editing" v-model="item.title" @blur="saveCollection(item)" />
-              <span v-else>{{ item.title }}</span>
-              <button @click="toggleExpand(item)">{{ item.expanded ? '收起' : '展开' }}</button>
-              <button @click="() => item.editing = true">重命名</button>
-              <button @click="togglePublic(item)">{{ item.isPublic === '1' ? '设为私有' : '设为公开' }}</button>
-              <button @click="deleteCollection(item)">删除</button>
+              <div v-else style="white-space: pre-wrap; margin-bottom: 0.5rem;">
+                {{ item.title }} ---- {{ item.description }}
+              </div>
+
+              <div>
+                <button @click="toggleExpand(item)">{{ item.expanded ? '收起' : '展开' }}</button>
+                <button @click="() => item.editing = true">重命名</button>
+                <button @click="togglePublic(item)">{{ item.isPublic === '1' ? '设为私有' : '设为公开' }}</button>
+                <button @click="deleteCollection(item)">删除</button>
+              </div>
             </div>
+
 
             <div v-if="item.expanded">
               <p v-if="!item.notes">加载中...</p>
               <ul v-else>
-                <li v-for="note in item.notes" :key="note.id">{{ note.title }}</li>
+                <li v-for="note in item.notes" :key="note.id">{{ note }}</li>
               </ul>
             </div>
           </li>
@@ -95,6 +101,7 @@
 </template>
 
 <script lang="ts" setup>
+import draggable from 'vuedraggable';
 import { ref, computed } from 'vue';
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
@@ -201,6 +208,7 @@ const toggleExpand = async (item) => {
     try {
       const res = await listNotesFromCollection({ gatherId: item.id });
       item.notes = res.data;
+      // console.l
     } catch (e) {
       item.notes = [];
     }
