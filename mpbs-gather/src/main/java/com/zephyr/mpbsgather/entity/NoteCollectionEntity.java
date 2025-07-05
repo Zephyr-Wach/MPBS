@@ -1,9 +1,10 @@
 package com.zephyr.mpbsgather.entity;
 
 import lombok.Data;
+import com.baomidou.mybatisplus.annotation.TableName;
+import java.time.LocalDateTime;
 
-import java.util.Date;
-
+@TableName("note_collection")
 @Data
 public class NoteCollectionEntity {
     private String id;
@@ -11,6 +12,6 @@ public class NoteCollectionEntity {
     private String description;
     private String authorId;
     private String isPublic;
-    private Date createdAt;
-    private Date updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

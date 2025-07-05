@@ -12,7 +12,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("/ULTIMATE/blog")
-public class ULTIMATEController {
+public class BlogULTIMATEController {
     @Autowired
     private BlogPostService blogPostService;
 

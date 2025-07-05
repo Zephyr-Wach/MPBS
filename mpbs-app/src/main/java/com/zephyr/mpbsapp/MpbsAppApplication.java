@@ -10,7 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         "com.zephyr.mpbscommon",
         "com.zephyr.mpbsfiles",
         "com.zephyr.mpbssecurity",
-        "com.zephyr.mpbsuser"
+        "com.zephyr.mpbsuser",
+        "com.zephyr.mpbsgather"
 })
 public class MpbsAppApplication {
 
