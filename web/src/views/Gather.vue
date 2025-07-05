@@ -3,7 +3,7 @@
     <div class="left-panel">
       <el-input
           v-model="searchKeyword"
-          placeholder="搜索笔记标题"
+          placeholder="搜索合集标题"
           clearable
           size="small"
           class="search-input"
@@ -42,15 +42,16 @@
 
 <script setup>
 import {ref, computed, watch, onMounted} from 'vue';
-import axios from 'axios';
 import MarkdownIt from 'markdown-it';
 import debounce from 'lodash/debounce';
+import request from '@/utils/request';
 
 // 状态变量
 const searchKeyword = ref('');
 const noteList = ref([]);
 const currentNoteId = ref(null);
 const currentNote = ref(null);
+const currentCollection = ref(null);
 const prevNoteId = ref(null);
 const nextNoteId = ref(null);
 const currentIndex = ref(-1);
@@ -72,10 +73,25 @@ const renderedMarkdown = computed(() => {
 // 异步获取笔记列表，支持搜索关键词
 const fetchNoteList = async () => {
   try {
-    const res = await axios.get('/notes', {params: {search: searchKeyword.value.trim()}});
-    noteList.value = res.data || [];
+    let res;
+    const kw = searchKeyword.value.trim();
+    if (!kw) {
+      // keyword 为空，调用列表接口
+      res = await request.get('/public/gather/list');
+    } else {
+      // keyword 不为空，调用搜索接口
+      res = await request.get('/public/gather/search', {
+        params: { keyword: kw }
+      });
+    }
+
+    if (res.code === 0 && Array.isArray(res.data)) {
+      noteList.value = res.data;
+    } else {
+      noteList.value = [];
+    }
+
     if (noteList.value.length > 0) {
-      // 如果当前选中笔记ID不在列表中，默认选第一个
       if (!currentNoteId.value || !noteList.value.find(n => n.id === currentNoteId.value)) {
         selectNote(noteList.value[0].id);
       }
@@ -97,7 +113,7 @@ const selectNote = async (id) => {
   currentNoteId.value = id;
   currentNote.value = null;
   try {
-    const res = await axios.get(`/notes/${id}`);
+    const res = await request.get(`/public/relation/queryGatherNotes?gatherId=${id}`);
     currentNote.value = res.data;
 
     currentIndex.value = noteList.value.findIndex(n => n.id === id);

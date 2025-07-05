@@ -28,12 +28,20 @@
     </select>
 
     <!-- 根据 gatherId 查询对应的所有 noteId 列表 -->
-    <select id="queryNoteIdByGatherId" parameterType="String" resultType="String">
-        SELECT note_id
-        FROM note_collection_relation
-        WHERE collection_id = #{gatherId}
-        ORDER BY order_index ASC
+<!--    <select id="queryNoteIdByGatherId" parameterType="String" resultType="String">-->
+<!--        SELECT note_id-->
+<!--        FROM note_collection_relation-->
+<!--        WHERE collection_id = #{gatherId}-->
+<!--        ORDER BY order_index ASC-->
+<!--    </select>-->
+    <select id="queryNoteIdAndTitleByGatherId" parameterType="String" resultType="map">
+        SELECT r.note_id AS noteId, n.title AS noteTitle
+        FROM note_collection_relation r
+                 JOIN note n ON r.note_id = n.id
+        WHERE r.collection_id = #{gatherId}
+        ORDER BY r.order_index ASC
     </select>
+
 
     <update id="batchUpdateNoteOrder" parameterType="map">
         UPDATE note_collection_relation

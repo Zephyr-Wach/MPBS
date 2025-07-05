@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -27,7 +28,8 @@ public class RelationServiceImpl implements RelationService {
 
     @Override
     public Result queryGatherNotes(String gatherId) {
-        return Result.success( relationMapper.queryNoteIdByGatherId(gatherId) );
+        List<Map<String, Object>> list = relationMapper.queryNoteIdAndTitleByGatherId(gatherId);
+        return Result.success(list);
     }
 
     @Override
