@@ -54,7 +54,43 @@
       </div>
     </div>
 
+    <button @click="handleManageCollection" :disabled="ManageCollectionloading" style="margin-left: 1rem; padding: 0.5rem 1rem;">
+      <template v-if="collectionloading">
+        管理中...
+      </template>
+    </button>
 
+    <div v-if="showManageCollection" class="modal-overlay" @click.self="closeManageCollection">
+      <div class="collectionSelector">
+        <h3>合集管理</h3>
+        <div v-if="ManageCollectionloading">加载中...</div>
+        <div v-else-if="collections.length === 0">暂无合集</div>
+        <ul>
+          <li v-for="item in collections" :key="item.id">
+            <div>
+              <input v-if="item.editing" v-model="item.title" @blur="saveCollection(item)" />
+              <span v-else>{{ item.title }}</span>
+              <button @click="toggleExpand(item)">
+                {{ item.expanded ? '收起' : '展开' }}
+              </button>
+              <button @click="() => item.editing = true">重命名</button>
+              <button @click="togglePublic(item)">
+                {{ item.isPublic === '1' ? '设为私有' : '设为公开' }}
+              </button>
+              <button @click="deleteCollection(item)">删除</button>
+            </div>
+
+            <div v-if="item.expanded">
+              <p v-if="!item.notes">加载中...</p>
+              <ul v-else>
+                <li v-for="note in item.notes" :key="note.id">{{ note.title }}</li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+        <button @click="closeManageCollection">关闭</button>
+      </div>
+    </div>
 
     <section>
         <label for="isPublic">是否公开：</label>
@@ -75,7 +111,7 @@ import { ref, computed } from 'vue';
 import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
-import { postNote, listCollections } from '@/api/admin/Gather';
+import { postNote, listCollections, listNotesFromCollection, delCollection, updateCollection } from '@/api/admin/Gather';
 
 // 表单数据
 const title = ref('');

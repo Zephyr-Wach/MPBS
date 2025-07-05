@@ -26,3 +26,37 @@ export function listCollections() {
         method: 'get'
     });
 }
+
+export function listNotesFromCollection() {
+    return request({
+        url: '/public/relation/queryGatherNotes?gatherId=',
+        method: 'get'
+    });
+}
+
+interface updateCollectionParams {
+    title: string;
+    description: string;
+    isPublic: string;
+}
+
+interface updateCollectionResponse {
+    code: number;
+    message: string;
+    data: {
+    };
+}
+export function updateCollection(params: updateCollectionParams, gatherId: string): Promise<updateCollectionResponse> {
+    return request({
+        url: `/ULTIMATE/gather/updateCollection?gatherId=${gatherId}`,
+        method: 'post',
+        data: params,
+    });
+}
+
+export function delCollection(gatherId: string) {
+    return request({
+        url: `/ULTIMATE/gather/deleteCollection?gatherId=${gatherId}`,
+        method: 'get'
+    });
+}
