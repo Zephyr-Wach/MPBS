@@ -55,6 +55,13 @@
     <div v-if="showManageCollection" class="modal-overlay" @click.self="closeManageCollection">
       <div class="collectionSelector">
         <h3>合集管理</h3>
+
+        <input
+            v-model="searchKeyword"
+            placeholder="搜索合集"
+            style="margin-bottom: 1rem; padding: 0.5rem; width: 100%;"
+        >
+
         <div v-if="ManageCollectionloading">加载中...</div>
         <div v-else-if="collections.length === 0">暂无合集</div>
         <ul>
@@ -112,8 +119,10 @@
 </template>
 
 <script lang="ts" setup>
+import debounce from 'lodash/debounce';
+import request from '@/utils/request';
 import draggable from 'vuedraggable';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
@@ -135,7 +144,7 @@ const showCollectionSelector = ref(false);
 const showManageCollection = ref(false);
 const collections = ref([]);
 const selectedCollection = ref(null);
-
+const searchKeyword = ref('');
 const markdown = ref(`# Hello Markdown!\n\n\
 \`\`\`js\nconsole.log("hello")\n\`\`\``);
 const md = new MarkdownIt({
@@ -254,15 +263,14 @@ const deleteCollection = async (item) => {
     alert('删除失败');
   }
 };
-
+//houxu an
 async function onNotesDragEnd(item) {
-  // 构造排序对象
-  const order = {};
-  item.notes.forEach((noteId, idx) => {
-    order[noteId] = idx + 1; // 从1开始排序
-  });
-
   try {
+    const order = {};
+    item.notes.forEach((note, idx) => {
+      order[note] = idx + 1;
+    });
+
     await request({
       url: '/ULTIMATE/gather/updateOrder',
       method: 'post',
@@ -271,11 +279,38 @@ async function onNotesDragEnd(item) {
         order,
       },
     });
+
     alert('排序保存成功');
   } catch (e) {
     alert('排序保存失败');
+    console.error('排序保存失败的错误:', e);
   }
 }
+
+const doSearch = debounce(async (keyword) => {
+  const res = await request({
+    url: `/public/gather/search?keyword=${encodeURIComponent(keyword)}`,
+    method: 'get',
+  });
+
+  if (res.code === 0 && Array.isArray(res.data.records)) {
+    collections.value = res.data.records.map(c => ({
+      ...c,
+      editing: false,
+      expanded: false,
+      notes: null
+    }));
+  }
+}, 300);
+
+
+watch(searchKeyword, (newVal) => {
+  if (!newVal) {
+    handleManageCollection(); // 重新加载
+  } else {
+    doSearch(newVal);
+  }
+});
 
 
 </script>
