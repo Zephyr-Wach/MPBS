@@ -54,6 +54,8 @@
       </div>
     </div>
 
+
+
     <section>
         <label for="isPublic">是否公开：</label>
         <select v-model="isPublic" id="isPublic">
