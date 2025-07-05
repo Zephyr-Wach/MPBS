@@ -1,6 +1,7 @@
 package com.zephyr.mpbsgather.service.Impl;
 
 import com.zephyr.mpbscommon.utils.Result;
+import com.zephyr.mpbsgather.dto.GatherNoteAddDTO;
 import com.zephyr.mpbsgather.dto.GatherOrderUpdateDTO;
 import com.zephyr.mpbsgather.mapper.NoteCollectionRelationMapper;
 import com.zephyr.mpbsgather.service.RelationService;
@@ -44,6 +45,13 @@ public class RelationServiceImpl implements RelationService {
         } else {
             return Result.failure(400, "排序更新失败");
         }
+    }
+
+    @Override
+    public Result addNoteToGather(GatherNoteAddDTO dto) {
+        return relationMapper.addNoteToGather(dto,relationMapper.getMaxOrderNumBygatherId(dto.getGatherId())+1) >0 ?
+                Result.success("添加成功") :
+                Result.failure(400, "添加失败");
     }
 
 }

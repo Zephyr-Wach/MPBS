@@ -19,7 +19,7 @@ public class NoteServiceImpl implements NoteService {
     public Result addNote(String userId, NoteEntity noteEntity) {
         noteEntity.setCreatedAt(LocalDateTime.now());
         int inserted = noteMapper.insert(noteEntity);
-        return inserted > 0 ? Result.success("创建成功") : Result.failure(400,"创建失败");
+        return inserted > 0 ? Result.success(noteEntity.getId()) : Result.failure(400,"创建失败");
     }
 
     @Override

@@ -50,4 +50,15 @@
         </foreach>
     </update>
 
+    <select id="getMaxOrderNumBygatherId" resultType="java.lang.Integer">
+        SELECT COALESCE(MAX(order_Index), 0)
+        FROM note_collection_relation
+        WHERE collection_id = #{gatherId}
+    </select>
+
+    <insert id="addNoteToGather">
+        INSERT INTO note_collection_relation (collection_id, note_id, order_index)
+        VALUES (#{dto.gatherId}, #{dto.noteId}, #{maxOrderNumByParentId})
+    </insert>
+
 </mapper>

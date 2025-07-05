@@ -1,6 +1,7 @@
 package com.zephyr.mpbsgather.service;
 
 import com.zephyr.mpbscommon.utils.Result;
+import com.zephyr.mpbsgather.dto.GatherNoteAddDTO;
 import com.zephyr.mpbsgather.dto.GatherOrderUpdateDTO;
 
 /**
@@ -22,4 +23,9 @@ public interface RelationService {
      * 更新集合下笔记顺序
      */
     public Result updateGatherNoteOrder(GatherOrderUpdateDTO gatherOrderUpdateDTO);
+
+    /**
+     * 添加笔记到合集
+      */
+    Result addNoteToGather(GatherNoteAddDTO dto);
 }

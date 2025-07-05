@@ -3,6 +3,7 @@ package com.zephyr.mpbsgather.controller;
 import com.zephyr.mpbscommon.utils.BeanConvertUtil;
 import com.zephyr.mpbscommon.utils.Result;
 import com.zephyr.mpbsgather.dto.GatherDTO;
+import com.zephyr.mpbsgather.dto.GatherNoteAddDTO;
 import com.zephyr.mpbsgather.dto.GatherOrderUpdateDTO;
 import com.zephyr.mpbsgather.dto.NoteDTO;
 import com.zephyr.mpbsgather.entity.NoteCollectionEntity;
@@ -117,5 +118,15 @@ public class GatherULTIMATEController {
     @PostMapping("/updateOrder")
     public Result updateOrder(@RequestBody GatherOrderUpdateDTO dto) {
         return relationService.updateGatherNoteOrder(dto);
+    }
+
+    /**
+     * 将笔记加入合集
+     * @param dto 笔记ID和合集ID
+     * @return result
+     */
+    @PostMapping("/addRelation")
+    public Result addRelation(@RequestBody GatherNoteAddDTO dto) {
+        return relationService.addNoteToGather(dto);
     }
 }
