@@ -3,7 +3,6 @@
     <div class="preview" style="flex: 1; padding: 1rem; border-right: 1px solid #ccc; overflow-y: auto;">
       <div v-html="renderedHtml" style="text-align: left;"></div>
     </div>
-    <!-- 右侧：Markdown 输入 -->
     <div class="editor" style="flex: 1; padding: 1rem; display: flex; flex-direction: column;">
       <textarea
           v-model="markdown"
@@ -22,15 +21,9 @@
     />
 
     <button @click="handleAddCollection" :disabled="collectionloading" style="margin-left: 1rem; padding: 0.5rem 1rem;">
-      <template v-if="collectionloading">
-        添加中...
-      </template>
-      <template v-else-if="selectedCollection">
-        已选合集：{{ selectedCollection.title }}
-      </template>
-      <template v-else>
-        选择合集
-      </template>
+      <template v-if="collectionloading">添加中...</template>
+      <template v-else-if="selectedCollection">已选合集：{{ selectedCollection.title }}</template>
+      <template v-else>选择合集</template>
     </button>
 
     <div v-if="showCollectionSelector" class="modal-overlay" @click.self="closeSelector">
@@ -55,9 +48,8 @@
     </div>
 
     <button @click="handleManageCollection" :disabled="ManageCollectionloading" style="margin-left: 1rem; padding: 0.5rem 1rem;">
-      <template v-if="collectionloading">
-        管理中...
-      </template>
+      <template v-if="ManageCollectionloading">管理中...</template>
+      <template v-else>管理合集</template>
     </button>
 
     <div v-if="showManageCollection" class="modal-overlay" @click.self="closeManageCollection">
@@ -70,13 +62,9 @@
             <div>
               <input v-if="item.editing" v-model="item.title" @blur="saveCollection(item)" />
               <span v-else>{{ item.title }}</span>
-              <button @click="toggleExpand(item)">
-                {{ item.expanded ? '收起' : '展开' }}
-              </button>
+              <button @click="toggleExpand(item)">{{ item.expanded ? '收起' : '展开' }}</button>
               <button @click="() => item.editing = true">重命名</button>
-              <button @click="togglePublic(item)">
-                {{ item.isPublic === '1' ? '设为私有' : '设为公开' }}
-              </button>
+              <button @click="togglePublic(item)">{{ item.isPublic === '1' ? '设为私有' : '设为公开' }}</button>
               <button @click="deleteCollection(item)">删除</button>
             </div>
 
@@ -93,11 +81,11 @@
     </div>
 
     <section>
-        <label for="isPublic">是否公开：</label>
-        <select v-model="isPublic" id="isPublic">
-          <option value="0">否</option>
-          <option value="1">是</option>
-        </select>
+      <label for="isPublic">是否公开：</label>
+      <select v-model="isPublic" id="isPublic">
+        <option value="0">否</option>
+        <option value="1">是</option>
+      </select>
     </section>
 
     <button @click="handlePostNote" :disabled="loading" style="margin-left: 1rem; padding: 0.5rem 1rem;">
@@ -108,22 +96,30 @@
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
-import MarkdownIt from 'markdown-it'
-import hljs from 'highlight.js'
-import 'highlight.js/styles/github.css'
-import { postNote, listCollections, listNotesFromCollection, delCollection, updateCollection } from '@/api/admin/Gather';
+import MarkdownIt from 'markdown-it';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github.css';
+import {
+  postNote,
+  listCollections,
+  listNotesFromCollection,
+  delCollection,
+  updateCollection
+} from '@/api/admin/Gather';
 
-// 表单数据
 const title = ref('');
 const coverUrl = ref('');
 const isPublic = ref('0');
 const loading = ref(false);
 const collectionloading = ref(false);
+const ManageCollectionloading = ref(false);
 const showCollectionSelector = ref(false);
+const showManageCollection = ref(false);
 const collections = ref([]);
 const selectedCollection = ref(null);
-const markdown = ref(`# Hello Markdown!\n\n\`\`\`js\nconsole.log("hello")\n\`\`\``)
-const renderedHtml = computed(() => md.render(markdown.value))
+
+const markdown = ref(`# Hello Markdown!\n\n\
+\`\`\`js\nconsole.log("hello")\n\`\`\``);
 const md = new MarkdownIt({
   html: true,
   linkify: true,
@@ -131,20 +127,17 @@ const md = new MarkdownIt({
   highlight: (str, lang) => {
     if (lang && hljs.getLanguage(lang)) {
       try {
-        return `<pre class="hljs"><code>${hljs.highlight(str, { language: lang }).value}</code></pre>`
+        return `<pre class="hljs"><code>${hljs.highlight(str, { language: lang }).value}</code></pre>`;
       } catch (_) {}
     }
-    return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`
+    return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`;
   }
-})
+});
+const renderedHtml = computed(() => md.render(markdown.value));
 
 const handlePostNote = async () => {
-  if (!title.value.trim()) {
-    alert('请输入文章标题');
-    return;
-  }
-  if (!markdown.value.trim()) {
-    alert('请输入文章内容');
+  if (!title.value.trim() || !markdown.value.trim()) {
+    alert('标题和内容不能为空');
     return;
   }
   loading.value = true;
@@ -154,12 +147,10 @@ const handlePostNote = async () => {
       contentMd: markdown.value.trim(),
       isPublic: isPublic.value,
     });
-
     if (res.code === 0) {
       alert('发布成功');
       title.value = '';
       markdown.value = '';
-      coverUrl.value = '';
       isPublic.value = '0';
     } else {
       alert('发布失败: ' + res.message);
@@ -172,32 +163,78 @@ const handlePostNote = async () => {
 };
 
 const handleAddCollection = async () => {
-  showCollectionSelector.value = true
-  collectionloading.value = true
+  showCollectionSelector.value = true;
+  collectionloading.value = true;
   try {
     const res = await listCollections();
     if (res.code === 0) {
-      collections.value = res.data;
-    } else {
-      console.error('加载失败:', res.message);
+      collections.value = res.data.map(c => ({ ...c, editing: false, expanded: false, notes: null }));
     }
-  } catch (e) {
-    console.error('请求异常:', e)
   } finally {
     collectionloading.value = false;
   }
-}
+};
+
+const handleManageCollection = async () => {
+  showManageCollection.value = true;
+  ManageCollectionloading.value = true;
+  try {
+    const res = await listCollections();
+    if (res.code === 0) {
+      collections.value = res.data.map(c => ({ ...c, editing: false, expanded: false, notes: null }));
+    }
+  } finally {
+    ManageCollectionloading.value = false;
+  }
+};
 
 const selectCollection = (item) => {
   selectedCollection.value = item;
-  showCollectionSelector.value = false; // 选择后关闭弹窗（可选）
-  console.log('选中了合集:', item);
-};
-
-const closeSelector = () => {
   showCollectionSelector.value = false;
 };
 
+const closeSelector = () => (showCollectionSelector.value = false);
+const closeManageCollection = () => (showManageCollection.value = false);
+
+const toggleExpand = async (item) => {
+  if (!item.expanded && !item.notes) {
+    try {
+      const res = await listNotesFromCollection({ gatherId: item.id });
+      item.notes = res.data;
+    } catch (e) {
+      item.notes = [];
+    }
+  }
+  item.expanded = !item.expanded;
+};
+
+const saveCollection = async (item) => {
+  try {
+    await updateCollection({
+      title: item.title,
+      description: item.description,
+      isPublic: item.isPublic,
+    }, item.id);
+    item.editing = false;
+  } catch (e) {
+    alert('更新失败');
+  }
+};
+
+const togglePublic = async (item) => {
+  item.isPublic = item.isPublic === '1' ? '0' : '1';
+  await saveCollection(item);
+};
+
+const deleteCollection = async (item) => {
+  if (!confirm('确认删除该合集吗？')) return;
+  try {
+    await delCollection(item.id);
+    collections.value = collections.value.filter(c => c.id !== item.id);
+  } catch (e) {
+    alert('删除失败');
+  }
+};
 </script>
 
 <style scoped>
@@ -206,13 +243,6 @@ const closeSelector = () => {
   padding: 1em;
   border-radius: 4px;
   overflow-x: auto;
-}
-.markdown-output code {
-  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-}
-
-.markdown-preview pre code {
-  white-space: pre-wrap;
 }
 .modal-overlay {
   position: fixed;
@@ -226,7 +256,6 @@ const closeSelector = () => {
   align-items: center;
   z-index: 999;
 }
-
 .collectionSelector {
   background: white;
   padding: 2rem;
@@ -242,14 +271,11 @@ const closeSelector = () => {
   margin: 0.25rem 0;
   transition: background-color 0.2s;
 }
-
 .item:hover {
   background-color: #f0f0f0;
 }
-
 .item.selected {
   background-color: #409eff;
   color: white;
 }
-
 </style>
