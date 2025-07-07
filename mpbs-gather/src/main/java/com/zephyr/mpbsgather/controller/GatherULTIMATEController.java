@@ -31,6 +31,25 @@ public class GatherULTIMATEController {
     }
 
     /**
+     * 模糊查询集合
+     * @param keyword 关键字
+     * @return 查询结果
+     */
+    @RequestMapping("/search")
+    public Result searchGather(@RequestParam String keyword,
+                               @RequestParam(defaultValue = "1") int pageNum,
+                               @RequestParam(defaultValue = "10") int pageSize) {
+        return Result.success( gatherService.fuzzySearch(keyword,false, pageNum, pageSize) );
+    }
+
+    /**
+     * 获取集合列表
+     * @return 集合列表
+     */
+    @RequestMapping("/list")
+    public Result listGather() {return gatherService.listCollection(false);}
+
+    /**
      * 创建集合
      * @param gatherDTO 创建集合的参数
      * @param authentication 认证信息

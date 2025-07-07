@@ -8,8 +8,9 @@
           size="small"
           class="search-input"
       />
-      <el-scrollbar class="note-list-scroll">
 
+
+      <el-scrollbar class="note-list-scroll">
         <el-scrollbar class="note-list-scroll">
           <el-menu
               :default-active="currentNoteId ? String(currentNoteId) : ''"
@@ -43,8 +44,9 @@
             </el-sub-menu>
           </el-menu>
         </el-scrollbar>
-
       </el-scrollbar>
+
+
     </div>
 
     <div class="right-panel">
@@ -98,14 +100,14 @@ const fetchCollectionList = async () => {
     const kw = searchKeyword.value.trim();
 
     if (!kw) {
-      res = await request.get('/public/gather/list');
+      res = await request.get('/ULTIMATE/gather/list');
       if (res.code === 0 && Array.isArray(res.data)) {
         collectionList.value = res.data;
       } else {
         collectionList.value = [];
       }
     } else {
-      res = await request.get('/public/gather/search', {
+      res = await request.get('/ULTIMATE/gather/search', {
         params: { keyword: kw },
       });
       if (res.code === 0 && res.data && Array.isArray(res.data.records)) {

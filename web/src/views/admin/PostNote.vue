@@ -265,7 +265,7 @@ const addToCollection = async (noteId: string) => {
 
 const doSelectorSearch = debounce(async (keyword) => {
   const res = await request({
-    url: `/public/gather/search?keyword=${encodeURIComponent(keyword)}`,
+    url: `//ULTIMATE/search?keyword=${encodeURIComponent(keyword)}`,
     method: 'get',
   });
 
@@ -401,7 +401,7 @@ async function onNotesDragEnd(item) {
 
 const doSearch = debounce(async (keyword) => {
   const res = await request({
-    url: `/public/gather/search?keyword=${encodeURIComponent(keyword)}`,
+    url: `/ULTIMATE/gather/search?keyword=${encodeURIComponent(keyword)}`,
     method: 'get',
   });
 

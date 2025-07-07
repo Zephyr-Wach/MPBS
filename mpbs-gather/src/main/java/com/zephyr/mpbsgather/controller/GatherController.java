@@ -19,7 +19,7 @@ public class GatherController {
     private NoteService noteService;
 
     /**
-     * 模糊查询集合
+     * 模糊查询公开集合
      * @param keyword 关键字
      * @return 查询结果
      */
@@ -27,15 +27,15 @@ public class GatherController {
     public Result searchGather(@RequestParam String keyword,
                                @RequestParam(defaultValue = "1") int pageNum,
                                @RequestParam(defaultValue = "10") int pageSize) {
-        return Result.success( gatherService.fuzzySearch(keyword,pageNum, pageSize) );
+        return Result.success( gatherService.fuzzySearch(keyword,true, pageNum, pageSize) );
     }
 
     /**
-     * 获取集合列表
+     * 获取公开集合列表
      * @return 集合列表
      */
     @RequestMapping("/list")
-    public Result listGather() {return gatherService.listCollection();}
+    public Result listGather() {return gatherService.listCollection(true);}
 
     /**
      * 获取指定note的内容

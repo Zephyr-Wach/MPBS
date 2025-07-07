@@ -18,5 +18,7 @@ public interface NoteCollectionMapper extends BaseMapper<NoteCollectionEntity> {
 
     int deleteById(@Param("id") String id);
 
+    List<NoteCollectionEntity> selectPublicTitleAndDescription();
+
     List<NoteCollectionEntity> selectAllTitleAndDescription();
 }

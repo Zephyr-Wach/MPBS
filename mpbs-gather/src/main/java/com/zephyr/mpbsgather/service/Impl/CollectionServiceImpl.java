@@ -45,18 +45,26 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public IPage<GatherVO> fuzzySearch(String keyword, int pageNum, int pageSize) {
+    public IPage<GatherVO> fuzzySearch(String keyword, boolean isPublic, int pageNum, int pageSize) {
         // 1. 构造分页参数
         Page<NoteCollectionEntity> page = new Page<>(pageNum, pageSize);
 
         // 2. 构造模糊查询条件（搜索 title 和 description）
         QueryWrapper<NoteCollectionEntity> query = new QueryWrapper<>();
-        query.eq("is_public", "1")  // 只查公开的
-                .and(wrapper -> wrapper
-                        .like("title", keyword)
-                        .or()
-                        .like("description", keyword))
-                .orderByDesc("created_at");
+        if(isPublic) {
+            query.eq("is_public", "1")  // 只查公开的
+                    .and(wrapper -> wrapper
+                            .like("title", keyword)
+                            .or()
+                            .like("description", keyword))
+                    .orderByDesc("created_at");
+        } else {
+            query.and(wrapper -> wrapper
+                    .like("title", keyword)
+                    .or()
+                    .like("description", keyword))
+                    .orderByDesc("created_at");
+        }
 
         // 3. 分页查询
         IPage<NoteCollectionEntity> entityPage = gatherMapper.selectPage(page, query);
@@ -72,8 +80,10 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public Result listCollection() {
-        List<NoteCollectionEntity> list = gatherMapper.selectAllTitleAndDescription();
+    public Result listCollection(boolean isPublic) {
+        List<NoteCollectionEntity> list = isPublic?
+                gatherMapper.selectPublicTitleAndDescription():
+                gatherMapper.selectAllTitleAndDescription();
         return list != null ? Result.success(list) : Result.failure(500, "查询失败");
     }
 }

@@ -40,17 +40,20 @@ public interface CollectionService {
     Result delCollection(String userId, String gatherId);
 
     /**
-     * 模糊搜索合集
+     * 模糊搜索公开合集
      * @param keyword  搜索关键字
+     * @param isPublic  是否只要公开
      * @param pageNum  页码
      * @param pageSize 每页数量
      * @return
      */
-    IPage<GatherVO> fuzzySearch(String keyword, int pageNum, int pageSize);
+    IPage<GatherVO> fuzzySearch(String keyword, boolean isPublic, int pageNum, int pageSize);
 
     /**
-     * 列出所有的笔记合集
+     * 列出合集
+     * @param isPublic  是否只要公开
      * @return 返回所有的笔记合集
      */
-    Result listCollection();
+    Result listCollection(boolean isPublic);
+
 }

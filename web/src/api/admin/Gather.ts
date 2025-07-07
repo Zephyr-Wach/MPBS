@@ -22,14 +22,14 @@ export function postNote(params: NoteParams): Promise<NoteResponse> {
 
 export function listCollections() {
     return request({
-        url: '/public/gather/list',
+        url: '/ULTIMATE/gather/list',
         method: 'get'
     });
 }
 
 export function listNotesFromCollection(params: { gatherId: string }) {
     return request({
-        url: '/public/relation/queryGatherNotes',
+        url: '/ULTIMATE/relation/queryGatherNotes',
         method: 'get',
         params,
     });
