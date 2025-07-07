@@ -59,9 +59,16 @@ cd mpbs
 ```
 4. 前端启动
 ```
-cd web
+cd ./web/
 npm install
 npm run serve
+```
+
+5. 打包服务
+```
+./gradlew :mpbs-app:bootJar
+cd ./web/
+npm run build
 ```
 
 ## 📘 使用说明
