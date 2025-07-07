@@ -15,37 +15,22 @@ MPBS（My Personal Blog Site）是一个基于 Java + Gradle 构建的多模块�
 
 ## 🏗️ 项目结构
 
-| 模块名         | 说明                   |
-| ------------- | ---------------------- |
-| `mpbs-app`      | 应用层，启动入口       |
-| `mpbs-auth`     | 认证与授权模块         |
-| `mpbs-blog`     | 博客内容管理模块       |
-| `mpbs-common`   | 公共工具与基础模块     |
-| `mpbs-files`    | 文件上传与管理模块     |
-| `mpbs-security` | 安全相关配置           |
-| `mpbs-user`     | 用户管理模块           |
-| `web`           | 前端界面（Vue 3）      |
-
+| 模块名             | 说明          |
+|-----------------|-------------|
+| `mpbs-app`      | 应用层，启动入口    |
+| `mpbs-auth`     | 认证与授权模块     |
+| `mpbs-blog`     | 博客内容管理模块    |
+| `mpbs-gather`   | 笔记&合集模块     |
+| `mpbs-common`   | 公共工具与基础模块   |
+| `mpbs-files`    | 文件上传与管理模块   |
+| `mpbs-security` | 安全相关配置      |
+| `mpbs-user`     | 用户管理模块      |
+| `web`           | 前端界面（Vue 3） |
 ---
 
 ## 🖼️ 界面预览
 
-1.管理面板
-
-![云盘](/web/public/1-1.png)
-![用户管理](/web/public/1-2.png)
-![Blog管理](/web/public/1-3.png)
-![媒体管理](/web/public/1-4.png)
-![发表Blog](/web/public/1-5.png)
-![个人中心](/web/public/2-4.png)
-
-2.游客面板
-![首页](/web/public/2-1.png)
-![Blog](/web/public/2-2.png)
-![关于&联系](/web/public/2-3.png)
-
-3.日志查询
-![日志查询](/web/public/3-1.png)
+**[演示网站](http://mpbs.tech)**
 
 ## 🧰 技术栈
 
