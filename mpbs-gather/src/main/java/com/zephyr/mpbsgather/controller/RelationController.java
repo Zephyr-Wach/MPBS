@@ -24,12 +24,12 @@ public class RelationController {
     }
 
     /**
-     * 查询指合集下的所有笔记
+     * 查询指合集下的所有公开笔记
      * @param gatherId
      * @return 查询结果
      */
     @RequestMapping("/queryGatherNotes")
     public Result queryGatherNotes(@RequestParam String gatherId) {
-        return relationService.queryGatherNotes(gatherId);
+        return relationService.queryGatherNotes(gatherId,true);
     }
 }

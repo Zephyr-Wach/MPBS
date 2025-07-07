@@ -25,7 +25,19 @@
     </update>
 
     <delete id="deleteById" parameterType="string">
-        DELETE FROM note_collection WHERE id = #{id}
+        -- 删除笔记表中的笔记
+        DELETE FROM note
+        WHERE id IN (
+            SELECT note_id FROM note_collection_relation WHERE collection_id = #{id}
+        );
+
+        -- 删除合集-笔记关联表数据
+        DELETE FROM note_collection_relation
+        WHERE collection_id = #{id};
+
+        -- 删除合集本身
+        DELETE FROM note_collection
+        WHERE id = #{id};
     </delete>
 
     <select id="selectPublicTitleAndDescription" resultType="com.zephyr.mpbsgather.entity.NoteCollectionEntity">

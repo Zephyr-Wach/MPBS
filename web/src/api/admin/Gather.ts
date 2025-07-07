@@ -29,7 +29,7 @@ export function listCollections() {
 
 export function listNotesFromCollection(params: { gatherId: string }) {
     return request({
-        url: '/ULTIMATE/relation/queryGatherNotes',
+        url: '/ULTIMATE/gather/queryGatherNotes',
         method: 'get',
         params,
     });

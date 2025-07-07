@@ -1,32 +1,3 @@
-<template>
-  <div style="padding: 1rem; max-width: 800px; margin: auto;">
-    <h2>博客管理</h2>
-
-    <div
-        v-for="blog in blogList"
-        :key="blog.id"
-        class="blog-item"
-    >
-      <div class="info" @click="goDetail(blog.id)">
-        <div class="title">{{ blog.title }}</div>
-        <div class="date">{{ formatDate(blog.createdAt) }}</div>
-        <div class="summary">{{ blog.contentMd.slice(0, 100) + (blog.contentMd.length > 100 ? '...' : '') }}</div>
-      </div>
-
-      <div class="actions">
-        <button @click.stop="goEdit(blog.id)">修改</button>
-        <button @click.stop="confirmDelete(blog.id)">删除</button>
-      </div>
-    </div>
-
-    <div class="pagination">
-      <button @click="prevPage" :disabled="page === 1">上一页</button>
-      <button @click="nextPage" :disabled="page === pages">下一页</button>
-      <span>第 {{ page }} 页 / 共 {{ pages }} 页</span>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
@@ -108,69 +79,132 @@ onMounted(() => {
 });
 </script>
 
+<template>
+  <div style="padding: 1rem; max-width: 800px; margin: auto;">
+    <h2>博客管理</h2>
+
+    <div
+        v-for="blog in blogList"
+        :key="blog.id"
+        class="blog-item"
+    >
+      <div class="info" @click="goDetail(blog.id)">
+        <div class="title">{{ blog.title }}</div>
+        <div class="date">{{ formatDate(blog.createdAt) }}</div>
+        <div class="summary">{{ blog.contentMd.slice(0, 100) + (blog.contentMd.length > 100 ? '...' : '') }}</div>
+      </div>
+
+      <div class="actions">
+        <button @click.stop="goEdit(blog.id)">修改</button>
+        <button @click.stop="confirmDelete(blog.id)">删除</button>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <button @click="prevPage" :disabled="page === 1">上一页</button>
+      <button @click="nextPage" :disabled="page === pages">下一页</button>
+      <span>第 {{ page }} 页 / 共 {{ pages }} 页</span>
+    </div>
+  </div>
+</template>
+
 <style scoped>
 .blog-item {
-  border: 1px solid #ddd;
+  border: 1px solid #e5e7eb;
   padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 6px;
+  margin-bottom: 1.2rem;
+  border-radius: 10px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  cursor: default;
+  align-items: flex-start;
+  background: #fff;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 .blog-item:hover {
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
 }
+
 .info {
   flex: 1;
   cursor: pointer;
+  padding-right: 1rem;
 }
 .title {
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: #2de2be;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #1e1e1e;
+  margin-bottom: 0.4rem;
+  transition: color 0.2s;
+}
+.title:hover {
+  color: #409eff;
 }
 .date {
   font-size: 0.8rem;
-  color: #999;
-  margin-top: 0.3rem;
+  color: #aaa;
+  margin-bottom: 0.5rem;
 }
 .summary {
-  margin-top: 0.5rem;
-  color: #444;
   font-size: 0.9rem;
-  overflow-wrap: anywhere;  /* 自动换行，强力断词 */
+  color: #444;
+  overflow-wrap: anywhere;
   word-break: break-word;
-  white-space: normal;      /* 允许换行 */
+  line-height: 1.5;
 }
 
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
 .actions button {
-  margin-left: 0.5rem;
-  padding: 0.4rem 0.8rem;
+  padding: 0.4rem 0.9rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 0.9rem;
   cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
 }
 .actions button:first-child {
-  background-color: #409eff;
+  background: #409eff;
   color: white;
+}
+.actions button:first-child:hover {
+  background: #66b1ff;
 }
 .actions button:last-child {
-  background-color: #f56c6c;
+  background: #f56c6c;
   color: white;
 }
+.actions button:last-child:hover {
+  background: #f78989;
+}
+
 .pagination {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   text-align: center;
+  font-size: 0.95rem;
+  color: #555;
 }
 .pagination button {
-  margin: 0 0.5rem;
+  margin: 0 0.4rem;
   padding: 0.5rem 1rem;
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 6px;
   cursor: pointer;
+  transition: all 0.2s;
+}
+.pagination button:hover:not(:disabled) {
+  background-color: #d9ecff;
+  color: #409eff;
 }
 .pagination button:disabled {
-  background-color: #ccc;
+  background-color: #e0e0e0;
+  color: #999;
   cursor: not-allowed;
 }
+
 </style>

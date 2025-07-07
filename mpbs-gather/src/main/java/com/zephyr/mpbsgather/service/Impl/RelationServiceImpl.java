@@ -27,8 +27,8 @@ public class RelationServiceImpl implements RelationService {
     }
 
     @Override
-    public Result queryGatherNotes(String gatherId) {
-        List<Map<String, Object>> list = relationMapper.queryNoteIdAndTitleByGatherId(gatherId);
+    public Result queryGatherNotes(String gatherId, boolean isPublic) {
+        List<Map<String, Object>> list = isPublic?relationMapper.queryPublicNoteIdAndTitleByGatherId(gatherId):relationMapper.queryNoteIdAndTitleByGatherId(gatherId);
         return Result.success(list);
     }
 

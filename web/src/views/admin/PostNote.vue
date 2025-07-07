@@ -123,7 +123,7 @@
               <draggable v-else v-model="item.notes" item-key="id" @end="() => onNotesDragEnd(item)" tag="ul">
                 <template #item="{ element }">
                   <li style="padding: 6px 10px; border: 1px solid #ddd; margin-bottom: 4px; border-radius: 4px; background: #f9f9f9; cursor: grab;">
-                    {{ element }}
+                    {{ element.noteTitle }}
                   </li>
                 </template>
               </draggable>
@@ -151,6 +151,7 @@ import {
   delCollection,
   updateCollection
 } from '@/api/admin/Gather';
+import {ElMessage} from "element-plus";
 
 const selectorSearchKeyword = ref('');
 const title = ref('');
@@ -340,7 +341,6 @@ const toggleExpand = async (item) => {
     try {
       const res = await listNotesFromCollection({ gatherId: item.id });
       item.notes = res.data;
-      // console.l
     } catch (e) {
       item.notes = [];
     }
@@ -375,12 +375,12 @@ const deleteCollection = async (item) => {
     alert('删除失败');
   }
 };
-//houxu an
+
 async function onNotesDragEnd(item) {
   try {
     const order = {};
     item.notes.forEach((note, idx) => {
-      order[note] = idx + 1;
+      order[note.noteId] = idx + 1;
     });
 
     await request({
@@ -391,8 +391,7 @@ async function onNotesDragEnd(item) {
         order,
       },
     });
-
-    alert('排序保存成功');
+    ElMessage.success('排序成功')
   } catch (e) {
     alert('排序保存失败');
     console.error('排序保存失败的错误:', e);

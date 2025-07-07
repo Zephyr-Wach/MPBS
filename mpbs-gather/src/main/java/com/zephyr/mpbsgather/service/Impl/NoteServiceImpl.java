@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 public class NoteServiceImpl implements NoteService {
@@ -24,6 +25,16 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public Result updateNote(String userId, String noteId, NoteEntity noteEntity) {
+        NoteEntity localEntity = noteMapper.getAllById(noteId);
+        if (Objects.equals(noteEntity.getContentMd(), "notUpdate")){
+            noteEntity.setContentMd(localEntity.getContentMd());
+        }
+        if ((Objects.equals(noteEntity.getIsPublic(), "2"))){
+            noteEntity.setIsPublic(localEntity.getIsPublic());
+        }
+        if (Objects.equals(noteEntity.getTitle(), "notUpdate")){
+            noteEntity.setTitle(localEntity.getTitle());
+        }
         noteEntity.setId(noteId);
         noteEntity.setUpdatedAt(LocalDateTime.now());
         return noteMapper.updateById(noteEntity) > 0 ? Result.success("更新成功") : Result.failure(400,"更新失败");

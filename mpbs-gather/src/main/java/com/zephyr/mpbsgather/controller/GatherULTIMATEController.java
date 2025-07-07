@@ -148,4 +148,14 @@ public class GatherULTIMATEController {
     public Result addRelation(@RequestBody GatherNoteAddDTO dto) {
         return relationService.addNoteToGather(dto);
     }
+
+    /**
+     * 查询指合集下的所有笔记
+     * @param gatherId
+     * @return 查询结果
+     */
+    @RequestMapping("/queryGatherNotes")
+    public Result queryGatherNotes(@RequestParam String gatherId) {
+        return relationService.queryGatherNotes(gatherId,false);
+    }
 }

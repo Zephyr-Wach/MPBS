@@ -90,7 +90,6 @@ const renderedMarkdown = computed(() => {
   return '';
 });
 
-
 // 获取合集列表接口
 const fetchCollectionList = async () => {
   try {

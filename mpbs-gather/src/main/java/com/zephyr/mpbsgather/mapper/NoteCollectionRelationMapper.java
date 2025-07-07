@@ -17,9 +17,8 @@ public interface NoteCollectionRelationMapper extends BaseMapper<RelationEntity>
 
     int queryIndexByNoteId(String noteId);
 
-//    List<String> queryNoteIdByGatherId(String gatherId);
+    List<Map<String, Object>> queryPublicNoteIdAndTitleByGatherId(@Param("gatherId") String gatherId);
     List<Map<String, Object>> queryNoteIdAndTitleByGatherId(@Param("gatherId") String gatherId);
-
 
     int batchUpdateNoteOrder(@Param("gatherId") Long gatherId,
                              @Param("orderMap") Map<Long, Integer> orderMap);

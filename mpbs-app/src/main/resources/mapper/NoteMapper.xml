@@ -6,9 +6,9 @@
     <!-- 插入 NoteCollectionEntity -->
     <insert id="insert" parameterType="com.zephyr.mpbsgather.entity.NoteEntity" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO note
-        (title, content_md, created_at)
+        (title, content_md, created_at, is_public)
         VALUES
-        (#{title}, #{contentMd}, #{createdAt})
+        (#{title}, #{contentMd}, #{createdAt}, #{isPublic})
     </insert>
 
     <select id="queryAuthorIdByNoteId" parameterType="String" resultType="String">
@@ -22,6 +22,7 @@
         SET
             title = #{title},
             content_md = #{contentMd},
+            is_public = #{isPublic},
             updated_at = NOW()
         WHERE id = #{id}
     </update>

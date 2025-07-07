@@ -15,9 +15,9 @@ public interface RelationService {
     public Result queryNoteRelation(String noteId);
 
     /**
-     * 查询当前合集下的所有笔记
+     * 查询当前合集下的笔记
      */
-    public Result queryGatherNotes(String gatherId);
+    public Result queryGatherNotes(String gatherId, boolean isPublic);
 
     /**
      * 更新集合下笔记顺序
