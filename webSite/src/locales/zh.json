@@ -1,6 +1,18 @@
 {
   "menu": "菜单",
   "Home": "首页",
+  "Blog": "博客",
+  "Notes": "笔记&合集",
+  "About": "关于我",
+  "Manage": "管理",
+  "Icloud": "云盘",
+  "media": "图片",
+  "PostBlog": "发表博客",
+  "PostNotes": "发布笔记",
+  "ManageBlog": "博客管理",
+  "ManageNotes": "笔记&合集管理",
+  "ManageUsers": "用户管理",
+  "Logs": "日志",
 
   "notFound": "页面不存在",
   "backToHome": "返回首页",

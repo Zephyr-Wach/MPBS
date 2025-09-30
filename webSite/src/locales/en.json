@@ -1,6 +1,18 @@
 {
   "menu": "Menu",
   "Home": "Home",
+  "Blog": "Blog",
+  "Notes": "Notes & Collections",
+  "About": "About Me",
+  "Manage": "Manage",
+  "Icloud": "Cloud Drive",
+  "media": "Images",
+  "PostBlog": "Post Blog",
+  "PostNotes": "Post Notes",
+  "ManageBlog": "Manage Blogs",
+  "ManageNotes": "Manage Notes & Collections",
+  "ManageUsers": "Manage Users",
+  "Logs": "Logs",
 
   "notFound": "Page Not Found",
   "backToHome": "Back to Home",
