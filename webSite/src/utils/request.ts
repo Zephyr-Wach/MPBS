@@ -37,6 +37,7 @@ instance.interceptors.response.use(
     <T>(response: AxiosResponse<ApiResponse<T>>) => {
         const { code, message } = response.data
         if (code !== 200) {
+            alert("error:"+ response.data.message)
             return Promise.reject(new Error(message || 'API Error'))
         }
         return response
@@ -48,20 +49,26 @@ instance.interceptors.response.use(
             switch (status) {
                 case 401:
                     console.error('未授权，请登录')
+                    alert("未授权，请登录")
                     break
                 case 403:
                     console.error('Forbidden:', msg)
+                    alert('Forbidden:'+ msg)
                     break
                 case 500:
                     console.error('Server Error:', msg)
+                    alert('Server Error:'+ msg)
                     break
                 default:
                     console.error('Response Error:', msg)
+                    alert('Response Error:'+ msg)
             }
         } else if (error.code === 'ECONNABORTED') {
             console.error('Request Timeout')
+            alert('Request Timeout')
         } else {
             console.error('Network Error:', error.message)
+            alert('Network Error:'+ error.message)
         }
         return Promise.reject(error)
     }

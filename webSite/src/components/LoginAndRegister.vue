@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref, computed } from "vue"
 import { useI18n } from "vue-i18n"
-import { loginByEmail} from "@/api/users.ts";
+import {login, register} from "@/api/users.ts";
 import {useUserStore} from "@/store/userStore.ts";
 import { useLoginModal } from '@/store/loginModal'
 
@@ -42,12 +42,11 @@ const validate = () => {
 
   let valid = true
 
-  if (!emailRegex.test(form.email)) {
-    errors.email = "enterIllegalEmail"
-    valid = false
-  }
-
   if (mode.value === "register") {
+    if (!emailRegex.test(form.email)) {
+      errors.email = "enterIllegalEmail"
+      valid = false
+    }
     if (!form.username.trim()) {
       errors.username = "enterUserName"
       valid = false
@@ -77,12 +76,14 @@ const validate = () => {
 }
 
 const handleSubmit = async () => {
+  console.log("submit mode:", mode.value, form)
   if (!validate()) return
 
   if (mode.value === "login") {
+    console.log("login")
     try {
-      const user = { email: form.email, userPwd: form.password }
-      const res = await loginByEmail(user)
+      const user = { userName: form.username, userPwd: form.password }
+      const res = await login(user)
       userStore.login({
         userId: res.data.data.userId,
         userName: res.data.data.userName,
@@ -94,8 +95,16 @@ const handleSubmit = async () => {
       console.error("login error:", err)
     }
   } else if (mode.value === "register") {
-    // TODO register
-    console.log("register:", form.username, form.email, form.password)
+    try{
+      const user = {userName:form.username, userPwd:form.password, email:form.email}
+      const res = await register(user)
+      if (res.data.code === 200){
+        alert(t('registerSuccess'))
+        mode.value = "login"
+      }
+    }catch (err) {
+      console.error("login error:", err)
+    }
   } else {
     // TODO forget pwd
     console.log("forgot pwd:", form.email)
@@ -120,14 +129,13 @@ const handleSubmit = async () => {
       >
         <div v-if="mode==='login'" key="login">
           <div>
-            <label class="block text-sm font-medium mb-1">{{ t("email")}}</label>
+            <label class="block text-sm font-medium mb-1">{{ t("userName")}}</label>
             <input
-                v-model="form.email"
-                type="email"
+                v-model="form.username"
+                type="text"
                 class="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                :placeholder="t('enterEmail')"
+                :placeholder="t('enterUserName')"
             />
-            <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ t(errors.email) }}</p>
           </div>
           <div>
             <label class="block text-sm font-medium mb-1">{{ t("pwd") }}</label>
@@ -235,8 +243,8 @@ const handleSubmit = async () => {
       <template v-if="mode==='login'">
         {{ t("noCount") }}？
         <button @click="mode='register'" class="text-blue-600 hover:underline">{{ t("goRegister") }}</button><br />
-        {{ t("forgetPwd") }}？
-        <button @click="mode='forgot'" class="text-blue-600 hover:underline">{{ t("refindPwd") }}</button>
+<!--        {{ t("forgetPwd") }}？-->
+<!--        <button @click="mode='forgot'" class="text-blue-600 hover:underline">{{ t("refindPwd") }}</button>-->
       </template>
       <template v-else-if="mode==='register'">
         {{ t("hadCount") }}？
