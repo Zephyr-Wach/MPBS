@@ -3,6 +3,7 @@ package com.zephyr.mpbsapp.controller;
 import com.zephyr.mpbsapp.vo.SidebarMenuVO;
 import com.zephyr.mpbsapp.service.SideBarService;
 import com.zephyr.mpbscommon.annotation.LogOperation;
+import com.zephyr.mpbscommon.dto.ApiResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,9 +27,9 @@ public class SideBarController {
      */
     @GetMapping("/getSideBarList")
     @LogOperation(operationType = "根据当前登录用户角色获取侧边栏菜单列表")
-    public List<SidebarMenuVO> getSideBarList(Authentication authentication) {
+    public ApiResponse getSideBarList(Authentication authentication) {
         return authentication == null || authentication.getAuthorities() == null || authentication.getAuthorities().isEmpty() ?
-                sideBarMenuService.getMenuByRole(null) :
-                sideBarMenuService.getMenuByRole(authentication.getAuthorities().iterator().next().getAuthority());
+                ApiResponse.success( sideBarMenuService.getMenuByRole(null) ):
+                ApiResponse.success( sideBarMenuService.getMenuByRole(authentication.getAuthorities().iterator().next().getAuthority()));
     }
 }

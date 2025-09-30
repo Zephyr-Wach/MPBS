@@ -41,3 +41,5 @@ local.properties
 /web/package-lock.json
 /web/node_modules/
 /web/dist/
+/webSite/node_modules/
+/webSite/package-lock.json
