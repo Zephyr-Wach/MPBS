@@ -28,7 +28,7 @@ const logout = () => userStore.logout()
 
     <!-- tittle -->
     <div class="flex justify-center">
-      <h1 class="text-lg font-semibold">my-vue-template</h1>
+      <h1 class="text-lg font-semibold">MPBS</h1>
     </div>
 
     <!-- user -->
