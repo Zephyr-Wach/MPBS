@@ -2,7 +2,7 @@ import axios from 'axios'
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { useUserStore } from '@/store/userStore.ts'
 
-interface ApiResponse<T = any> {
+export interface ApiResponse<T = any> {
     code: number
     data: T
     message: string

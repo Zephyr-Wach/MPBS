@@ -27,8 +27,8 @@ const logout = () => userStore.logout()
     </div>
 
     <!-- tittle -->
-    <div class="flex justify-center">
-      <h1 class="text-lg font-semibold">MPBS</h1>
+    <div class="flex justify-center sm:flex">
+      <h1 class="text-lg font-semibold max-[540px]:invisible">MPBS</h1>
     </div>
 
     <!-- user -->
