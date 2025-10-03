@@ -46,7 +46,7 @@ function handleTitleSearch() {
     }
     try {
       const res = await searchBlogTitle(kw);
-      if (res.data.code === 0) {
+      if (res.data.code === 200) {
         suggestions.value = res.data.data.records.slice(0, 5);
         showSuggestions.value = suggestions.value.length > 0;
       }
