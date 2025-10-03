@@ -54,7 +54,6 @@ const renderedHtml = computed(() => {
 const loadDetail = async () => {
   const id = route.params.id as string;
   const res = await getBlogDetail(id);
-  console.log(res)
   if (res.data.code === 200) {
     blog.value = res.data.data;
   } else {

@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted, watch} from 'vue';
 import { getCommentList } from '@/api/comment.ts';
 import { addCommentWithEmailCheck, deleteComment } from '@/api/comment.ts';
 import { getUserInfo } from '@/api/users.ts';
 import { useRouter } from 'vue-router';
 import CommentItem from './CommentItem.vue';
+import {useUserStore} from "@/store/userStore.ts";
 
 const router = useRouter();
 
@@ -24,15 +25,19 @@ const replyCommentId = ref<string | null>(null);
 const currentUser = ref({ userId: '', userPermission: '' });
 const isLoggedIn = ref(false);
 
+const userStore = useUserStore()
+
 async function loadUser() {
-  try {
-    const res = await getUserInfo();
-    if (res.code === 0) {
-      currentUser.value = res.data;
-      isLoggedIn.value = true;
+  if (userStore.isLoggedIn) {
+    try {
+      const res = await getUserInfo();
+      if (res.data.code === 200) {
+        currentUser.value = res.data.data;
+        isLoggedIn.value = true;
+      }
+    } catch {
+      isLoggedIn.value = false;
     }
-  } catch {
-    isLoggedIn.value = false;
   }
 }
 
@@ -40,7 +45,7 @@ async function loadComments() {
   loading.value = true;
   try {
     const res = await getCommentList(props.postId);
-    if (res.data.code === 0) {
+    if (res.data.code === 200) {
       commentTree.value = res.data.data;
     } else {
       alert('获取评论失败：' + res.data.message);
@@ -110,7 +115,7 @@ async function deleteThisComment(id: string) {
   if (!confirm('确认删除这条评论吗？')) return;
   try {
     const res = await deleteComment(id);
-    if (res.data.code === 0) {
+    if (res.data.code === 200) {
       await loadComments();
     } else {
       alert('删除失败：' + res.data.message);
@@ -125,6 +130,14 @@ onMounted(async () => {
   await loadUser();
   await loadComments();
 });
+watch(() => userStore.isLoggedIn, async (newVal) => {
+  if (newVal) {
+    await loadUser()
+  } else {
+    currentUser.value = null
+    isLoggedIn.value = false
+  }
+})
 </script>
 
 <template>

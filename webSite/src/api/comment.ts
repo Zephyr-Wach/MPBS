@@ -8,7 +8,7 @@ export const addComment = (obj: object) => {
 export const addCommentWithEmailCheck = async (obj: Object) => {
     try {
         const userInfoResponse = await getUserInfo();
-        const userData = userInfoResponse.data;
+        const userData = userInfoResponse.data.data;
 
         if (userData.email && userData.emailStatus === 'confirmed') {
             // 邮箱已验证，继续发表评论
