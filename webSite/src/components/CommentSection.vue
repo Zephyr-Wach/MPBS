@@ -145,7 +145,7 @@ watch(() => userStore.isLoggedIn, async (newVal) => {
   if (newVal) {
     await loadUser()
   } else {
-    currentUser.value = null
+    currentUser.value = { userId: '', userPermission: '' }
     isLoggedIn.value = false
   }
 })
