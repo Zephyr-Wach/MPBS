@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+
+// TODO 1.某行文本太长了就会超出容器，要自动换行
+// TODO 2.md没有对$ $或$$ $$包裹的latex的转换渲染
+// TODO 3.代码块没有复制的按钮
+
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { getBlogDetail } from '@/api/blog.ts';
