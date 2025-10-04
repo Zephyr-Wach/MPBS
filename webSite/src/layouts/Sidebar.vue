@@ -2,7 +2,7 @@
 import {onMounted, ref, watch} from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterLink } from 'vue-router'
-import { fetchSideBar } from "@/api/normal/general.ts";
+import { fetchSideBar } from "@/api";
 import { useUserStore } from "@/store/userStore.ts";
 
 const userStore = useUserStore()
