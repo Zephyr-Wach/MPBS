@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import {ref, onMounted, watch} from 'vue';
-import { getCommentList } from '@/api/comment.ts';
-import { addCommentWithEmailCheck, deleteComment } from '@/api/comment.ts';
-import { getUserInfo } from '@/api/users.ts';
+import { getCommentList } from '@/api/normal/comment.ts';
+import { addCommentWithEmailCheck, deleteComment } from '@/api/normal/comment.ts';
+import { getUserInfo } from '@/api/normal/users.ts';
 import { useRouter } from 'vue-router';
 import CommentItem from './CommentItem.vue';
 import {useUserStore} from "@/store/userStore.ts";

@@ -1,5 +1,5 @@
-import request from '@/utils/request';
-import {getUserInfo} from "@/api/users.ts";
+import request from '@/utils/request.ts';
+import {getUserInfo} from "@/api/normal/users.ts";
 
 export const addComment = (obj: object) => {
     return request.post('/public/blog/addComment', obj)

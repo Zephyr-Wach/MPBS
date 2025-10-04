@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@/utils/request.ts'
 
 // Sidebar Menu
 export interface SideBarItem {

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {ref, onMounted, onBeforeUnmount} from 'vue';
 import {useRouter} from 'vue-router';
-import {getBlogList, searchBlog, searchBlogTitle } from '@/api/blog.ts';
+import {getBlogList, searchBlog, searchBlogTitle } from '@/api/normal/blog.ts';
 import {useI18n} from "vue-i18n";
 
 const { t } = useI18n()

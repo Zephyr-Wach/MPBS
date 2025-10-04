@@ -6,7 +6,7 @@
 
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { getBlogDetail } from '@/api/blog.ts';
+import { getBlogDetail } from '@/api/normal/blog.ts';
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref, computed } from "vue"
 import { useI18n } from "vue-i18n"
-import {login, register} from "@/api/users.ts";
+import {login, register} from "@/api/normal/users.ts";
 import {useUserStore} from "@/store/userStore.ts";
 import { useLoginModal } from '@/store/loginModal'
 
