@@ -16,7 +16,18 @@ const props = defineProps({
   }
 });
 
-const commentTree = ref([]);
+export interface Comment {
+  id: string;
+  postId: string;
+  userId: string;
+  userName: string;
+  avatarUrl?: string | null;
+  parentId: string | null;
+  content: string;
+  createdAt: string;
+  children?: Comment[];
+}
+const commentTree = ref<Comment[]>([]);
 const loading = ref(false);
 const submitLoading = ref(false);
 const newComment = ref('');

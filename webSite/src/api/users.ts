@@ -17,7 +17,12 @@ export function register( user:{userName:string; userPwd:string;email:string}){
 }
 
 export interface UserDetail{
-
+    userId:string;
+    userName:string;
+    avatarUrl:string;
+    email:string;
+    userPermission:string;
+    emailStatus:string;
 }
 export const getUserInfo = () => {
     return request.get<UserDetail>('/NORMAL/user/getInfoByToken')
