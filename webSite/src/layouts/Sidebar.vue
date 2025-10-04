@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterLink } from 'vue-router'
 import { fetchSideBar } from "@/api/general.ts";
+import { useUserStore } from "@/store/userStore.ts";
 
+const userStore = useUserStore()
 interface SideBarItem {
   id: number
   name: string
@@ -65,6 +67,9 @@ const setSideBarMenu = async () => {
 }
 
 onMounted(() => {
+  setSideBarMenu()
+})
+watch(() => userStore.isLoggedIn, () => {
   setSideBarMenu()
 })
 </script>
