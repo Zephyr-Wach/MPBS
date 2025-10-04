@@ -18,24 +18,7 @@ const { t } = useI18n()
 
 // 默认菜单
 const sideBar = ref<SideBarItem[]>([
-  { id: 1, name: "Home", path: "/" },
-  { id: 2, name: "userCenter", path: "/userCenter" },
-  {
-    id: 3,
-    name: "List1",
-    children: [
-      { id: 31, name: "a1", path: "/t1" },
-      { id: 32, name: "a2", path: "/t2" },
-    ]
-  },
-  {
-    id: 4,
-    name: "List2",
-    children: [
-      { id: 41, name: "b1", path: "/a" },
-      { id: 42, name: "b2", path: "/b" },
-    ]
-  }
+  { id: 1, name: "Home", path: "/" }
 ])
 
 const collapseState = ref<Record<number, boolean>>({})

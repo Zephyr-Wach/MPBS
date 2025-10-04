@@ -2,7 +2,9 @@
 import {ref, onMounted, onBeforeUnmount} from 'vue';
 import {useRouter} from 'vue-router';
 import {getBlogList, searchBlog, searchBlogTitle } from '@/api/blog.ts';
+import {useI18n} from "vue-i18n";
 
+const { t } = useI18n()
 const page = ref(1);
 const pages = ref(1);
 interface BlogItem {
@@ -51,7 +53,7 @@ function handleTitleSearch() {
         showSuggestions.value = suggestions.value.length > 0;
       }
     } catch (e) {
-      console.error('搜索联想失败', e);
+      console.error(t('searchBlogFailed'), e);
       showSuggestions.value = false;
     }
   }, 300);
@@ -104,10 +106,10 @@ async function loadBlogs() {
       blogList.value = res.data.data.records;
       pages.value = res.data.data.pages;
     } else {
-      alert('获取博客列表失败：' + res.data.message);
+      alert(t('getBlogListFailed') + ":" + res.data.message);
     }
   } catch (error) {
-    alert('请求博客列表出错');
+    alert(t('getBlogListFailed'));
     console.error(error);
   }
 }
@@ -159,10 +161,10 @@ const disabledBtnStyle = {
           v-model="keyword"
           @input="handleTitleSearch"
           @keyup.enter="handleSearch"
-          placeholder="🔍 输入关键词搜索博客"
+          :placeholder="'🔍' + t('enterKeyword')"
           class="search-input"
       />
-      <button class="search-btn" @click="handleSearch">搜索</button>
+      <button class="search-btn" @click="handleSearch">{{ t('search') }}</button>
     </div>
 
     <ul v-if="showSuggestions" class="suggestion-box">
@@ -233,17 +235,17 @@ const disabledBtnStyle = {
           :disabled="page === 1"
           :style="page === 1 ? disabledBtnStyle : btnStyle"
       >
-        上一页
+        {{ t('theFormer') }}
       </button>
       <button
           @click="nextPage"
           :disabled="page === pages"
           :style="page === pages ? disabledBtnStyle : btnStyle"
       >
-        下一页
+        {{ t('theLater') }}
       </button>
       <span style="margin-left: 1rem; color: #666;">
-        第 <span style="color: #2de2be; font-weight: bold;">{{ page }}</span> 页 / 共 {{ pages }} 页
+        {{ t('page') }} <span style="color: #2de2be; font-weight: bold;">{{ page }}</span> {{ t('allPages') }} {{ pages }} {{ t('pa') }}
       </span>
     </div>
   </div>

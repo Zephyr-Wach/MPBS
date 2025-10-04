@@ -6,7 +6,9 @@ import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import CommentSection from '@/components/CommentSection.vue';
+import {useI18n} from "vue-i18n";
 
+const { t } = useI18n()
 const blog = ref<null | {
   id: string;
   title: string;
@@ -57,7 +59,7 @@ const loadDetail = async () => {
   if (res.data.code === 200) {
     blog.value = res.data.data;
   } else {
-    alert('获取文章详情失败：' + res.data.message);
+    alert(t('getArticleDetailFailed') + res.data.message);
   }
 };
 
@@ -77,7 +79,7 @@ onMounted(loadDetail);
     <div class="content" v-html="renderedHtml"></div>
     <CommentSection :postId="blog?.id" />
   </div>
-  <div v-else class="loading">加载中...</div>
+  <div v-else class="loading">{{ t('loading') }}</div>
 </template>
 
 <style scoped>

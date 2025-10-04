@@ -6,7 +6,9 @@ import { getUserInfo } from '@/api/users.ts';
 import { useRouter } from 'vue-router';
 import CommentItem from './CommentItem.vue';
 import {useUserStore} from "@/store/userStore.ts";
+import {useI18n} from "vue-i18n";
 
+const { t } = useI18n()
 const router = useRouter();
 
 const props = defineProps({
@@ -59,10 +61,10 @@ async function loadComments() {
     if (res.data.code === 200) {
       commentTree.value = res.data.data;
     } else {
-      alert('获取评论失败：' + res.data.message);
+      alert(t('getCommentsFailed') + res.data.message);
     }
   } catch (e) {
-    alert('请求评论出错');
+    alert(t('getCommentsFailed'));
     console.error(e);
   } finally {
     loading.value = false;
@@ -79,13 +81,13 @@ function toggleReply(commentId: string) {
 
 async function submitComment(parentId: string | null, content: string) {
   if (!isLoggedIn.value) {
-    router.push({ name: 'Login' });
+    await router.push({name: 'Login'});
     return;
   }
 
   content = content.trim();
   if (!content) {
-    alert('请输入评论内容');
+    alert(t('enterComment'));
     return;
   }
 
@@ -101,14 +103,14 @@ async function submitComment(parentId: string | null, content: string) {
       replyCommentId.value = null;
       await loadComments();
     } else {
-      alert('评论失败：' + res.data.message);
+      alert(t('commentFailed') + res.data.message);
     }
   } catch (e: any) {
     // 如果是邮箱没验证的自定义错误，提示对应信息
     if (e.message === '请完成邮箱验证再评论') {
-      alert(e.message);
+      alert(t('completeEmailVerification'));
     } else {
-      alert('提交评论出错');
+      alert(t('submitCommentError'));
     }
     console.error(e);
   } finally {
@@ -123,16 +125,16 @@ function submitCommentFromChild({ parentId, content }: { parentId: string, conte
 
 
 async function deleteThisComment(id: string) {
-  if (!confirm('确认删除这条评论吗？')) return;
+  if (!confirm(t('confirmDeleteComment'))) return;
   try {
     const res = await deleteComment(id);
     if (res.data.code === 200) {
       await loadComments();
     } else {
-      alert('删除失败：' + res.data.message);
+      alert(t('deleteFailed') + res.data.message);
     }
   } catch (e) {
-    alert('删除评论出错');
+    alert(t('deleteCommentError'));
     console.error(e);
   }
 }
@@ -153,12 +155,12 @@ watch(() => userStore.isLoggedIn, async (newVal) => {
 
 <template>
   <div class="comments-section">
-    <h3 class="section-title">评论区</h3>
+    <h3 class="section-title">{{t('commentSection')}}</h3>
 
-    <div v-if="loading" class="loading-text">加载中...</div>
+    <div v-if="loading" class="loading-text">{{ t('loading') }}</div>
 
     <div v-else>
-      <div v-if="commentTree.length === 0" class="no-comments">暂无评论，快来抢沙发！</div>
+      <div v-if="commentTree.length === 0" class="no-comments">{{t('noComments')}}</div>
 
       <ul class="comment-list">
         <CommentItem
@@ -176,10 +178,10 @@ watch(() => userStore.isLoggedIn, async (newVal) => {
 
       <!-- 顶级评论输入 -->
       <div class="new-comment">
-        <h4>发表评论</h4>
+        <h4>{{t('postComment')}}</h4>
         <textarea
             v-model="newComment"
-            placeholder="请输入评论内容"
+            :placeholder="t('enterComment')"
             rows="4"
             :disabled="!isLoggedIn"
         ></textarea>
@@ -189,7 +191,7 @@ watch(() => userStore.isLoggedIn, async (newVal) => {
         >
 
 
-          {{ submitLoading ? '提交中...' : isLoggedIn ? '提交评论' : '请先登录' }}
+          {{ submitLoading ? t('submitting') : isLoggedIn ? t('submitComment') : t('pleaseLogin') }}
         </button>
       </div>
     </div>
@@ -245,7 +247,7 @@ watch(() => userStore.isLoggedIn, async (newVal) => {
 .new-comment textarea {
   width: 100%;
   border-radius: 10px;
-  border: 1.5px solid #ddd;
+  border: 2px solid #ddd;
   padding: 0.75rem 1rem;
   resize: vertical;
   font-size: 1rem;
