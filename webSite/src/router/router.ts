@@ -27,15 +27,15 @@ import BlogManage from "@/pages/admin/BlogManage.vue";
 
 const routes: RouteRecordRaw[] = [
     { path: "/", component: Home },
-    { path: 'about', component: About,},
+    { path: '/about', component: About,},
 
     { path: "/userCenter", component: UserProfile, meta: { requiresAuth: true } },
 
     { path: "/blog", component: Blog},
     { path: "/blog/detail/:id", component: BlogDetail, props: true},
-    { path: "admin/blogs/edit/:id", component: BlogEdit, props: true, meta: {requiresAuth: true}},
-    { path: "admin/deliver", component: PostBlog, meta: { requiresAuth: true}},
-    { path: 'admin/blogs', component: BlogManage, meta: { requiresAuth: true },},
+    { path: "/admin/blogs/edit/:id", component: BlogEdit, props: true, meta: {requiresAuth: true}},
+    { path: "/admin/deliver", component: PostBlog, meta: { requiresAuth: true}},
+    { path: '/admin/blogs', component: BlogManage, meta: { requiresAuth: true },},
     //
     // { path: "/gather", component: Gather},
     // { path: "/admin/postNote", component: PostNote, meta: { requiresAuth: true}},

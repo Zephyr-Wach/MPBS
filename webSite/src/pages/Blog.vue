@@ -101,7 +101,6 @@ async function loadBlogs() {
     } else {
       res = await getBlogList();
     }
-    console.log(res)
     if (res.data.code === 200) {
       blogList.value = res.data.data.records;
       pages.value = res.data.data.pages;
