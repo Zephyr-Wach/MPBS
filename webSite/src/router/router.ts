@@ -13,7 +13,7 @@ import PostBlog from "@/pages/admin/PostBlog.vue";
 import BlogEdit from "@/pages/admin/BlogEdit.vue";
 import BlogManage from "@/pages/admin/BlogManage.vue";
 
-// import Gather from "@/pages/Gather.vue";
+import Gather from "@/pages/Gather.vue";
 // import PostNote from "@/pages/admin/PostNote.vue";
 // import GatherManager from "@/pages/admin/GatherManager.vue";
 
@@ -37,7 +37,7 @@ const routes: RouteRecordRaw[] = [
     { path: "/admin/deliver", component: PostBlog, meta: { requiresAuth: true}},
     { path: '/admin/blogs', component: BlogManage, meta: { requiresAuth: true },},
     //
-    // { path: "/gather", component: Gather},
+    { path: "/gather", component: Gather},
     // { path: "/admin/postNote", component: PostNote, meta: { requiresAuth: true}},
     // { path: '/admin/gather', component: GatherManager, meta: { requiresAuth: true },},
     //
