@@ -130,5 +130,15 @@
   "enterMdHere": "在这里输入 Markdown 内容...",
   "enterCoverUrl": "封面图片 URL (可选)",
   "posting": "发布中...",
-  "postBlog": "发布博客"
+  "postBlog": "发布博客",
+
+  "getCollectionFailed": "获取合集失败",
+  "searchCollectionFailed": "搜索合集失败",
+  "getNoteListFailed": "获取笔记列表失败",
+  "getNoteFailed": "获取笔记内容失败",
+  "copy": "复制",
+  "copyed": "已复制",
+  "searchCollection": "搜索合集...",
+  "collection": "合集",
+  "selectNote": "请选择一篇笔记查看内容"
 }

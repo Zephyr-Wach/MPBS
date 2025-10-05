@@ -105,5 +105,15 @@
   "enterComment": "Please enter your comment",
   "submitting": "Submitting...",
   "submitComment": "Submit Comment",
-  "pleaseLogin": "Please log in first"
+  "pleaseLogin": "Please log in first",
+
+  "getCollectionFailed": "Failed to get collection",
+  "searchCollectionFailed": "Failed to search collection",
+  "getNoteListFailed": "Failed to get note list",
+  "getNoteFailed": "Failed to get note content",
+  "copy": "Copy",
+  "copyed": "Copied",
+  "searchCollection": "Search collection...",
+  "collection": "Collection",
+  "selectNote": "Please select a note to view its content"
 }
